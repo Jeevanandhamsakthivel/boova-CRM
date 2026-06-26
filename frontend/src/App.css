@@ -1,0 +1,63 @@
+body {
+  margin: 0;
+}
+
+#center {
+  display: grid;
+  gap: 1.5rem;
+  padding: 2rem;
+  text-align: center;
+}
+
+.hero {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.base,
+.framework,
+.vite {
+  max-width: 140px;
+}
+
+.counter {
+  margin-top: 1.5rem;
+  padding: 0.75rem 1.25rem;
+  border: none;
+  background: #2563eb;
+  color: white;
+  border-radius: 0.75rem;
+  cursor: pointer;
+}
+
+.ticks {
+  height: 4px;
+  background: linear-gradient(90deg, #2563eb 0%, #0ea5e9 100%);
+}
+
+#next-steps {
+  display: grid;
+  gap: 2rem;
+  padding: 2rem;
+}
+
+#docs,
+#social {
+  background: white;
+  border-radius: 1rem;
+  padding: 1.5rem;
+  box-shadow: 0 10px 20px rgba(15, 23, 42, 0.08);
+}
+
+.icon,
+.button-icon {
+  width: 24px;
+  height: 24px;
+}
+
+a {
+  color: #2563eb;
+}

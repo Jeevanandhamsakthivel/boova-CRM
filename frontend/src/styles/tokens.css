@@ -1,0 +1,58 @@
+:root {
+    /* --- Palette --- */
+    --ink-900: #15192B;
+    --ink-800: #1D2238;
+    --ink-700: #272D49;
+    --ink-600: #3A3F4B;
+    --ink-400: #6B7080;
+    --ink-200: #B8BBC4;
+
+    --canvas: #FAF9F6;
+    --surface: #FFFFFF;
+    --surface-sunken: #F1EFEA;
+    --border-hairline: #E4E1D8;
+
+    --accent: #C8862D;
+    --accent-strong: #A66A1B;
+    --accent-tint: #F7E9D3;
+
+    --success: #3F8F6F;
+    --success-tint: #E1F0E8;
+    --danger: #C1543C;
+    --danger-tint: #F8E5E0;
+    --warning: #C99A2E;
+    --warning-tint: #FBF1DA;
+    --info: #3E6FA8;
+    --info-tint: #E4ECF6;
+
+    /* Lead temperature signature */
+    --temp-hot: #C1543C;
+    --temp-warm: #C8862D;
+    --temp-cold: #3E6FA8;
+
+    /* --- Type --- */
+    --font-display: "Fraunces", "Iowan Old Style", serif;
+    --font-body: "Inter", "Source Sans 3", system-ui, -apple-system, sans-serif;
+    --font-mono: "IBM Plex Mono", "SFMono-Regular", Consolas, monospace;
+
+    /* --- Layout --- */
+    --rail-width: 232px;
+    --rail-width-collapsed: 72px;
+    --topbar-height: 64px;
+    --radius-sm: 6px;
+    --radius-md: 10px;
+    --radius-lg: 16px;
+
+    --shadow-sm: 0 1px 2px rgba(21, 25, 43, 0.06);
+    --shadow-md: 0 4px 16px rgba(21, 25, 43, 0.08);
+    --shadow-lg: 0 12px 32px rgba(21, 25, 43, 0.14);
+
+    --transition-fast: 120ms ease;
+    --transition-base: 200ms ease;
+}
+
+@media (prefers-color-scheme: dark) {
+    :root {
+        /* Reserved for future dark mode; app currently ships light-only. */
+    }
+}
