@@ -1,4 +1,3 @@
-import { useState } from "react";
 import { NavLink } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
 import {
@@ -24,6 +23,7 @@ import {
     IconMail,
     IconGlobe,
     IconStar,
+    IconTrendUp,
 } from "../ui/Icons";
 
 const NAV_SECTIONS = [
@@ -35,6 +35,13 @@ const NAV_SECTIONS = [
             { to: "/customers", label: "Customers", icon: IconCustomers },
             { to: "/companies", label: "Companies", icon: IconBuilding },
             { to: "/pipeline", label: "Pipeline", icon: IconPipeline },
+        ],
+    },
+    {
+        label: "Catalog",
+        items: [
+            { to: "/products", label: "Products", icon: IconStar },
+            { to: "/services", label: "Services", icon: IconTarget },
         ],
     },
     {
@@ -50,6 +57,7 @@ const NAV_SECTIONS = [
             { to: "/tasks", label: "Tasks", icon: IconTasks },
             { to: "/followups", label: "Follow-ups", icon: IconFollowups },
             { to: "/calendar", label: "Calendar", icon: IconCalendar },
+            { to: "/projects", label: "Projects", icon: IconActivity },
         ],
     },
     {
@@ -70,7 +78,9 @@ const NAV_SECTIONS = [
         label: "Insights",
         items: [
             { to: "/reports", label: "Reports", icon: IconReports },
+            { to: "/ai-assistant", label: "AI Assistant", icon: IconTrendUp },
             { to: "/automation", label: "Automation", icon: IconActivity },
+            { to: "/documents", label: "Documents", icon: IconDollar },
         ],
     },
     {
@@ -87,40 +97,50 @@ const NAV_SECTIONS = [
 export function Sidebar({ collapsed, onToggleCollapse, mobileOpen, onCloseMobile }) {
     const { user } = useAuth();
 
+    const isActive = (item) => {
+        const path = window.location.pathname;
+        if (item.end) return path === item.to;
+        return path.startsWith(item.to);
+    };
+
     return (
-        <aside className={`app-rail${mobileOpen ? " mobile-open" : ""}`}>
-            <div className="rail-brand" onClick={onCloseMobile}>
-                <span className="rail-brand-mark">P</span>
-                <span className="rail-brand-name">PSM CRM</span>
+        <aside className={`sidebar${mobileOpen ? " mobile-open" : ""}`}>
+            <div className="sidebar-brand" onClick={onCloseMobile}>
+                <span className="sidebar-brand-icon">C</span>
+                <span className="sidebar-brand-text">CRM Pro</span>
             </div>
 
-            {NAV_SECTIONS.map((section) => {
-                const visibleItems = section.items.filter(
-                    (item) => !item.roles || item.roles.includes(user?.role)
-                );
-                if (visibleItems.length === 0) return null;
-                return (
-                    <div key={section.label}>
-                        <div className="rail-section-label">{section.label}</div>
-                        {visibleItems.map((item) => (
-                            <NavLink
-                                key={item.to}
-                                to={item.to}
-                                end={item.end}
-                                className={({ isActive }) => `rail-link${isActive ? " active" : ""}`}
-                                onClick={onCloseMobile}
-                            >
-                                <item.icon width={18} height={18} />
-                                <span>{item.label}</span>
-                            </NavLink>
-                        ))}
-                    </div>
-                );
-            })}
+            <nav className="sidebar-nav">
+                {NAV_SECTIONS.map((section) => {
+                    const visibleItems = section.items.filter(
+                        (item) => !item.roles || item.roles.includes(user?.role)
+                    );
+                    if (visibleItems.length === 0) return null;
+                    return (
+                        <div key={section.label}>
+                            <div className="sidebar-section-label">{section.label}</div>
+                            {visibleItems.map((item) => (
+                                <NavLink
+                                    key={item.to}
+                                    to={item.to}
+                                    end={item.end}
+                                    className={({ isActive: active }) =>
+                                        `sidebar-item${active ? " active" : ""}`
+                                    }
+                                    onClick={onCloseMobile}
+                                >
+                                    <item.icon width={19} height={19} />
+                                    <span>{item.label}</span>
+                                </NavLink>
+                            ))}
+                        </div>
+                    );
+                })}
+            </nav>
 
-            <div className="rail-footer">
-                <button className="rail-collapse-toggle" onClick={onToggleCollapse}>
-                    {collapsed ? <IconChevronRight width={15} height={15} /> : <IconChevronLeft width={15} height={15} />}
+            <div style={{ padding: "8px", borderTop: "1px solid var(--border)" }}>
+                <button className="sidebar-item" onClick={onToggleCollapse} style={{ justifyContent: collapsed ? "center" : "flex-start" }}>
+                    {collapsed ? <IconChevronRight width={19} height={19} /> : <IconChevronLeft width={19} height={19} />}
                     {!collapsed && <span>Collapse</span>}
                 </button>
             </div>

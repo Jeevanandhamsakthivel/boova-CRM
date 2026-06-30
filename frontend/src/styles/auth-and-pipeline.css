@@ -1,7 +1,3 @@
-/* ===========================================================
-   AUTH PAGES — Login & Register
-   =========================================================== */
-
 .auth-page {
     min-height: 100vh;
     display: flex;
@@ -9,272 +5,173 @@
     justify-content: center;
     background: var(--canvas);
     padding: 24px;
-    position: relative;
-    overflow: hidden;
-}
-
-.auth-page::before {
-    content: '';
-    position: absolute;
-    top: -50%;
-    left: -50%;
-    width: 200%;
-    height: 200%;
-    background: radial-gradient(circle at 30% 40%, var(--accent-glass) 0%, transparent 50%),
-                radial-gradient(circle at 70% 60%, var(--accent-glass) 0%, transparent 50%);
-    pointer-events: none;
 }
 
 .auth-card {
-    width: 100%;
-    max-width: 420px;
     background: var(--surface);
     border: 1px solid var(--border);
     border-radius: var(--radius-xl);
     box-shadow: var(--shadow-lg);
-    padding: 40px 36px;
-    position: relative;
-    animation: fade-in-up 0.4s ease;
+    width: 100%;
+    max-width: 420px;
+    padding: 40px;
 }
 
 .auth-brand {
     display: flex;
     align-items: center;
-    justify-content: center;
-    gap: 10px;
-    margin-bottom: 32px;
+    gap: 12px;
+    margin-bottom: 8px;
 }
 
-.auth-brand-mark {
+.auth-brand-icon {
     width: 40px;
     height: 40px;
-    border-radius: 10px;
-    background: var(--gradient-gold);
+    border-radius: var(--radius-sm);
+    background: var(--gradient-primary);
     display: flex;
     align-items: center;
     justify-content: center;
-    font-family: var(--font-display);
+    color: #fff;
     font-weight: 800;
     font-size: 18px;
-    color: var(--ink-900);
-    box-shadow: 0 2px 12px rgba(200, 134, 45, 0.3);
 }
 
-.auth-brand-name {
-    font-family: var(--font-display);
+.auth-brand-text {
     font-size: 22px;
-    font-weight: 700;
+    font-weight: 800;
     color: var(--ink-900);
 }
 
 .auth-title {
-    text-align: center;
-    margin-bottom: 28px;
-}
-
-.auth-title h1 {
-    font-family: var(--font-display);
-    font-size: 22px;
+    font-size: 20px;
     font-weight: 700;
     color: var(--ink-900);
     margin-bottom: 4px;
 }
 
-.auth-title p {
-    font-size: 13.5px;
-    color: var(--ink-400);
+.auth-subtitle {
+    font-size: 13px;
+    color: var(--ink-500);
+    margin-bottom: 28px;
 }
 
 .auth-error {
-    padding: 12px 16px;
     background: var(--accent-red-tint);
-    border: 1px solid var(--accent-red);
-    border-radius: var(--radius-sm);
     color: var(--accent-red);
     font-size: 13px;
     font-weight: 500;
+    padding: 10px 14px;
+    border-radius: var(--radius-sm);
     margin-bottom: 16px;
+    border: 1px solid rgba(220, 38, 38, 0.12);
 }
+
+.auth-submit {
+    width: 100%;
+    height: 44px;
+    border-radius: var(--radius-sm);
+    background: var(--accent);
+    color: #fff;
+    border: none;
+    font-size: 14px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all var(--transition-fast);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
+
+.auth-submit:hover { background: var(--accent-strong); box-shadow: 0 2px 12px var(--accent-glow); }
 
 .auth-footer {
     text-align: center;
-    margin-top: 24px;
     font-size: 13px;
-    color: var(--ink-400);
+    color: var(--ink-500);
+    margin-top: 24px;
 }
 
-.auth-footer a {
-    color: var(--accent-strong);
-    font-weight: 600;
-    text-decoration: none;
-}
+.auth-footer a { color: var(--accent); font-weight: 600; }
+.auth-footer a:hover { text-decoration: underline; }
 
-.auth-footer a:hover {
-    text-decoration: underline;
-}
-
-/* ===========================================================
-   PIPELINE / KANBAN BOARD
-   =========================================================== */
-
-.pipeline-page {
-    display: flex;
-    flex-direction: column;
-    gap: 0;
-}
-
-.pipeline-board {
+.kanban-board {
     display: flex;
     gap: 16px;
     overflow-x: auto;
-    padding-bottom: 20px;
-    align-items: flex-start;
-    min-height: 60vh;
-}
-
-.pipeline-column {
-    min-width: 280px;
-    max-width: 300px;
-    flex-shrink: 0;
-    display: flex;
-    flex-direction: column;
-    gap: 0;
-}
-
-.pipeline-column-header {
-    background: var(--surface-sunken);
-    border: 1px solid var(--border);
-    border-radius: var(--radius-md) var(--radius-md) 0 0;
-    padding: 14px 16px 10px;
-}
-
-.pipeline-column-name {
-    font-weight: 700;
-    font-size: 13px;
-    color: var(--ink-700);
-    margin-bottom: 2px;
-}
-
-.pipeline-column-meta {
-    font-size: 11.5px;
-    color: var(--ink-400);
-}
-
-.pipeline-column-cards {
-    background: var(--surface-sunken);
-    border: 1px solid var(--border);
-    border-top: none;
-    border-radius: 0 0 var(--radius-md) var(--radius-md);
-    padding: 8px 10px 12px;
-    min-height: 80px;
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
     flex: 1;
+    min-height: 60vh;
+    padding-bottom: 8px;
 }
 
-.pipeline-card {
+.kanban-col {
+    flex: 1;
+    min-width: 260px;
+    max-width: 320px;
+    background: var(--canvas-alt);
+    border-radius: var(--radius-md);
+    display: flex;
+    flex-direction: column;
+}
+
+.kanban-col-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 14px 16px;
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--ink-800);
+    border-bottom: 1px solid var(--border-light);
+}
+
+.kanban-col-count {
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--ink-500);
+    background: var(--ink-200);
+    padding: 1px 8px;
+    border-radius: var(--radius-full);
+}
+
+.kanban-cards {
+    padding: 8px;
+    flex: 1;
+    min-height: 100px;
+}
+
+.kanban-card {
     background: var(--surface);
     border: 1px solid var(--border);
-    border-radius: var(--radius-md);
-    padding: 14px 16px;
+    border-radius: var(--radius-sm);
+    padding: 12px 14px;
+    margin-bottom: 8px;
     cursor: grab;
     transition: all var(--transition-fast);
     box-shadow: var(--shadow-xs);
 }
 
-.pipeline-card:hover {
-    box-shadow: var(--shadow-md);
+.kanban-card:hover {
     border-color: var(--accent);
+    box-shadow: var(--shadow-md);
+    transform: translateY(-1px);
 }
 
-.pipeline-card:active {
-    cursor: grabbing;
-}
+.kanban-card:active { cursor: grabbing; }
+.kanban-card.dragging { opacity: 0.5; transform: rotate(2deg); }
+.kanban-card.drag-over { border-color: var(--accent); background: var(--accent-tint); }
 
-.pipeline-card-title {
+.kanban-card-title {
+    font-size: 13px;
     font-weight: 600;
-    font-size: 13.5px;
-    color: var(--ink-900);
+    color: var(--ink-800);
     margin-bottom: 4px;
 }
 
-.pipeline-card-value {
-    color: var(--accent-strong);
-    font-weight: 700;
-    font-size: 13px;
-    font-variant-numeric: tabular-nums;
-}
-
-.pipeline-card-customer {
+.kanban-card-sub {
     font-size: 12px;
-    color: var(--ink-400);
-    margin-top: 4px;
+    color: var(--ink-500);
 }
 
-.pipeline-card-footer {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    margin-top: 10px;
-    padding-top: 8px;
-    border-top: 1px solid var(--border-light);
-}
-
-.pipeline-card-owner {
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    font-size: 11.5px;
-    color: var(--ink-400);
-}
-
-.pipeline-empty-card {
-    padding: 20px 14px;
-    text-align: center;
-    color: var(--ink-200);
-    font-size: 12px;
-    border: 2px dashed var(--border);
-    border-radius: var(--radius-sm);
-}
-
-.pipeline-add-card {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 6px;
-    padding: 10px;
-    border: 2px dashed var(--border);
-    border-radius: var(--radius-sm);
-    color: var(--ink-400);
-    font-size: 12.5px;
-    font-weight: 600;
-    cursor: pointer;
-    background: transparent;
-    width: 100%;
-    transition: all var(--transition-fast);
-}
-
-.pipeline-add-card:hover {
-    border-color: var(--accent);
-    color: var(--accent-strong);
-    background: var(--accent-tint);
-}
-
-/* Dragging state */
-.pipeline-card.dragging {
-    opacity: 0.5;
-    transform: rotate(2deg);
-}
-
-.pipeline-column.drag-over .pipeline-column-cards {
-    background: var(--accent-tint);
-    border-color: var(--accent);
-}
-
-/* ── Responsive ────────────────────────────────────────── */
-@media (max-width: 900px) {
-    .pipeline-column {
-        min-width: 240px;
-    }
-}
+.pipeline-page { display: flex; flex-direction: column; height: calc(100vh - var(--topbar-height) - 140px); }

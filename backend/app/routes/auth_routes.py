@@ -7,8 +7,12 @@ POST /api/auth/logout
 GET  /api/auth/me
 PUT  /api/auth/me
 POST /api/auth/change-password
+POST /api/auth/avatar
+GET  /api/auth/me/audit
 """
-from flask import Blueprint, request, g
+import os
+import uuid
+from flask import Blueprint, request, g, current_app
 from flask_jwt_extended import (
     create_access_token,
     create_refresh_token,
@@ -26,9 +30,11 @@ from app.models.auth_schema import (
 )
 from app.services import user_service
 from app.services.token_service import add_token_to_blocklist
-from app.services.audit_service import record_audit_log
+from app.services.audit_service import record_audit_log, list_audit_logs
 from app.utils.responses import success_response, error_response
 from app.utils.errors import AppError, format_marshmallow_errors
+from app.utils.helpers import serialize_doc
+from app.utils.pagination import get_pagination_params, build_pagination_meta
 from app.middlewares.auth_middleware import jwt_required_custom
 
 auth_bp = Blueprint("auth", __name__, url_prefix="/api/auth")
@@ -154,3 +160,45 @@ def change_password():
         return error_response(e.message, e.status_code)
 
     return success_response(message="Password changed successfully.")
+
+
+@auth_bp.post("/avatar")
+@jwt_required_custom()
+def upload_avatar():
+    if "file" not in request.files:
+        return error_response("No file provided.", 400)
+    uploaded = request.files["file"]
+    if not uploaded.filename:
+        return error_response("No file selected.", 400)
+
+    mimetype = uploaded.mimetype or ""
+    if not mimetype.startswith("image/"):
+        return error_response("Only image files are allowed.", 422)
+
+    ext = os.path.splitext(uploaded.filename)[1].lower()
+    if ext not in (".png", ".jpg", ".jpeg", ".gif", ".webp"):
+        return error_response("Unsupported image format.", 422)
+
+    avatar_dir = os.path.join(
+        current_app.config.get("UPLOAD_FOLDER", os.path.join(os.getcwd(), "uploads")),
+        "avatars",
+    )
+    os.makedirs(avatar_dir, exist_ok=True)
+    storage_name = f"{uuid.uuid4().hex}{ext}"
+    dest = os.path.join(avatar_dir, storage_name)
+    uploaded.save(dest)
+
+    avatar_url = f"/uploads/avatars/{storage_name}"
+    user_service.update_user_profile(g.current_user_id, {"avatar_url": avatar_url})
+    record_audit_log(g.current_user_id, "update", "user", g.current_user_id, changes={"avatar_url": avatar_url})
+    return success_response({"avatar_url": avatar_url}, message="Avatar uploaded.")
+
+
+@auth_bp.get("/me/audit")
+@jwt_required_custom()
+def get_my_audit_logs():
+    page, per_page, skip = get_pagination_params()
+    filters = {"user_id": g.current_user_id, "action": request.args.get("action")}
+    logs, total = list_audit_logs(filters, skip, per_page)
+    meta = build_pagination_meta(page, per_page, total)
+    return success_response(serialize_doc(logs), meta=meta)

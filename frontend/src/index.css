@@ -11,9 +11,11 @@ body {
     font-family: Inter, system-ui, sans-serif;
     line-height: 1.5;
     background: var(--canvas);
-    color: var(--ink-800);
+    color: var(--ink-200);
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+    background-image: var(--gradient-mesh);
+    background-attachment: fixed;
 }
 
 img {

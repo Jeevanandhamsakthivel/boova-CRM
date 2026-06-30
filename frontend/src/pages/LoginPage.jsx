@@ -24,15 +24,18 @@ export default function LoginPage() {
     }
 
     return (
-        <div style={{ minHeight: "100vh", display: "flex", alignItems: "center", justifyContent: "center", background: "var(--canvas)" }}>
-            <div className="card card-pad" style={{ width: "100%", maxWidth: 400 }}>
-                <div style={{ marginBottom: 28, textAlign: "center" }}>
-                    <span style={{ width: 44, height: 44, borderRadius: 12, background: "var(--accent)", color: "var(--ink-900)", display: "inline-flex", alignItems: "center", justifyContent: "center", fontFamily: "var(--font-display)", fontWeight: 700, fontSize: 22 }}>P</span>
-                    <h1 style={{ fontFamily: "var(--font-display)", fontSize: 24, marginTop: 12, marginBottom: 4 }}>PSM CRM</h1>
-                    <p className="text-muted text-sm">Sign in to your account</p>
+        <div className="auth-page">
+            <div className="auth-card">
+                <div className="auth-brand">
+                    <span className="auth-brand-mark">P</span>
+                    <span className="auth-brand-name">NovaCRM</span>
+                </div>
+                <div className="auth-title">
+                    <h1>Welcome back</h1>
+                    <p>Sign in to your account to continue</p>
                 </div>
 
-                {error && <div className="badge badge-danger" style={{ marginBottom: 16, width: "100%", borderRadius: 6, justifyContent: "center" }}>{error}</div>}
+                {error && <div className="auth-error">{error}</div>}
 
                 <form onSubmit={handleSubmit}>
                     <div className="field-group">
@@ -43,12 +46,12 @@ export default function LoginPage() {
                         <label className="field-label">Password</label>
                         <input className="field-input" type="password" required value={form.password} onChange={e => setForm(f => ({ ...f, password: e.target.value }))} placeholder="••••••••" />
                     </div>
-                    <button className="btn btn-primary btn-block" type="submit" disabled={loading} style={{ marginTop: 8 }}>
+                    <button className="btn btn-primary btn-block btn-lg" type="submit" disabled={loading} style={{ marginTop: 8 }}>
                         {loading ? "Signing in…" : "Sign In"}
                     </button>
                 </form>
-                <p className="text-muted text-sm" style={{ textAlign: "center", marginTop: 18 }}>
-                    No account? <Link to="/register" style={{ color: "var(--accent-strong)", fontWeight: 600 }}>Register</Link>
+                <p className="auth-footer">
+                    No account? <Link to="/register">Create one</Link>
                 </p>
             </div>
         </div>

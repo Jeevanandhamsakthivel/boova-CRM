@@ -24,22 +24,37 @@ def list_settings():
 
 
 @settings_bp.post("")
-@admin_required
+@jwt_required_custom()
 def upsert_setting():
     try:
         data = SettingUpsertSchema().load(request.get_json(force=True, silent=True) or {})
     except ValidationError as err:
         return error_response("Validation failed.", 422, format_marshmallow_errors(err))
 
+    # Non-admin users can only manage their own user-scoped settings
+    if g.current_user_role != "admin":
+        if data.get("scope") != "user":
+            return error_response("Only admins can manage global settings.", 403)
+        if data.get("scope_id") and data["scope_id"] != g.current_user_id:
+            return error_response("You can only modify your own settings.", 403)
+        data["scope_id"] = g.current_user_id
+
     setting = settings_service.upsert_setting(data, g.current_user_id)
     return success_response(serialize_doc(setting), message="Setting updated.")
 
 
 @settings_bp.delete("/<key>")
-@admin_required
+@jwt_required_custom()
 def delete_setting(key):
     scope = request.args.get("scope", "global")
     scope_id = request.args.get("scope_id")
+
+    if g.current_user_role != "admin":
+        if scope != "user":
+            return error_response("Only admins can delete global settings.", 403)
+        if scope_id and scope_id != g.current_user_id:
+            return error_response("You can only delete your own settings.", 403)
+
     try:
         settings_service.delete_setting(key, scope, scope_id)
     except AppError as e:

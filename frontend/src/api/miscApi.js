@@ -25,7 +25,7 @@ export const notificationsApi = {
 
 export const settingsApi = {
     list: (params) => apiClient.get("/settings", { params }),
-    upsert: (payload) => apiClient.put("/settings", payload),
+    upsert: (payload) => apiClient.post("/settings", payload),
     remove: (key, params) => apiClient.delete(`/settings/${key}`, { params }),
 };
 

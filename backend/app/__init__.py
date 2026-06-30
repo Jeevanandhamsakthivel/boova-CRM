@@ -1,8 +1,9 @@
 """
 Flask application factory (SRS Chapter 24: Backend Architecture).
 """
+import os
 import logging
-from flask import Flask
+from flask import Flask, send_from_directory
 
 from app.config import get_config
 from app.extensions import jwt, cors
@@ -92,5 +93,15 @@ def create_app(config_object=None):
     app.register_blueprint(enrich_bp)
     app.register_blueprint(pricing_bp)
     app.register_blueprint(onboarding_bp)
+
+    # Serve uploaded files (avatars, etc.)
+    upload_dir = app.config.get("UPLOAD_FOLDER", os.path.join(os.getcwd(), "uploads"))
+    @app.get("/uploads/<path:filepath>")
+    def serve_upload(filepath):
+        safe_path = os.path.normpath(filepath)
+        full = os.path.normpath(os.path.join(upload_dir, safe_path))
+        if not full.startswith(os.path.normpath(upload_dir)):
+            abort(403)
+        return send_from_directory(upload_dir, safe_path)
 
     return app

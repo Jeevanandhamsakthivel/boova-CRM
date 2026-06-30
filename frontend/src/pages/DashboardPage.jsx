@@ -5,71 +5,26 @@ import { useAuth } from "../context/AuthContext";
 import { formatCurrency, formatRelative } from "../utils/formatters";
 import {
     IconLeads, IconCustomers, IconPipeline, IconTasks,
-    IconFollowups, IconTrendUp, IconTarget, IconActivity,
-    IconDollar, IconCalendar, IconPlus, IconArrowRight,
-    IconBell, IconRefresh,
+    IconActivity, IconArrowRight, IconRefresh,
 } from "../components/ui/Icons";
-import { DonutChart, BarChart, ProgressRing, ChartLegend } from "../components/ui/Charts";
+import { BarChart, ProgressRing } from "../components/ui/Charts";
+import BusinessHealthScore from "../components/business/BusinessHealthScore";
+import AIBusinessAdvisor from "../components/business/AIBusinessAdvisor";
+import TodayActionCenter from "../components/business/TodayActionCenter";
+import RevenueForecast from "../components/business/RevenueForecast";
+import SmartNotifications from "../components/business/SmartNotifications";
+import DashboardLayout from "../components/dashboard/DashboardLayout";
 
-function KpiCard({ label, value, sub, accent, icon: Icon, trend, to }) {
+function KpiCard({ label, value, sub, icon: Icon, iconClass = "kpi-icon-purple", to }) {
     const navigate = useNavigate();
     return (
-        <div
-            className="dash-kpi-card"
-            style={{ borderTop: `3px solid ${accent}` }}
-            onClick={() => to && navigate(to)}
-        >
-            <div className="dash-kpi-icon" style={{ background: accent + "14", color: accent }}>
-                {Icon && <Icon width={19} height={19} />}
+        <div className="kpi-card" onClick={() => to && navigate(to)} style={{ cursor: to ? "pointer" : "default" }}>
+            <div className={`kpi-icon ${iconClass}`}>
+                {Icon && <Icon width={18} height={18} />}
             </div>
-            <div className="dash-kpi-body">
-                <span className="dash-kpi-value">{value ?? "—"}</span>
-                <span className="dash-kpi-label">{label}</span>
-                {sub && <span className="dash-kpi-sub">{sub}</span>}
-                {trend !== undefined && (
-                    <span className="dash-kpi-trend" style={{ color: trend >= 0 ? "var(--accent-green)" : "var(--accent-red)" }}>
-                        {trend >= 0 ? "↑" : "↓"} {Math.abs(trend)}%
-                    </span>
-                )}
-            </div>
-        </div>
-    );
-}
-
-function PriorityItem({ icon: Icon, accent, label, count, to }) {
-    return (
-        <Link to={to} className="dash-priority-item">
-            <div className="dash-priority-icon" style={{ background: accent + "14", color: accent }}>
-                <Icon width={16} height={16} />
-            </div>
-            <div className="dash-priority-body">
-                <div className="dash-priority-label">{label}</div>
-            </div>
-            <div className="dash-priority-count" style={{ color: accent }}>
-                {count ?? 0}
-            </div>
-        </Link>
-    );
-}
-
-function QuickAction({ icon: Icon, label, to, accent = "var(--accent)" }) {
-    return (
-        <Link to={to} className="dash-quick-action">
-            <Icon width={15} height={15} />
-            <span style={{ fontSize: 13, fontWeight: 500, flex: 1 }}>{label}</span>
-            <IconArrowRight width={13} height={13} />
-        </Link>
-    );
-}
-
-function ActivityItem({ activity }) {
-    return (
-        <div className="dash-activity-item">
-            <div className="dash-activity-dot" />
-            <div className="dash-activity-content">
-                <p className="dash-activity-text">{activity.description || activity.title || "Activity"}</p>
-                <span className="dash-activity-time">{formatRelative(activity.created_at)}</span>
-            </div>
+            <span className="kpi-label">{label}</span>
+            <span className="kpi-value">{value ?? "—"}</span>
+            {sub && <span className="stat-sub">{sub}</span>}
         </div>
     );
 }
@@ -107,158 +62,185 @@ export default function DashboardPage() {
     const totalDeals = (s.open_deals_count || 0) + wonDeals;
     const winRate = totalDeals > 0 ? Math.round((wonDeals / totalDeals) * 100) : 0;
 
-    const conversionRate = s.total_leads > 0 ? Math.round(((s.total_customers || 0) / s.total_leads) * 100) : 0;
-
     if (loading) return (
         <div className="page-loading">
             <div className="spinner spinner-lg" />
         </div>
     );
 
-    return (
-        <div className="dash-page">
-            {/* Greeting */}
-            <div className="dash-greeting">
-                <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
-                    <div>
-                        <h1>{greeting}, {user?.name?.split(" ")[0] || user?.email?.split("@")[0] || "there"}</h1>
-                        <p>Here's what's happening across your pipeline today.</p>
-                    </div>
-                    <button className="btn btn-ghost btn-sm" onClick={loadData} disabled={refreshing}>
-                        <IconRefresh width={14} height={14} />
-                        {refreshing ? "Refreshing..." : "Refresh"}
-                    </button>
-                </div>
-            </div>
+    const hasStageData = s.stage_distribution && s.stage_distribution.length > 0;
 
-            {/* KPI Strip */}
-            <div className="dash-kpi-strip">
-                <KpiCard label="Total Leads"     value={s.total_leads ?? 0}         sub={`${s.new_leads ?? 0} new this period`}      accent="#6366F1" icon={IconLeads}     to="/leads" />
-                <KpiCard label="Customers"       value={s.total_customers ?? 0}     sub="Active accounts"                             accent="#10B981" icon={IconCustomers}  to="/customers" />
-                <KpiCard label="Open Deals"      value={s.open_deals_count ?? 0}    sub={formatCurrency(s.open_deals_value) + " value"} accent="#F59E0B" icon={IconPipeline}  to="/pipeline" />
-                <KpiCard label="Pending Tasks"   value={s.pending_tasks ?? 0}       sub={`${s.overdue_tasks ?? 0} overdue`}           accent="#EF4444" icon={IconTasks}     to="/tasks" />
-                <KpiCard label="Win Rate"        value={winRate + "%"}              sub={`${wonDeals} won of ${totalDeals} deals`}    accent="#8B5CF6" icon={IconTarget}    to="/pipeline" />
-                <KpiCard label="Conversion"      value={conversionRate + "%"}       sub="Leads to customers"                          accent="#14B8A6" icon={IconTrendUp}   to="/reports" />
-            </div>
-
-            {/* Main grid */}
-            <div className="dash-grid">
-                {/* Priority Queue */}
-                <div className="dash-card">
-                    <div className="dash-section-head">
-                        <h3>Priority Queue</h3>
-                    </div>
-                    <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
-                        <PriorityItem icon={IconTasks}     accent="#EF4444" label="Overdue tasks"            count={s.overdue_tasks}     to="/tasks" />
-                        <PriorityItem icon={IconFollowups} accent="#8B5CF6" label="Pending follow-ups"       count={s.pending_followups} to="/followups" />
-                        <PriorityItem icon={IconLeads}     accent="#6366F1" label="New leads to review"      count={s.new_leads}         to="/leads?status=new" />
-                        <PriorityItem icon={IconPipeline}  accent="#F59E0B" label="Open deals in pipeline"   count={s.open_deals_count}  to="/pipeline" />
-                    </div>
-                </div>
-
-                {/* Quick Actions */}
-                <div className="dash-card">
-                    <div className="dash-section-head">
-                        <h3>Quick Actions</h3>
-                    </div>
-                    <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
-                        <QuickAction icon={IconPlus}      label="Add a new lead"          to="/leads" />
-                        <QuickAction icon={IconCustomers} label="View all customers"       to="/customers" />
-                        <QuickAction icon={IconPipeline}  label="Check pipeline"           to="/pipeline" />
-                        <QuickAction icon={IconTasks}     label="Clear outstanding tasks"  to="/tasks" />
-                        <QuickAction icon={IconFollowups} label="Review follow-ups"        to="/followups" />
-                        <QuickAction icon={IconActivity}  label="View reports & analytics" to="/reports" />
-                    </div>
-                </div>
-
-                {/* Activity Feed */}
-                <div className="dash-card dash-card-wide">
-                    <div className="dash-section-head">
-                        <h3>Recent Activity</h3>
-                        <Link to="/reports" className="dash-section-link">
-                            View all <IconArrowRight width={12} height={12} />
-                        </Link>
-                    </div>
-                    {recentActivities.length === 0 ? (
-                        <div className="dash-activity-empty">
-                            No recent activity yet. Start by adding a lead or customer.
-                        </div>
-                    ) : (
-                        recentActivities.map((a, i) => <ActivityItem key={a.id || i} activity={a} />)
-                    )}
-                </div>
-
-                {/* Pipeline Value Banner */}
-                <div className="dash-pipeline-banner">
-                    <div className="dash-pipeline-banner-left">
-                        <div className="dash-pipeline-banner-icon">
-                            <IconDollar width={24} height={24} />
-                        </div>
-                        <div className="dash-pipeline-banner-info">
-                            <h3>Total Open Pipeline</h3>
-                            <div className="value">{formatCurrency(s.open_deals_value)}</div>
-                        </div>
-                    </div>
-                    <Link to="/pipeline" className="dash-pipeline-banner-cta">
-                        Open Pipeline <IconArrowRight width={14} height={14} />
+    function PipelineWidget() {
+        if (!hasStageData) return null;
+        return (
+            <div className="dash-panel">
+                <div className="dash-panel-header">
+                    <span className="dash-panel-title">Pipeline by Stage</span>
+                    <Link to="/pipeline" style={{ fontSize: 12, color: "var(--accent)", fontWeight: 600, display: "flex", alignItems: "center", gap: 4 }}>
+                        View <IconArrowRight width={12} height={12} />
                     </Link>
                 </div>
+                <div className="dash-panel-body">
+                    <BarChart
+                        bars={s.stage_distribution.map((st, i) => ({
+                            label: st.name || st._id,
+                            value: st.count,
+                            color: ["var(--accent)", "var(--accent-amber)", "var(--accent-green)", "var(--accent-blue)", "var(--accent-purple)", "var(--accent-cyan)"][i % 6],
+                        }))}
+                        height={160}
+                        formatValue={(v) => v}
+                    />
+                </div>
+            </div>
+        );
+    }
 
-                {/* Deal Stage Distribution Chart */}
-                {s.stage_distribution && s.stage_distribution.length > 0 && (
-                    <div className="dash-chart-card" style={{ gridColumn: "span 2" }}>
-                        <div className="dash-section-head">
-                            <h3>Pipeline by Stage</h3>
-                            <Link to="/pipeline" className="dash-section-link">
-                                View pipeline <IconArrowRight width={12} height={12} />
-                            </Link>
+    function WinRateWidget() {
+        return (
+            <div className="dash-panel">
+                <div className="dash-panel-header">
+                    <span className="dash-panel-title">Win Rate</span>
+                </div>
+                <div className="dash-panel-body" style={{ display: "flex", alignItems: "center", gap: 24 }}>
+                    <ProgressRing
+                        pct={winRate}
+                        size={100}
+                        strokeWidth={10}
+                        color="var(--accent-green)"
+                        label={`${winRate}%`}
+                        sublabel="win rate"
+                    />
+                    <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+                        <div style={{ display: "flex", alignItems: "center", gap: 8, fontSize: 13 }}>
+                            <span className="temp-dot" style={{ background: "var(--accent-green)" }} />
+                            <span style={{ color: "var(--ink-600)" }}>Won</span>
+                            <span style={{ fontWeight: 700, color: "var(--ink-900)", marginLeft: "auto" }}>{wonDeals}</span>
                         </div>
-                        <BarChart
-                            bars={s.stage_distribution.map((st, i) => ({
-                                label: st.name || st._id,
-                                value: st.count,
-                                color: ["#6366F1", "#F59E0B", "#10B981", "#3B82F6", "#8B5CF6", "#14B8A6"][i % 6],
-                            }))}
-                            height={140}
-                            formatValue={(v) => v}
-                        />
-                    </div>
-                )}
-
-                {/* Win Rate Ring */}
-                <div className="dash-chart-card">
-                    <div className="dash-section-head">
-                        <h3>Win Rate</h3>
-                    </div>
-                    <div style={{ display: "flex", alignItems: "center", gap: 24 }}>
-                        <ProgressRing
-                            pct={winRate}
-                            size={100}
-                            strokeWidth={10}
-                            color="var(--accent-green)"
-                            label={`${winRate}%`}
-                            sublabel="win rate"
-                        />
-                        <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
-                            <div style={{ display: "flex", alignItems: "center", gap: 8, fontSize: 13 }}>
-                                <span style={{ width: 8, height: 8, borderRadius: "50%", background: "var(--accent-green)" }} />
-                                <span style={{ color: "var(--ink-600)" }}>Won</span>
-                                <span style={{ fontWeight: 700, color: "var(--ink-900)" }}>{wonDeals}</span>
-                            </div>
-                            <div style={{ display: "flex", alignItems: "center", gap: 8, fontSize: 13 }}>
-                                <span style={{ width: 8, height: 8, borderRadius: "50%", background: "var(--surface-sunken)" }} />
-                                <span style={{ color: "var(--ink-600)" }}>Open</span>
-                                <span style={{ fontWeight: 700, color: "var(--ink-900)" }}>{s.open_deals_count || 0}</span>
-                            </div>
-                            <div style={{ display: "flex", alignItems: "center", gap: 8, fontSize: 13 }}>
-                                <span style={{ width: 8, height: 8, borderRadius: "50%", background: "var(--accent-red)" }} />
-                                <span style={{ color: "var(--ink-600)" }}>Lost</span>
-                                <span style={{ fontWeight: 700, color: "var(--ink-900)" }}>{s.lost_deals_count || 0}</span>
-                            </div>
+                        <div style={{ display: "flex", alignItems: "center", gap: 8, fontSize: 13 }}>
+                            <span className="temp-dot" style={{ background: "var(--surface-sunken)", border: "1px solid var(--border)" }} />
+                            <span style={{ color: "var(--ink-600)" }}>Open</span>
+                            <span style={{ fontWeight: 700, color: "var(--ink-900)", marginLeft: "auto" }}>{s.open_deals_count || 0}</span>
+                        </div>
+                        <div style={{ display: "flex", alignItems: "center", gap: 8, fontSize: 13 }}>
+                            <span className="temp-dot" style={{ background: "var(--accent-red)" }} />
+                            <span style={{ color: "var(--ink-600)" }}>Lost</span>
+                            <span style={{ fontWeight: 700, color: "var(--ink-900)", marginLeft: "auto" }}>{s.lost_deals_count || 0}</span>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
+        );
+    }
+
+    function ActivityWidget() {
+        return (
+            <div className="dash-panel">
+                <div className="dash-panel-header">
+                    <span className="dash-panel-title">Recent Activity</span>
+                    <Link to="/reports" style={{ fontSize: 12, color: "var(--accent)", fontWeight: 600, display: "flex", alignItems: "center", gap: 4 }}>
+                        View all <IconArrowRight width={12} height={12} />
+                    </Link>
+                </div>
+                <div className="dash-panel-body" style={{ padding: "4px 20px" }}>
+                    {recentActivities.length === 0 ? (
+                        <div className="empty-state" style={{ padding: "30px 20px" }}>
+                            <IconActivity width={24} height={24} style={{ color: "var(--ink-400)" }} />
+                            <h3>No recent activity</h3>
+                            <p>Start by adding a lead or customer.</p>
+                        </div>
+                    ) : (
+                        <div style={{ maxHeight: 300, overflowY: 'auto' }}>
+                            {recentActivities.map((a, i) => (
+                                <div key={a.id || i} className="dash-activity-item">
+                                    <div className="dash-activity-dot" style={{ background: "var(--accent)" }} />
+                                    <div className="dash-activity-text">
+                                        {a.description || a.title || "Activity"}
+                                        <div className="dash-activity-time">{formatRelative(a.created_at)}</div>
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
+                    )}
+                </div>
+            </div>
+        );
+    }
+
+    const widgets = [
+        {
+            id: "health", title: "Business Health", span: 1,
+            render: () => <BusinessHealthScore metrics={s} />,
+        },
+        {
+            id: "actions", title: "Action Center", span: 1,
+            render: () => <TodayActionCenter summary={s} />,
+        },
+        {
+            id: "advisor", title: "AI Advisor", span: 1,
+            render: () => <AIBusinessAdvisor summary={s} />,
+        },
+        {
+            id: "forecast", title: "Revenue Forecast", span: 2,
+            render: () => <RevenueForecast summary={s} />,
+        },
+        {
+            id: "notifications", title: "Notifications", span: 1,
+            render: () => <SmartNotifications compact />,
+        },
+        {
+            id: "pipeline", title: "Pipeline by Stage", span: 2,
+            render: () => <PipelineWidget />,
+        },
+        {
+            id: "winrate", title: "Win Rate", span: 1,
+            render: () => <WinRateWidget />,
+        },
+        {
+            id: "activity", title: "Recent Activity", span: 2,
+            render: () => <ActivityWidget />,
+        },
+    ];
+
+    const defaultOrder = ["health", "actions", "forecast", "advisor", "pipeline", "winrate", "notifications", "activity"];
+
+    return (
+        <>
+            {/* Header */}
+            <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 24 }}>
+                <div>
+                    <h1 className="page-title">{greeting}, {user?.name?.split(" ")[0] || user?.email?.split("@")[0] || "there"}!</h1>
+                    <p className="page-subtitle">
+                        {new Date().toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric' })}
+                        {' — '}Here's your Business OS overview.
+                    </p>
+                </div>
+                <button className="btn btn-ghost btn-sm" onClick={loadData} disabled={refreshing}>
+                    <IconRefresh width={14} height={14} />
+                    {refreshing ? "Refreshing…" : "Refresh"}
+                </button>
+            </div>
+
+            {/* Top Row: KPI Cards (always visible, not draggable) */}
+            <div className="dash-kpi-grid">
+                <KpiCard label="Total Leads" value={s.total_leads ?? 0} sub={`${s.new_leads ?? 0} new this period`} icon={IconLeads} iconClass="kpi-icon-purple" to="/leads" />
+                <KpiCard label="Customers" value={s.total_customers ?? 0} sub="Active accounts" icon={IconCustomers} iconClass="kpi-icon-green" to="/customers" />
+                <KpiCard label="Open Deals" value={s.open_deals_count ?? 0} sub={formatCurrency(s.open_deals_value) + " value"} icon={IconPipeline} iconClass="kpi-icon-amber" to="/pipeline" />
+                <KpiCard label="Pending Tasks" value={s.pending_tasks ?? 0} sub={`${s.overdue_tasks ?? 0} overdue`} icon={IconTasks} iconClass="kpi-icon-red" to="/tasks" />
+            </div>
+
+            {/* Draggable Widget Layout */}
+            <DashboardLayout widgets={widgets} defaultOrder={defaultOrder}>
+                {/* Pipeline Value CTA — rendered below widgets */}
+                {s.open_deals_value > 0 && (
+                    <div className="dash-ai-card" style={{ background: "var(--gradient-dark)", gridColumn: "1 / -1", marginTop: 20 }}>
+                        <span className="dash-ai-title">Total Open Pipeline Value</span>
+                        <span className="dash-ai-text" style={{ fontSize: 32, fontWeight: 800 }}>{formatCurrency(s.open_deals_value)}</span>
+                        <Link to="/pipeline" className="dash-ai-btn" style={{ marginTop: 8, textDecoration: 'none' }}>
+                            Open Pipeline <IconArrowRight width={14} height={14} />
+                        </Link>
+                    </div>
+                )}
+            </DashboardLayout>
+        </>
     );
 }

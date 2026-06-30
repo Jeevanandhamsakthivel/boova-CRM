@@ -5,6 +5,7 @@ import { ToastProvider } from "./context/ToastContext";
 import { ProtectedRoute, RoleRoute } from "./components/common/RouteGuards";
 import { AppLayout } from "./components/layout/AppLayout";
 import { ThemeProvider } from "./context/ThemeContext";
+import { AIProvider } from "./context/AIContext";
 
 // Lazy-loaded pages for code splitting
 const LoginPage = lazy(() => import("./pages/LoginPage"));
@@ -35,6 +36,11 @@ const AutomationPage = lazy(() => import("./pages/AutomationPage"));
 const PricingPage = lazy(() => import("./pages/PricingPage"));
 const OnboardingWizardPage = lazy(() => import("./pages/OnboardingWizardPage"));
 const DataExportPage = lazy(() => import("./pages/DataExportPage"));
+const ProductsPage = lazy(() => import("./pages/ProductsPage"));
+const ServicesPage = lazy(() => import("./pages/ServicesPage"));
+const ProjectsPage = lazy(() => import("./pages/ProjectsPage"));
+const AIAssistantPage = lazy(() => import("./pages/AIAssistantPage"));
+const DocumentsPage = lazy(() => import("./pages/DocumentsPage"));
 
 function PageLoading() {
     return (
@@ -63,6 +69,7 @@ export default function App() {
         <BrowserRouter>
             <AuthProvider>
                 <ThemeProvider>
+                <AIProvider>
                 <ToastProvider>
                     <Routes>
                         <Route path="/login" element={<SuspenseWrapper><LoginPage /></SuspenseWrapper>} />
@@ -95,6 +102,11 @@ export default function App() {
                                 <Route path="/automation" element={<SuspenseWrapper><AutomationPage /></SuspenseWrapper>} />
 
                                 <Route path="/reports" element={<SuspenseWrapper><ReportsPage /></SuspenseWrapper>} />
+                                <Route path="/products" element={<SuspenseWrapper><ProductsPage /></SuspenseWrapper>} />
+                                <Route path="/services" element={<SuspenseWrapper><ServicesPage /></SuspenseWrapper>} />
+                                <Route path="/projects" element={<SuspenseWrapper><ProjectsPage /></SuspenseWrapper>} />
+                                <Route path="/ai-assistant" element={<SuspenseWrapper><AIAssistantPage /></SuspenseWrapper>} />
+                                <Route path="/documents" element={<SuspenseWrapper><DocumentsPage /></SuspenseWrapper>} />
 
                                 <Route path="/pricing" element={<SuspenseWrapper><PricingPage /></SuspenseWrapper>} />
                                 <Route path="/onboarding" element={<SuspenseWrapper><OnboardingWizardPage /></SuspenseWrapper>} />
@@ -112,6 +124,7 @@ export default function App() {
                         <Route path="*" element={<Navigate to="/404" replace />} />
                     </Routes>
                 </ToastProvider>
+                </AIProvider>
                 </ThemeProvider>
             </AuthProvider>
         </BrowserRouter>

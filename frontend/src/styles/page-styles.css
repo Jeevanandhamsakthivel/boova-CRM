@@ -1,278 +1,300 @@
-/* ===========================================================
-   PAGE ENHANCEMENTS — Email, Calendar, WhatsApp, Automation
-   =========================================================== */
-
-/* ── Shared stats bar ──────────────────────────────────── */
-.page-stats {
+.contacts-grid {
     display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 12px;
-    margin-bottom: 24px;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 16px;
 }
 
-.page-stat-card {
+.contact-card {
     background: var(--surface);
     border: 1px solid var(--border);
     border-radius: var(--radius-md);
-    padding: 16px 18px;
+    padding: 18px;
     display: flex;
-    align-items: center;
-    gap: 12px;
-    box-shadow: var(--shadow-xs);
+    flex-direction: column;
+    gap: 8px;
     transition: all var(--transition-fast);
+    cursor: pointer;
 }
 
-.page-stat-card:hover {
+.contact-card:hover {
     box-shadow: var(--shadow-md);
+    border-color: var(--accent);
     transform: translateY(-1px);
 }
 
-.page-stat-icon {
-    width: 38px;
-    height: 38px;
-    border-radius: 10px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-shrink: 0;
-}
-
-.page-stat-body {
-    display: flex;
-    flex-direction: column;
-    gap: 1px;
-    min-width: 0;
-}
-
-.page-stat-value {
-    font-family: var(--font-display);
-    font-size: 20px;
-    font-weight: 700;
-    color: var(--ink-900);
-    line-height: 1.2;
-    letter-spacing: -0.02em;
-}
-
-.page-stat-label {
-    font-size: 11px;
-    font-weight: 600;
-    color: var(--ink-400);
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-}
-
-/* ── Email specific ────────────────────────────────────── */
-.email-row {
-    cursor: pointer;
-}
-
-.email-row.unread td:first-of-type,
-.email-row.unread td:nth-of-type(2) {
-    font-weight: 600;
-    color: var(--ink-900);
-}
-
-.email-subject {
-    max-width: 320px;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-}
-
-.email-sender {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-}
-
-.email-avatar {
-    width: 28px;
-    height: 28px;
-    border-radius: 50%;
-    background: var(--gradient-gold);
-    color: var(--ink-900);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 10px;
-    font-weight: 700;
-    flex-shrink: 0;
-}
-
-.email-avatar-alt {
-    background: var(--surface-sunken);
-    color: var(--ink-500);
-}
-
-.email-badge {
-    display: inline-flex;
-    align-items: center;
-    gap: 4px;
-    padding: 2px 8px;
-    border-radius: var(--radius-full);
-    font-size: 10.5px;
-    font-weight: 600;
-    letter-spacing: 0.02em;
-}
-
-.email-badge-inbound {
-    background: var(--accent-blue-tint);
-    color: var(--accent-blue);
-}
-
-.email-badge-outbound {
-    background: var(--accent-amber-tint);
-    color: var(--accent-amber);
-}
-
-/* ── Calendar specific ─────────────────────────────────── */
-.calendar-meeting-row {
-    cursor: pointer;
-}
-
-.calendar-platform-badge {
-    display: inline-flex;
-    align-items: center;
-    gap: 5px;
-    padding: 2px 10px;
-    border-radius: var(--radius-full);
-    font-size: 11px;
-    font-weight: 600;
-}
-
-.calendar-attendee-avatars {
-    display: flex;
-    align-items: center;
-}
-
-.calendar-attendee-avatar {
-    width: 24px;
-    height: 24px;
-    border-radius: 50%;
-    background: var(--surface-sunken);
-    color: var(--ink-500);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 9px;
-    font-weight: 700;
-    margin-right: -6px;
-    border: 2px solid var(--surface);
-}
-
-.calendar-attendee-count {
-    font-size: 11px;
-    color: var(--ink-400);
-    margin-left: 10px;
-}
-
-/* ── WhatsApp specific ─────────────────────────────────── */
-.whatsapp-row {
-    cursor: pointer;
-}
-
-.whatsapp-message-preview {
-    max-width: 360px;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-    font-size: 13px;
-}
-
-.whatsapp-status-dot {
-    width: 8px;
-    height: 8px;
-    border-radius: 50%;
-    display: inline-block;
-    margin-right: 6px;
-}
-
-.whatsapp-status-sent { background: var(--accent-blue); }
-.whatsapp-status-delivered { background: var(--accent-green); }
-.whatsapp-status-read { background: var(--accent); }
-.whatsapp-status-failed { background: var(--accent-red); }
-
-/* ── Automation specific ───────────────────────────────── */
-.automation-card {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: var(--radius-lg);
-    padding: 20px 24px;
-    box-shadow: var(--shadow-xs);
-    transition: all var(--transition-fast);
-}
-
-.automation-card:hover {
-    box-shadow: var(--shadow-md);
-    border-color: var(--border-strong);
-}
-
-.automation-flow {
+.contact-card-top {
     display: flex;
     align-items: center;
     gap: 12px;
-    padding: 12px 16px;
-    background: var(--surface-sunken);
-    border-radius: var(--radius-md);
-    margin-top: 8px;
 }
 
-.automation-flow-step {
+.contact-card-name {
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--ink-900);
+}
+
+.contact-card-title {
+    font-size: 12px;
+    color: var(--ink-500);
+}
+
+.contact-card-detail {
     display: flex;
     align-items: center;
     gap: 8px;
-    padding: 6px 12px;
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: var(--radius-sm);
     font-size: 12px;
+    color: var(--ink-600);
+}
+
+.contact-card-detail svg {
+    width: 14px;
+    height: 14px;
+    color: var(--ink-500);
+    flex: none;
+}
+
+.contact-card-tags {
+    display: flex;
+    gap: 4px;
+    flex-wrap: wrap;
+    margin-top: 4px;
+}
+
+.deal-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 16px;
+    border-bottom: 1px solid var(--border-light);
+    transition: background var(--transition-fast);
+    cursor: pointer;
+}
+
+.deal-row:last-child { border-bottom: none; }
+.deal-row:hover { background: var(--canvas); }
+
+.deal-info { flex: 1; }
+.deal-name { font-size: 14px; font-weight: 600; color: var(--ink-900); }
+.deal-org { font-size: 12px; color: var(--ink-500); margin-top: 1px; }
+
+.deal-stats {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+.deal-amount {
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--ink-900);
+    font-variant-numeric: tabular-nums;
+}
+
+.deal-stage {
+    font-size: 11px;
     font-weight: 600;
-    color: var(--ink-700);
+    padding: 3px 10px;
+    border-radius: var(--radius-full);
+    min-width: 70px;
+    text-align: center;
 }
 
-.automation-flow-arrow {
-    color: var(--ink-300);
-    flex-shrink: 0;
+.notif-item {
+    display: flex;
+    gap: 12px;
+    padding: 14px 18px;
+    border-bottom: 1px solid var(--border-light);
+    transition: background var(--transition-fast);
+    cursor: pointer;
 }
 
-.automation-toggle {
-    position: relative;
-    width: 40px;
-    height: 22px;
-    border-radius: 11px;
-    background: var(--surface-sunken);
-    border: 1px solid var(--border);
+.notif-item:hover { background: var(--canvas); }
+.notif-item:last-child { border-bottom: none; }
+.notif-item.unread { background: var(--accent-tint); border-left: 3px solid var(--accent); }
+
+.notif-icon {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex: none;
+    font-size: 15px;
+    color: #fff;
+}
+
+.notif-content { flex: 1; }
+.notif-text { font-size: 13px; color: var(--ink-700); line-height: 1.5; }
+.notif-time { font-size: 11px; color: var(--ink-500); margin-top: 3px; }
+
+.placeholder-module {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 80px 24px;
+    min-height: 50vh;
+}
+
+.placeholder-module-icon {
+    width: 80px;
+    height: 80px;
+    border-radius: var(--radius-xl);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 36px;
+    color: #fff;
+    margin-bottom: 20px;
+}
+
+.placeholder-module h2 {
+    font-size: 24px;
+    font-weight: 800;
+    color: var(--ink-900);
+    margin-bottom: 6px;
+}
+
+.placeholder-module p {
+    font-size: 14px;
+    color: var(--ink-500);
+    max-width: 420px;
+    line-height: 1.6;
+    margin-bottom: 20px;
+}
+
+.setting-group {
+    margin-bottom: 24px;
+}
+
+.setting-group-title {
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--ink-900);
+    margin-bottom: 12px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid var(--border);
+}
+
+.setting-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 0;
+    border-bottom: 1px solid var(--border-light);
+}
+
+.setting-label { font-size: 13px; color: var(--ink-700); }
+.setting-desc { font-size: 12px; color: var(--ink-500); margin-top: 1px; }
+
+.settings-sidebar {
+    width: 220px;
+    flex: none;
+}
+
+.settings-nav-item {
+    padding: 10px 14px;
+    border-radius: var(--radius-sm);
+    font-size: 13px;
+    color: var(--ink-600);
     cursor: pointer;
     transition: all var(--transition-fast);
-    flex-shrink: 0;
+    border: none;
+    background: none;
+    width: 100%;
+    text-align: left;
+    display: flex;
+    align-items: center;
+    gap: 8px;
 }
 
-.automation-toggle.active {
-    background: var(--accent);
-    border-color: var(--accent);
+.settings-nav-item:hover { background: var(--accent-tint); color: var(--accent); }
+.settings-nav-item.active { background: var(--accent-tint); color: var(--accent); font-weight: 600; }
+
+.settings-content { flex: 1; }
+
+.inbox-item {
+    display: flex;
+    gap: 12px;
+    padding: 14px 18px;
+    border-bottom: 1px solid var(--border-light);
+    cursor: pointer;
+    transition: background var(--transition-fast);
 }
 
-.automation-toggle-knob {
-    position: absolute;
-    top: 2px;
-    left: 2px;
-    width: 16px;
-    height: 16px;
-    border-radius: 50%;
-    background: #fff;
-    box-shadow: var(--shadow-sm);
-    transition: transform var(--transition-fast);
+.inbox-item:hover { background: var(--canvas); }
+.inbox-item.unread { background: var(--accent-tint); }
+
+.inbox-item-subject {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--ink-900);
+    margin-bottom: 2px;
 }
 
-.automation-toggle.active .automation-toggle-knob {
-    transform: translateX(18px);
+.inbox-item-preview {
+    font-size: 12px;
+    color: var(--ink-500);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
-/* ── Responsive ────────────────────────────────────────── */
-@media (max-width: 900px) {
-    .page-stats { grid-template-columns: repeat(2, 1fr); }
+.inbox-item-time {
+    font-size: 11px;
+    color: var(--ink-500);
+    white-space: nowrap;
 }
 
-@media (max-width: 480px) {
-    .page-stats { grid-template-columns: 1fr; }
+.doc-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 16px;
+}
+
+.doc-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    padding: 18px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    transition: all var(--transition-fast);
+    cursor: pointer;
+}
+
+.doc-card:hover { box-shadow: var(--shadow-md); border-color: var(--accent); }
+.doc-card-icon { font-size: 28px; color: var(--accent); }
+.doc-card-name { font-size: 13px; font-weight: 600; color: var(--ink-800); }
+.doc-card-meta { font-size: 11px; color: var(--ink-500); }
+
+.email-detail-panel {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.email-detail-header {
+    padding: 16px 20px;
+    border-bottom: 1px solid var(--border);
+}
+
+.email-detail-subject {
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--ink-900);
+    margin-bottom: 8px;
+}
+
+.email-detail-body {
+    flex: 1;
+    padding: 20px;
+    overflow-y: auto;
+    font-size: 13px;
+    line-height: 1.7;
+    color: var(--ink-700);
 }

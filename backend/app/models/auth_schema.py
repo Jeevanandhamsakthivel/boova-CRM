@@ -30,6 +30,31 @@ class UpdateProfileSchema(Schema):
     phone = fields.String(allow_none=True, validate=validate.Length(max=20))
     avatar_url = fields.String(allow_none=True)
 
+    # Professional
+    job_title = fields.String(allow_none=True, validate=validate.Length(max=100))
+    department = fields.String(allow_none=True, validate=validate.Length(max=100))
+    bio = fields.String(allow_none=True, validate=validate.Length(max=500))
+
+    # Contact
+    address_line1 = fields.String(allow_none=True, validate=validate.Length(max=200))
+    address_line2 = fields.String(allow_none=True, validate=validate.Length(max=200))
+    city = fields.String(allow_none=True, validate=validate.Length(max=100))
+    state = fields.String(allow_none=True, validate=validate.Length(max=100))
+    zip_code = fields.String(allow_none=True, validate=validate.Length(max=20))
+    country = fields.String(allow_none=True, validate=validate.Length(max=100))
+
+    # Social
+    linkedin = fields.String(allow_none=True, validate=validate.Length(max=200))
+    github = fields.String(allow_none=True, validate=validate.Length(max=200))
+    twitter = fields.String(allow_none=True, validate=validate.Length(max=200))
+    website = fields.String(allow_none=True, validate=validate.Length(max=200))
+
+    # Preferences
+    timezone = fields.String(allow_none=True, validate=validate.Length(max=50))
+    language = fields.String(allow_none=True, validate=validate.Length(max=10))
+    date_format = fields.String(allow_none=True, validate=validate.Length(max=20))
+    notification_preferences = fields.Dict(allow_none=True)
+
 
 class AdminUpdateUserSchema(Schema):
     name = fields.String(validate=validate.Length(min=2, max=100))
