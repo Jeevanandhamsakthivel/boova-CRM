@@ -47,8 +47,52 @@ PERMISSIONS = {
     "deals.update": [ROLE_ADMIN, ROLE_MANAGER, ROLE_AGENT],
     "deals.delete": [ROLE_ADMIN, ROLE_MANAGER],
 
-    "reports.read": [ROLE_ADMIN, ROLE_MANAGER],
+    "reports.read": [ROLE_ADMIN, ROLE_MANAGER, ROLE_AGENT],
     "audit.read": [ROLE_ADMIN],
+
+    "companies.read": [ROLE_ADMIN, ROLE_MANAGER, ROLE_AGENT],
+    "companies.create": [ROLE_ADMIN, ROLE_MANAGER, ROLE_AGENT],
+    "companies.update": [ROLE_ADMIN, ROLE_MANAGER, ROLE_AGENT],
+    "companies.delete": [ROLE_ADMIN, ROLE_MANAGER],
+
+    "quotes.read": [ROLE_ADMIN, ROLE_MANAGER, ROLE_AGENT],
+    "quotes.create": [ROLE_ADMIN, ROLE_MANAGER, ROLE_AGENT],
+    "quotes.update": [ROLE_ADMIN, ROLE_MANAGER, ROLE_AGENT],
+    "quotes.delete": [ROLE_ADMIN, ROLE_MANAGER],
+
+    "invoices.read": [ROLE_ADMIN, ROLE_MANAGER, ROLE_AGENT],
+    "invoices.create": [ROLE_ADMIN, ROLE_MANAGER, ROLE_AGENT],
+    "invoices.update": [ROLE_ADMIN, ROLE_MANAGER, ROLE_AGENT],
+    "invoices.delete": [ROLE_ADMIN, ROLE_MANAGER],
+
+    "tickets.read": [ROLE_ADMIN, ROLE_MANAGER, ROLE_AGENT],
+    "tickets.create": [ROLE_ADMIN, ROLE_MANAGER, ROLE_AGENT],
+    "tickets.update": [ROLE_ADMIN, ROLE_MANAGER, ROLE_AGENT],
+    "tickets.delete": [ROLE_ADMIN, ROLE_MANAGER],
+
+    "kb.read": [ROLE_ADMIN, ROLE_MANAGER, ROLE_AGENT],
+    "kb.create": [ROLE_ADMIN, ROLE_MANAGER, ROLE_AGENT],
+    "kb.update": [ROLE_ADMIN, ROLE_MANAGER, ROLE_AGENT],
+    "kb.delete": [ROLE_ADMIN, ROLE_MANAGER],
+
+    "email.read": [ROLE_ADMIN, ROLE_MANAGER, ROLE_AGENT],
+    "email.send": [ROLE_ADMIN, ROLE_MANAGER, ROLE_AGENT],
+
+    "whatsapp.read": [ROLE_ADMIN, ROLE_MANAGER, ROLE_AGENT],
+    "whatsapp.send": [ROLE_ADMIN, ROLE_MANAGER, ROLE_AGENT],
+
+    "calendar.read": [ROLE_ADMIN, ROLE_MANAGER, ROLE_AGENT],
+    "calendar.create": [ROLE_ADMIN, ROLE_MANAGER, ROLE_AGENT],
+    "calendar.update": [ROLE_ADMIN, ROLE_MANAGER, ROLE_AGENT],
+    "calendar.delete": [ROLE_ADMIN, ROLE_MANAGER],
+
+    "automation.read": [ROLE_ADMIN, ROLE_MANAGER, ROLE_AGENT],
+    "automation.create": [ROLE_ADMIN, ROLE_MANAGER],
+    "automation.update": [ROLE_ADMIN, ROLE_MANAGER],
+    "automation.delete": [ROLE_ADMIN],
+
+    "bulk.actions": [ROLE_ADMIN, ROLE_MANAGER],
+    "migration.read": [ROLE_ADMIN, ROLE_MANAGER],
 }
 
 

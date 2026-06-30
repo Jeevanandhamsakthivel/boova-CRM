@@ -12,9 +12,12 @@ export function ProtectedRoute() {
 }
 
 export function RoleRoute({ roles }) {
-  const { user } = useAuth();
+  const { user, loading } = useAuth();
+  const location = useLocation();
+
+  if (loading) return <PageLoading />;
   if (!user || !roles.includes(user.role)) {
-    return <Navigate to="/" replace />;
+    return <Navigate to="/access-denied" state={{ from: location }} replace />;
   }
   return <Outlet />;
 }

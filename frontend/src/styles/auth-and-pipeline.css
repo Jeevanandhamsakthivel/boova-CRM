@@ -1,242 +1,280 @@
-/* ---------- Auth screens ---------- */
-.auth-screen {
-    min-height: 100vh;
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    background: var(--canvas);
-}
+/* ===========================================================
+   AUTH PAGES — Login & Register
+   =========================================================== */
 
-.auth-panel-form {
+.auth-page {
+    min-height: 100vh;
     display: flex;
     align-items: center;
     justify-content: center;
-    padding: 40px;
-}
-
-.auth-form-card {
-    width: 100%;
-    max-width: 380px;
-}
-
-.auth-form-card .rail-brand-mark {
-    margin-bottom: 18px;
-}
-
-.auth-form-card h1 {
-    margin-bottom: 6px;
-}
-
-.auth-form-card .subtitle {
-    color: var(--ink-400);
-    margin-bottom: 28px;
-    font-size: 13.5px;
-}
-
-.auth-form-footer {
-    margin-top: 20px;
-    text-align: center;
-    font-size: 13px;
-    color: var(--ink-400);
-}
-
-.auth-panel-feature {
-    background: var(--ink-900);
-    color: #fff;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    padding: 60px;
+    background: var(--canvas);
+    padding: 24px;
     position: relative;
     overflow: hidden;
 }
 
-.auth-panel-feature::before {
-    content: "";
+.auth-page::before {
+    content: '';
     position: absolute;
-    width: 480px;
-    height: 480px;
-    border-radius: 50%;
-    background: radial-gradient(circle, rgba(200, 134, 45, 0.22), transparent 70%);
-    top: -120px;
-    right: -160px;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle at 30% 40%, var(--accent-glass) 0%, transparent 50%),
+                radial-gradient(circle at 70% 60%, var(--accent-glass) 0%, transparent 50%);
+    pointer-events: none;
 }
 
-.auth-feature-quote {
+.auth-card {
+    width: 100%;
+    max-width: 420px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-xl);
+    box-shadow: var(--shadow-lg);
+    padding: 40px 36px;
+    position: relative;
+    animation: fade-in-up 0.4s ease;
+}
+
+.auth-brand {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    margin-bottom: 32px;
+}
+
+.auth-brand-mark {
+    width: 40px;
+    height: 40px;
+    border-radius: 10px;
+    background: var(--gradient-gold);
+    display: flex;
+    align-items: center;
+    justify-content: center;
     font-family: var(--font-display);
-    font-size: 28px;
-    line-height: 1.35;
-    max-width: 440px;
-    position: relative;
-    z-index: 1;
+    font-weight: 800;
+    font-size: 18px;
+    color: var(--ink-900);
+    box-shadow: 0 2px 12px rgba(200, 134, 45, 0.3);
 }
 
-.auth-feature-pipeline {
-    display: flex;
-    gap: 10px;
-    margin-top: 36px;
-    position: relative;
-    z-index: 1;
+.auth-brand-name {
+    font-family: var(--font-display);
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--ink-900);
 }
 
-.auth-feature-stage {
-    flex: 1;
-    height: 5px;
-    border-radius: 4px;
-    background: rgba(255, 255, 255, 0.14);
+.auth-title {
+    text-align: center;
+    margin-bottom: 28px;
 }
 
-.auth-feature-stage.filled {
-    background: var(--accent);
+.auth-title h1 {
+    font-family: var(--font-display);
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--ink-900);
+    margin-bottom: 4px;
 }
 
-.alert-banner {
-    display: flex;
-    align-items: flex-start;
-    gap: 10px;
-    padding: 11px 14px;
+.auth-title p {
+    font-size: 13.5px;
+    color: var(--ink-400);
+}
+
+.auth-error {
+    padding: 12px 16px;
+    background: var(--accent-red-tint);
+    border: 1px solid var(--accent-red);
     border-radius: var(--radius-sm);
+    color: var(--accent-red);
     font-size: 13px;
+    font-weight: 500;
     margin-bottom: 16px;
 }
 
-.alert-error {
-    background: var(--danger-tint);
-    color: var(--danger);
+.auth-footer {
+    text-align: center;
+    margin-top: 24px;
+    font-size: 13px;
+    color: var(--ink-400);
 }
 
-.alert-success {
-    background: var(--success-tint);
-    color: var(--success);
+.auth-footer a {
+    color: var(--accent-strong);
+    font-weight: 600;
+    text-decoration: none;
 }
 
-@media (max-width: 880px) {
-    .auth-screen {
-        grid-template-columns: 1fr;
-    }
-
-    .auth-panel-feature {
-        display: none;
-    }
+.auth-footer a:hover {
+    text-decoration: underline;
 }
 
-/* ---------- Pipeline Kanban ---------- */
-.kanban-board {
+/* ===========================================================
+   PIPELINE / KANBAN BOARD
+   =========================================================== */
+
+.pipeline-page {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+}
+
+.pipeline-board {
     display: flex;
     gap: 16px;
     overflow-x: auto;
-    padding-bottom: 12px;
+    padding-bottom: 20px;
     align-items: flex-start;
+    min-height: 60vh;
 }
 
-.kanban-column {
-    flex: 0 0 280px;
-    background: var(--surface-sunken);
-    border-radius: var(--radius-md);
+.pipeline-column {
+    min-width: 280px;
+    max-width: 300px;
+    flex-shrink: 0;
     display: flex;
     flex-direction: column;
-    max-height: calc(100vh - 220px);
+    gap: 0;
 }
 
-.kanban-column.drag-over {
-    background: var(--accent-tint);
+.pipeline-column-header {
+    background: var(--surface-sunken);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md) var(--radius-md) 0 0;
+    padding: 14px 16px 10px;
 }
 
-.kanban-column-header {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    padding: 14px 14px 10px;
-}
-
-.kanban-stage-bar {
-    width: 4px;
-    height: 16px;
-    border-radius: 3px;
-    flex: none;
-}
-
-.kanban-column-title {
+.pipeline-column-name {
     font-weight: 700;
-    font-size: 13.5px;
-    color: var(--ink-800);
-    flex: 1;
+    font-size: 13px;
+    color: var(--ink-700);
+    margin-bottom: 2px;
 }
 
-.kanban-column-count {
+.pipeline-column-meta {
     font-size: 11.5px;
     color: var(--ink-400);
-    background: var(--surface);
-    padding: 1px 7px;
-    border-radius: 999px;
 }
 
-.kanban-column-total {
-    padding: 0 14px 10px;
-    font-size: 12px;
-    color: var(--ink-400);
-}
-
-.kanban-cards {
+.pipeline-column-cards {
+    background: var(--surface-sunken);
+    border: 1px solid var(--border);
+    border-top: none;
+    border-radius: 0 0 var(--radius-md) var(--radius-md);
+    padding: 8px 10px 12px;
+    min-height: 80px;
     display: flex;
     flex-direction: column;
-    gap: 10px;
-    padding: 0 10px 10px;
-    overflow-y: auto;
+    gap: 8px;
     flex: 1;
 }
 
-.kanban-card {
+.pipeline-card {
     background: var(--surface);
-    border: 1px solid var(--border-hairline);
-    border-radius: var(--radius-sm);
-    padding: 12px 13px;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    padding: 14px 16px;
     cursor: grab;
-    box-shadow: var(--shadow-sm);
-    transition: box-shadow var(--transition-fast), transform var(--transition-fast);
+    transition: all var(--transition-fast);
+    box-shadow: var(--shadow-xs);
 }
 
-.kanban-card:hover {
+.pipeline-card:hover {
     box-shadow: var(--shadow-md);
+    border-color: var(--accent);
 }
 
-.kanban-card.dragging {
-    opacity: 0.5;
+.pipeline-card:active {
+    cursor: grabbing;
 }
 
-.kanban-card-title {
+.pipeline-card-title {
     font-weight: 600;
-    font-size: 13px;
+    font-size: 13.5px;
     color: var(--ink-900);
-    margin-bottom: 6px;
+    margin-bottom: 4px;
 }
 
-.kanban-card-value {
-    font-family: var(--font-mono);
-    font-size: 13px;
+.pipeline-card-value {
     color: var(--accent-strong);
-    font-weight: 600;
+    font-weight: 700;
+    font-size: 13px;
+    font-variant-numeric: tabular-nums;
 }
 
-.kanban-card-meta {
+.pipeline-card-customer {
+    font-size: 12px;
+    color: var(--ink-400);
+    margin-top: 4px;
+}
+
+.pipeline-card-footer {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    margin-top: 8px;
+    margin-top: 10px;
+    padding-top: 8px;
+    border-top: 1px solid var(--border-light);
 }
 
-.kanban-add-card {
-    margin: 4px 10px 10px;
-    padding: 8px;
+.pipeline-card-owner {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 11.5px;
+    color: var(--ink-400);
+}
+
+.pipeline-empty-card {
+    padding: 20px 14px;
+    text-align: center;
+    color: var(--ink-200);
+    font-size: 12px;
+    border: 2px dashed var(--border);
     border-radius: var(--radius-sm);
-    border: 1px dashed var(--ink-200);
-    background: transparent;
+}
+
+.pipeline-add-card {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    padding: 10px;
+    border: 2px dashed var(--border);
+    border-radius: var(--radius-sm);
     color: var(--ink-400);
     font-size: 12.5px;
+    font-weight: 600;
     cursor: pointer;
-    text-align: center;
+    background: transparent;
+    width: 100%;
+    transition: all var(--transition-fast);
 }
 
-.kanban-add-card:hover {
+.pipeline-add-card:hover {
     border-color: var(--accent);
     color: var(--accent-strong);
+    background: var(--accent-tint);
+}
+
+/* Dragging state */
+.pipeline-card.dragging {
+    opacity: 0.5;
+    transform: rotate(2deg);
+}
+
+.pipeline-column.drag-over .pipeline-column-cards {
+    background: var(--accent-tint);
+    border-color: var(--accent);
+}
+
+/* ── Responsive ────────────────────────────────────────── */
+@media (max-width: 900px) {
+    .pipeline-column {
+        min-width: 240px;
+    }
 }

@@ -37,7 +37,7 @@ export const usersApi = {
 };
 
 export const auditApi = {
-    list: (params) => apiClient.get("/audit-logs", { params }),
+    list: (params) => apiClient.get("/audit", { params }),
 };
 
 export const activitiesApi = {

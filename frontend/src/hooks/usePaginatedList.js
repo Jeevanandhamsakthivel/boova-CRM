@@ -50,5 +50,5 @@ export function usePaginatedList(fetchFn, initialParams = {}) {
         updateParams({ page });
     }
 
-    return { items, meta, params, setParams: updateParams, goToPage, loading, error, reload };
+    return { items, setItems, meta, params, setParams: updateParams, goToPage, loading, error, reload, updateParams };
 }

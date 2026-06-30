@@ -1,0 +1,278 @@
+/* ===========================================================
+   PAGE ENHANCEMENTS — Email, Calendar, WhatsApp, Automation
+   =========================================================== */
+
+/* ── Shared stats bar ──────────────────────────────────── */
+.page-stats {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 12px;
+    margin-bottom: 24px;
+}
+
+.page-stat-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    padding: 16px 18px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    box-shadow: var(--shadow-xs);
+    transition: all var(--transition-fast);
+}
+
+.page-stat-card:hover {
+    box-shadow: var(--shadow-md);
+    transform: translateY(-1px);
+}
+
+.page-stat-icon {
+    width: 38px;
+    height: 38px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.page-stat-body {
+    display: flex;
+    flex-direction: column;
+    gap: 1px;
+    min-width: 0;
+}
+
+.page-stat-value {
+    font-family: var(--font-display);
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--ink-900);
+    line-height: 1.2;
+    letter-spacing: -0.02em;
+}
+
+.page-stat-label {
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--ink-400);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+/* ── Email specific ────────────────────────────────────── */
+.email-row {
+    cursor: pointer;
+}
+
+.email-row.unread td:first-of-type,
+.email-row.unread td:nth-of-type(2) {
+    font-weight: 600;
+    color: var(--ink-900);
+}
+
+.email-subject {
+    max-width: 320px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.email-sender {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.email-avatar {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    background: var(--gradient-gold);
+    color: var(--ink-900);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 10px;
+    font-weight: 700;
+    flex-shrink: 0;
+}
+
+.email-avatar-alt {
+    background: var(--surface-sunken);
+    color: var(--ink-500);
+}
+
+.email-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 2px 8px;
+    border-radius: var(--radius-full);
+    font-size: 10.5px;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+}
+
+.email-badge-inbound {
+    background: var(--accent-blue-tint);
+    color: var(--accent-blue);
+}
+
+.email-badge-outbound {
+    background: var(--accent-amber-tint);
+    color: var(--accent-amber);
+}
+
+/* ── Calendar specific ─────────────────────────────────── */
+.calendar-meeting-row {
+    cursor: pointer;
+}
+
+.calendar-platform-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 2px 10px;
+    border-radius: var(--radius-full);
+    font-size: 11px;
+    font-weight: 600;
+}
+
+.calendar-attendee-avatars {
+    display: flex;
+    align-items: center;
+}
+
+.calendar-attendee-avatar {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    background: var(--surface-sunken);
+    color: var(--ink-500);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 9px;
+    font-weight: 700;
+    margin-right: -6px;
+    border: 2px solid var(--surface);
+}
+
+.calendar-attendee-count {
+    font-size: 11px;
+    color: var(--ink-400);
+    margin-left: 10px;
+}
+
+/* ── WhatsApp specific ─────────────────────────────────── */
+.whatsapp-row {
+    cursor: pointer;
+}
+
+.whatsapp-message-preview {
+    max-width: 360px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    font-size: 13px;
+}
+
+.whatsapp-status-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    display: inline-block;
+    margin-right: 6px;
+}
+
+.whatsapp-status-sent { background: var(--accent-blue); }
+.whatsapp-status-delivered { background: var(--accent-green); }
+.whatsapp-status-read { background: var(--accent); }
+.whatsapp-status-failed { background: var(--accent-red); }
+
+/* ── Automation specific ───────────────────────────────── */
+.automation-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 20px 24px;
+    box-shadow: var(--shadow-xs);
+    transition: all var(--transition-fast);
+}
+
+.automation-card:hover {
+    box-shadow: var(--shadow-md);
+    border-color: var(--border-strong);
+}
+
+.automation-flow {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 16px;
+    background: var(--surface-sunken);
+    border-radius: var(--radius-md);
+    margin-top: 8px;
+}
+
+.automation-flow-step {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 12px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--ink-700);
+}
+
+.automation-flow-arrow {
+    color: var(--ink-300);
+    flex-shrink: 0;
+}
+
+.automation-toggle {
+    position: relative;
+    width: 40px;
+    height: 22px;
+    border-radius: 11px;
+    background: var(--surface-sunken);
+    border: 1px solid var(--border);
+    cursor: pointer;
+    transition: all var(--transition-fast);
+    flex-shrink: 0;
+}
+
+.automation-toggle.active {
+    background: var(--accent);
+    border-color: var(--accent);
+}
+
+.automation-toggle-knob {
+    position: absolute;
+    top: 2px;
+    left: 2px;
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    background: #fff;
+    box-shadow: var(--shadow-sm);
+    transition: transform var(--transition-fast);
+}
+
+.automation-toggle.active .automation-toggle-knob {
+    transform: translateX(18px);
+}
+
+/* ── Responsive ────────────────────────────────────────── */
+@media (max-width: 900px) {
+    .page-stats { grid-template-columns: repeat(2, 1fr); }
+}
+
+@media (max-width: 480px) {
+    .page-stats { grid-template-columns: 1fr; }
+}

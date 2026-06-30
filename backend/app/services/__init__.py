@@ -12,3 +12,4 @@ from . import settings_service
 from . import token_service
 from . import user_service
 from . import task_service
+from . import migration_service

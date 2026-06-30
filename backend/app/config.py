@@ -32,6 +32,9 @@ class Config:
         "CORS_ORIGINS", "http://localhost:5173,http://127.0.0.1:5173"
     ).split(",")
 
+    # File uploads
+    UPLOAD_FOLDER = os.getenv("UPLOAD_FOLDER", os.path.join(os.path.dirname(__file__), "..", "uploads"))
+
     # Pagination
     DEFAULT_PAGE_SIZE = int(os.getenv("DEFAULT_PAGE_SIZE", 20))
     MAX_PAGE_SIZE = int(os.getenv("MAX_PAGE_SIZE", 100))

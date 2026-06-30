@@ -133,4 +133,76 @@ def create_indexes(db):
     db.audit_logs.create_index([("entity_id", ASCENDING)], name="idx_audit_entity_id")
     db.audit_logs.create_index([("created_at", DESCENDING)], name="idx_audit_created_at")
 
+    # --- Companies ---
+    db.companies.create_index([("name", ASCENDING)], unique=True, name="uniq_company_name")
+    db.companies.create_index([("domain", ASCENDING)], name="idx_company_domain")
+    db.companies.create_index([("industry", ASCENDING)], name="idx_company_industry")
+    db.companies.create_index([("status", ASCENDING)], name="idx_company_status")
+    db.companies.create_index([("assigned_to", ASCENDING)], name="idx_company_assigned_to")
+    db.companies.create_index([("created_at", DESCENDING)], name="idx_company_created_at")
+    db.companies.create_index(
+        [("name", TEXT), ("domain", TEXT), ("email", TEXT)], name="text_company_search"
+    )
+
+    # --- Quotes ---
+    db.quotes.create_index([("customer_id", ASCENDING)], name="idx_quote_customer")
+    db.quotes.create_index([("status", ASCENDING)], name="idx_quote_status")
+    db.quotes.create_index([("assigned_to", ASCENDING)], name="idx_quote_assigned_to")
+    db.quotes.create_index([("created_at", DESCENDING)], name="idx_quote_created_at")
+
+    # --- Invoices ---
+    db.invoices.create_index([("customer_id", ASCENDING)], name="idx_invoice_customer")
+    db.invoices.create_index([("status", ASCENDING)], name="idx_invoice_status")
+    db.invoices.create_index([("invoice_number", ASCENDING)], unique=True, name="uniq_invoice_number")
+    db.invoices.create_index([("assigned_to", ASCENDING)], name="idx_invoice_assigned_to")
+    db.invoices.create_index([("due_date", ASCENDING)], name="idx_invoice_due_date")
+    db.invoices.create_index([("created_at", DESCENDING)], name="idx_invoice_created_at")
+
+    # --- Payments ---
+    db.payments.create_index([("invoice_id", ASCENDING)], name="idx_payment_invoice")
+    db.payments.create_index([("transaction_id", ASCENDING)], name="idx_payment_transaction")
+    db.payments.create_index([("created_at", DESCENDING)], name="idx_payment_created_at")
+
+    # --- Tickets (Support Desk) ---
+    db.tickets.create_index([("customer_id", ASCENDING)], name="idx_ticket_customer")
+    db.tickets.create_index([("status", ASCENDING)], name="idx_ticket_status")
+    db.tickets.create_index([("priority", ASCENDING)], name="idx_ticket_priority")
+    db.tickets.create_index([("assigned_to", ASCENDING)], name="idx_ticket_assigned_to")
+    db.tickets.create_index([("category", ASCENDING)], name="idx_ticket_category")
+    db.tickets.create_index([("created_at", DESCENDING)], name="idx_ticket_created_at")
+
+    # --- Knowledge Base ---
+    db.kb_articles.create_index([("title", ASCENDING)], name="idx_kb_title")
+    db.kb_articles.create_index([("status", ASCENDING)], name="idx_kb_status")
+    db.kb_articles.create_index([("category", ASCENDING)], name="idx_kb_category")
+    db.kb_articles.create_index([("visibility", ASCENDING)], name="idx_kb_visibility")
+    db.kb_articles.create_index(
+        [("title", TEXT), ("content", TEXT)], name="text_kb_search"
+    )
+
+    # --- Meetings ---
+    db.meetings.create_index([("customer_id", ASCENDING)], name="idx_meeting_customer")
+    db.meetings.create_index([("lead_id", ASCENDING)], name="idx_meeting_lead")
+    db.meetings.create_index([("assigned_to", ASCENDING)], name="idx_meeting_assigned_to")
+    db.meetings.create_index([("status", ASCENDING)], name="idx_meeting_status")
+    db.meetings.create_index([("start_time", ASCENDING)], name="idx_meeting_start_time")
+
+    # --- Emails ---
+    db.emails.create_index([("customer_id", ASCENDING)], name="idx_email_customer")
+    db.emails.create_index([("lead_id", ASCENDING)], name="idx_email_lead")
+    db.emails.create_index([("direction", ASCENDING)], name="idx_email_direction")
+    db.emails.create_index([("created_at", DESCENDING)], name="idx_email_created_at")
+    db.email_templates.create_index([("name", ASCENDING)], name="idx_email_template_name")
+
+    # --- WhatsApp ---
+    db.whatsapp_messages.create_index([("customer_id", ASCENDING)], name="idx_wa_customer")
+    db.whatsapp_messages.create_index([("lead_id", ASCENDING)], name="idx_wa_lead")
+    db.whatsapp_messages.create_index([("direction", ASCENDING)], name="idx_wa_direction")
+    db.whatsapp_messages.create_index([("created_at", DESCENDING)], name="idx_wa_created_at")
+
+    # --- Automations ---
+    db.automations.create_index([("status", ASCENDING)], name="idx_automation_status")
+    db.automations.create_index([("object_type", ASCENDING)], name="idx_automation_object_type")
+    db.automations.create_index([("trigger.type", ASCENDING)], name="idx_automation_trigger_type")
+
     logger.info("All MongoDB indexes ensured.")

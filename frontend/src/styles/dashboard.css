@@ -1,0 +1,425 @@
+/* ===========================================================
+   DASHBOARD — Premium Enterprise Layout
+   =========================================================== */
+
+.dash-page {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+}
+
+/* ── Greeting ──────────────────────────────────────────── */
+.dash-greeting {
+    margin-bottom: 28px;
+}
+
+.dash-greeting h1 {
+    font-family: var(--font-display);
+    font-size: 28px;
+    font-weight: 700;
+    margin: 0 0 6px;
+    letter-spacing: -0.02em;
+    color: var(--ink-900);
+}
+
+.dash-greeting p {
+    font-size: 14px;
+    color: var(--ink-400);
+    margin: 0;
+}
+
+/* ── KPI strip ─────────────────────────────────────────── */
+.dash-kpi-strip {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    gap: 14px;
+    margin-bottom: 28px;
+}
+
+.dash-kpi-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    padding: 18px 20px;
+    display: flex;
+    gap: 14px;
+    align-items: flex-start;
+    box-shadow: var(--shadow-xs);
+    transition: all var(--transition-fast);
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+}
+
+.dash-kpi-card::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, transparent 50%, rgba(255,255,255,0.4));
+    pointer-events: none;
+}
+
+.dash-kpi-card:hover {
+    box-shadow: var(--shadow-md);
+    transform: translateY(-2px);
+}
+
+.dash-kpi-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.dash-kpi-body {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    min-width: 0;
+}
+
+.dash-kpi-value {
+    font-family: var(--font-display);
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--ink-900);
+    line-height: 1;
+    letter-spacing: -0.02em;
+}
+
+.dash-kpi-label {
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--ink-400);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.dash-kpi-sub {
+    font-size: 11.5px;
+    color: var(--ink-500);
+}
+
+.dash-kpi-trend {
+    font-size: 11.5px;
+    font-weight: 700;
+}
+
+/* ── Main grid ─────────────────────────────────────────── */
+.dash-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    grid-template-rows: auto auto;
+    gap: 20px;
+}
+
+.dash-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 22px 24px;
+    box-shadow: var(--shadow-xs);
+}
+
+.dash-card-wide {
+    grid-column: span 3;
+}
+
+.dash-card-title {
+    font-family: var(--font-display);
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--ink-900);
+    margin: 0 0 4px;
+    letter-spacing: -0.01em;
+}
+
+.dash-card-subtitle {
+    font-size: 12px;
+    color: var(--ink-400);
+    margin: 0 0 16px;
+}
+
+/* ── Section header inside dash cards ──────────────────── */
+.dash-section-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 14px;
+}
+
+.dash-section-head h3 {
+    font-family: var(--font-display);
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--ink-900);
+}
+
+.dash-section-link {
+    font-size: 12.5px;
+    color: var(--accent-strong);
+    font-weight: 600;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    transition: color var(--transition-fast);
+}
+
+.dash-section-link:hover {
+    color: var(--accent);
+}
+
+/* ── Priority queue items ──────────────────────────────── */
+.dash-priority-item {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 12px 16px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    text-decoration: none;
+    transition: all var(--transition-fast);
+}
+
+.dash-priority-item:hover {
+    border-color: var(--accent);
+    box-shadow: var(--shadow-sm);
+}
+
+.dash-priority-icon {
+    width: 36px;
+    height: 36px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.dash-priority-body {
+    flex: 1;
+    min-width: 0;
+}
+
+.dash-priority-label {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--ink-900);
+}
+
+.dash-priority-count {
+    font-family: var(--font-display);
+    font-size: 22px;
+    font-weight: 700;
+    flex-shrink: 0;
+    line-height: 1;
+}
+
+/* ── Quick action links ────────────────────────────────── */
+.dash-quick-action {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 14px;
+    border-radius: var(--radius-md);
+    background: var(--surface-sunken);
+    border: 1px solid transparent;
+    text-decoration: none;
+    transition: all var(--transition-fast);
+    color: var(--ink-700);
+}
+
+.dash-quick-action:hover {
+    background: var(--accent-tint);
+    border-color: var(--accent);
+    color: var(--accent-strong);
+}
+
+.dash-quick-action svg:last-child {
+    margin-left: auto;
+    opacity: 0;
+    transition: opacity var(--transition-fast), transform var(--transition-fast);
+}
+
+.dash-quick-action:hover svg:last-child {
+    opacity: 0.6;
+    transform: translateX(2px);
+}
+
+/* ── Activity feed ─────────────────────────────────────── */
+.dash-activity-item {
+    display: flex;
+    gap: 12px;
+    padding: 12px 0;
+    border-bottom: 1px solid var(--border-light);
+}
+
+.dash-activity-item:last-child {
+    border-bottom: none;
+}
+
+.dash-activity-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--accent);
+    flex-shrink: 0;
+    margin-top: 6px;
+}
+
+.dash-activity-content {
+    flex: 1;
+    min-width: 0;
+}
+
+.dash-activity-text {
+    font-size: 13.5px;
+    color: var(--ink-800);
+    margin: 0;
+    line-height: 1.5;
+}
+
+.dash-activity-time {
+    font-size: 11.5px;
+    color: var(--ink-400);
+}
+
+.dash-activity-empty {
+    text-align: center;
+    padding: 40px 0;
+    color: var(--ink-400);
+    font-size: 13px;
+}
+
+/* ── Pipeline value banner ─────────────────────────────── */
+.dash-pipeline-banner {
+    background: var(--gradient-dark);
+    border-color: transparent;
+    color: #fff;
+    grid-column: 1 / -1;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 24px 28px;
+}
+
+.dash-pipeline-banner-left {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.dash-pipeline-banner-icon {
+    width: 52px;
+    height: 52px;
+    border-radius: 14px;
+    background: rgba(255,255,255,0.1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.dash-pipeline-banner-info h3 {
+    font-size: 13px;
+    font-weight: 600;
+    opacity: 0.7;
+    margin-bottom: 4px;
+}
+
+.dash-pipeline-banner-info .value {
+    font-family: var(--font-display);
+    font-size: 34px;
+    font-weight: 700;
+    line-height: 1;
+}
+
+.dash-pipeline-banner-cta {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(255,255,255,0.1);
+    border: 1px solid rgba(255,255,255,0.15);
+    border-radius: var(--radius-sm);
+    padding: 10px 18px;
+    color: #fff;
+    text-decoration: none;
+    font-size: 13px;
+    font-weight: 600;
+    transition: all var(--transition-fast);
+    flex-shrink: 0;
+}
+
+.dash-pipeline-banner-cta:hover {
+    background: rgba(255,255,255,0.18);
+}
+
+/* ── Chart grid within dashboard ───────────────────────── */
+.dash-chart-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+}
+
+.dash-chart-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 22px 24px;
+    box-shadow: var(--shadow-xs);
+}
+
+/* ── Forecast accuracy ring section ────────────────────── */
+.dash-forecast {
+    display: flex;
+    align-items: center;
+    gap: 24px;
+}
+
+.dash-forecast-stats {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.dash-forecast-stat {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 13px;
+}
+
+.dash-forecast-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+}
+
+/* ── Responsive ────────────────────────────────────────── */
+@media (max-width: 1200px) {
+    .dash-kpi-strip { grid-template-columns: repeat(3, 1fr); }
+}
+
+@media (max-width: 900px) {
+    .dash-kpi-strip { grid-template-columns: repeat(2, 1fr); }
+    .dash-grid      { grid-template-columns: 1fr; }
+    .dash-card-wide { grid-column: span 1; }
+    .dash-chart-grid { grid-template-columns: 1fr; }
+    .dash-pipeline-banner {
+        flex-direction: column;
+        gap: 16px;
+        text-align: center;
+    }
+}
+
+@media (max-width: 480px) {
+    .dash-kpi-strip { grid-template-columns: 1fr; }
+}

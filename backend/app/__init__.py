@@ -24,9 +24,23 @@ from app.routes.notification_routes import notifications_bp
 from app.routes.settings_routes import settings_bp
 from app.routes.audit_routes import audit_bp
 from app.routes.activity_routes import activities_bp
+from app.routes.migration_routes import migration_bp
 from app.routes.health_routes import health_bp
-
-
+from app.routes.quote_routes import quotes_bp
+from app.routes.invoice_routes import invoices_bp, payments_bp
+from app.routes.company_routes import companies_bp
+from app.routes.ticket_routes import tickets_bp
+from app.routes.knowledge_base_routes import kb_bp
+from app.routes.email_routes import email_bp
+from app.routes.whatsapp_routes import whatsapp_bp
+from app.routes.calendar_routes import calendar_bp
+from app.routes.automation_routes import automation_bp
+from app.routes.bulk_action_routes import bulk_bp
+from app.routes.data_export_routes import export_bp
+from app.routes.enrichment_routes import enrich_bp
+from app.routes.migration_enhanced_routes import migration_enhanced_bp
+from app.routes.pricing_routes import pricing_bp
+from app.routes.onboarding_routes import onboarding_bp
 def create_app(config_object=None):
     app = Flask(__name__)
     app.config.from_object(config_object or get_config())
@@ -61,5 +75,22 @@ def create_app(config_object=None):
     app.register_blueprint(settings_bp)
     app.register_blueprint(audit_bp)
     app.register_blueprint(activities_bp)
+    app.register_blueprint(migration_bp)
+    app.register_blueprint(migration_enhanced_bp)
+    app.register_blueprint(quotes_bp)
+    app.register_blueprint(invoices_bp)
+    app.register_blueprint(payments_bp)
+    app.register_blueprint(companies_bp)
+    app.register_blueprint(tickets_bp)
+    app.register_blueprint(kb_bp)
+    app.register_blueprint(email_bp)
+    app.register_blueprint(whatsapp_bp)
+    app.register_blueprint(calendar_bp)
+    app.register_blueprint(automation_bp)
+    app.register_blueprint(bulk_bp)
+    app.register_blueprint(export_bp)
+    app.register_blueprint(enrich_bp)
+    app.register_blueprint(pricing_bp)
+    app.register_blueprint(onboarding_bp)
 
     return app

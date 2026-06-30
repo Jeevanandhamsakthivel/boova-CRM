@@ -1,7 +1,9 @@
 import { useEffect, useState } from "react";
 import { settingsApi } from "../api/miscApi";
+import { useTheme } from "../context/ThemeContext";
 
 export default function SettingsPage() {
+    const { theme, toggleTheme } = useTheme();
     const [settings, setSettings] = useState([]);
     const [loading, setLoading] = useState(true);
     const [editKey, setEditKey] = useState(null);
@@ -34,7 +36,30 @@ export default function SettingsPage() {
             <div className="page-header">
                 <div className="page-header-title">
                     <h1 style={{ fontFamily: "var(--font-display)", fontSize: 22, margin: 0 }}>Settings</h1>
-                    <span className="page-header-subtitle">System configuration</span>
+                    <span className="page-header-subtitle">System configuration & preferences</span>
+                </div>
+            </div>
+
+            <div className="automation-card" style={{ marginBottom: 20 }}>
+                <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+                    <div>
+                        <h3 style={{ fontFamily: "var(--font-display)", fontSize: 15, fontWeight: 700, color: "var(--ink-900)", margin: "0 0 4px" }}>Appearance</h3>
+                        <p style={{ fontSize: 13, color: "var(--ink-400)", margin: 0 }}>
+                            Switch between light and dark mode
+                        </p>
+                    </div>
+                    <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+                        <span style={{ fontSize: 12.5, color: "var(--ink-400)", fontWeight: 500 }}>
+                            {theme === "dark" ? "Dark" : "Light"}
+                        </span>
+                        <button
+                            className="btn btn-secondary btn-sm"
+                            onClick={toggleTheme}
+                            style={{ minWidth: 80 }}
+                        >
+                            {theme === "dark" ? "Light mode" : "Dark mode"}
+                        </button>
+                    </div>
                 </div>
             </div>
 

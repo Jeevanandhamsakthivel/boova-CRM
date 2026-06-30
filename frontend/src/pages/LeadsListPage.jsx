@@ -1,65 +1,86 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { leadsApi } from "../api/leadsApi";
+import { usePaginatedList } from "../hooks/usePaginatedList";
+import { StatusBadge } from "../components/ui/Badge";
+import { Button } from "../components/ui/Button";
+import { Modal } from "../components/ui/Modal";
+import { LeadFormModal } from "../components/features/LeadFormModal";
+import { Pagination } from "../components/ui/Misc";
+import { useToast } from "../context/ToastContext";
+import { formatDate, formatCurrency } from "../utils/formatters";
+import { IconPlus, IconSearch } from "../components/ui/Icons";
 
-const STATUS_COLORS = {
-    new: "badge-info",
-    contacted: "badge-accent",
-    qualified: "badge-success",
-    unqualified: "badge-danger",
-    converted: "badge-success",
-    lost: "badge-neutral",
-};
-
-const TEMP_CLASS = { hot: "temp-hot", warm: "temp-warm", cold: "temp-cold" };
+const TEMP_COLOR = { hot:"var(--danger)", warm:"var(--warning)", cold:"var(--info)" };
+const TEMP_EMOJI = { hot:"🔥", warm:"🌤", cold:"❄️" };
 
 export default function LeadsListPage() {
-    const navigate = useNavigate();
-    const [leads, setLeads] = useState([]);
-    const [loading, setLoading] = useState(true);
-    const [search, setSearch] = useState("");
-    const [status, setStatus] = useState("");
-    const [page, setPage] = useState(1);
-    const [total, setTotal] = useState(0);
-    const limit = 20;
+    const navigate   = useNavigate();
+    const toast      = useToast();
+    const [showCreate, setShowCreate] = useState(false);
+    const [search, setSearch]         = useState("");
+    const [status, setStatus]         = useState("");
+    const [source, setSource]         = useState("");
 
-    useEffect(() => {
-        setLoading(true);
-        leadsApi.list({ search, status, page, limit })
-            .then(r => {
-                const d = r.data.data;
-                setLeads(Array.isArray(d) ? d : d.items || []);
-                setTotal(d.total ?? (Array.isArray(d) ? d.length : 0));
-            })
-            .catch(() => setLeads([]))
-            .finally(() => setLoading(false));
-    }, [search, status, page]);
+    const { items: leads, meta, loading, reload, updateParams } = usePaginatedList(
+        leadsApi.list,
+        { search, status, source, page: 1, per_page: 20 }
+    );
+
+    function applyFilter(patch) {
+        updateParams({ ...patch, page: 1 });
+    }
 
     return (
         <div>
             <div className="page-header">
                 <div className="page-header-title">
-                    <h1 style={{ fontFamily: "var(--font-display)", fontSize: 22, margin: 0 }}>Leads</h1>
-                    <span className="page-header-subtitle">{total} total leads</span>
+                    <h1 style={{ fontFamily:"var(--font-display)", fontSize:24, margin:0, letterSpacing:"-0.02em" }}>Leads</h1>
+                    <span className="page-header-subtitle">{meta.total_count} total leads</span>
+                </div>
+                <div className="page-actions">
+                    <Button onClick={() => setShowCreate(true)}>
+                        <IconPlus width={14} height={14} /> New Lead
+                    </Button>
                 </div>
             </div>
 
-            <div className="toolbar">
+            {/* Filters */}
+            <div className="toolbar" style={{ marginBottom:16 }}>
                 <div className="toolbar-filters">
-                    <input className="field-input" style={{ width: 240 }} placeholder="Search leads…" value={search} onChange={e => { setSearch(e.target.value); setPage(1); }} />
-                    <select className="field-select" style={{ width: 160 }} value={status} onChange={e => { setStatus(e.target.value); setPage(1); }}>
+                    <div style={{ position:"relative" }}>
+                        <IconSearch width={14} height={14} style={{ position:"absolute", left:10, top:"50%", transform:"translateY(-50%)", color:"var(--ink-400)" }} />
+                        <input
+                            className="field-input"
+                            style={{ width:240, paddingLeft:32 }}
+                            placeholder="Search leads…"
+                            value={search}
+                            onChange={e => { setSearch(e.target.value); applyFilter({ search: e.target.value }); }}
+                        />
+                    </div>
+                    <select className="field-select" style={{ width:150 }} value={status} onChange={e => { setStatus(e.target.value); applyFilter({ status: e.target.value }); }}>
                         <option value="">All statuses</option>
-                        {["new", "contacted", "qualified", "unqualified", "converted", "lost"].map(s => (
-                            <option key={s} value={s}>{s.charAt(0).toUpperCase() + s.slice(1)}</option>
+                        {["new","contacted","qualified","unqualified","lost"].map(s => (
+                            <option key={s} value={s}>{s.charAt(0).toUpperCase()+s.slice(1)}</option>
+                        ))}
+                    </select>
+                    <select className="field-select" style={{ width:160 }} value={source} onChange={e => { setSource(e.target.value); applyFilter({ source: e.target.value }); }}>
+                        <option value="">All sources</option>
+                        {["website","referral","social_media","email_campaign","cold_call","event","whatsapp","paid_ad","partner","other"].map(s => (
+                            <option key={s} value={s}>{s.split("_").map(w=>w.charAt(0).toUpperCase()+w.slice(1)).join(" ")}</option>
                         ))}
                     </select>
                 </div>
             </div>
 
             {loading ? (
-                <div className="page-loading"><div className="spinner" style={{ width: 32, height: 32 }} /></div>
+                <div className="page-loading"><div className="spinner" style={{width:28,height:28}} /></div>
             ) : leads.length === 0 ? (
-                <div className="empty-state"><h3>No leads found</h3><p>Try adjusting your filters.</p></div>
+                <div className="empty-state">
+                    <h3>No leads found</h3>
+                    <p>Try adjusting your filters or create a new lead.</p>
+                    <Button onClick={() => setShowCreate(true)} style={{ marginTop:8 }}><IconPlus width={14} height={14} /> New Lead</Button>
+                </div>
             ) : (
                 <div className="data-table-wrap">
                     <table className="data-table">
@@ -67,43 +88,55 @@ export default function LeadsListPage() {
                             <tr>
                                 <th>Name</th>
                                 <th>Company</th>
+                                <th>Contact</th>
                                 <th>Status</th>
-                                <th>Temperature</th>
+                                <th>Temp</th>
+                                <th>Est. Value</th>
                                 <th>Source</th>
-                                <th>Assigned To</th>
+                                <th>Owner</th>
                                 <th>Created</th>
                             </tr>
                         </thead>
                         <tbody>
                             {leads.map(lead => (
                                 <tr key={lead.id} onClick={() => navigate(`/leads/${lead.id}`)}>
-                                    <td className="cell-strong">{lead.name}</td>
-                                    <td className="cell-muted">{lead.company || "—"}</td>
-                                    <td><span className={`badge ${STATUS_COLORS[lead.status] || "badge-neutral"}`}>{lead.status}</span></td>
                                     <td>
-                                        {lead.temperature && (
-                                            <span style={{ display: "flex", alignItems: "center", gap: 6 }}>
-                                                <span className={`temp-dot ${TEMP_CLASS[lead.temperature] || ""}`} />
-                                                {lead.temperature}
+                                        <div style={{ fontWeight:600, color:"var(--ink-900)", fontSize:13.5 }}>{lead.name}</div>
+                                        {lead.job_title && <div style={{ fontSize:11.5, color:"var(--ink-400)" }}>{lead.job_title}</div>}
+                                    </td>
+                                    <td className="cell-muted">{lead.company || "—"}</td>
+                                    <td>
+                                        {lead.email && <div style={{ fontSize:12.5, color:"var(--ink-600)" }}>{lead.email}</div>}
+                                        {lead.phone && <div style={{ fontSize:12.5, color:"var(--ink-400)" }}>{lead.phone}</div>}
+                                    </td>
+                                    <td><StatusBadge status={lead.status} /></td>
+                                    <td>
+                                        {lead.qualification && (
+                                            <span style={{ fontSize:13, fontWeight:600, color:TEMP_COLOR[lead.qualification] }}>
+                                                {TEMP_EMOJI[lead.qualification]} {lead.qualification.charAt(0).toUpperCase()+lead.qualification.slice(1)}
                                             </span>
                                         )}
                                     </td>
-                                    <td className="cell-muted">{lead.source || "—"}</td>
-                                    <td className="cell-muted">{lead.assigned_to_name || "—"}</td>
-                                    <td className="cell-muted">{lead.created_at ? new Date(lead.created_at).toLocaleDateString() : "—"}</td>
+                                    <td style={{ fontWeight:600, color:"var(--success)", fontSize:13 }}>{formatCurrency(lead.estimated_value)}</td>
+                                    <td className="cell-muted" style={{ fontSize:12.5 }}>
+                                        {lead.source ? lead.source.split("_").map(w=>w.charAt(0).toUpperCase()+w.slice(1)).join(" ") : "—"}
+                                    </td>
+                                    <td className="cell-muted" style={{ fontSize:12.5 }}>{lead.assigned_to || "—"}</td>
+                                    <td className="cell-muted" style={{ fontSize:12.5 }}>{formatDate(lead.created_at)}</td>
                                 </tr>
                             ))}
                         </tbody>
                     </table>
-                    <div className="pagination-bar">
-                        <span>Page {page}</span>
-                        <div className="pagination-controls">
-                            <button className="btn btn-secondary btn-sm" disabled={page === 1} onClick={() => setPage(p => p - 1)}>Prev</button>
-                            <button className="btn btn-secondary btn-sm" disabled={leads.length < limit} onClick={() => setPage(p => p + 1)}>Next</button>
-                        </div>
-                    </div>
+                    <Pagination meta={meta} onPageChange={p => updateParams({ page: p })} />
                 </div>
             )}
+
+            <Modal open={showCreate} onClose={() => setShowCreate(false)} title="New Lead" maxWidth={720}>
+                <LeadFormModal
+                    onCreated={() => { setShowCreate(false); reload(); toast.success("Lead created."); }}
+                    onCancel={() => setShowCreate(false)}
+                />
+            </Modal>
         </div>
     );
 }

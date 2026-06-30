@@ -103,3 +103,78 @@ def tasks_completion_report():
     db = get_db()
     pipeline = [{"$group": {"_id": "$status", "count": {"$sum": 1}}}]
     return list(db.tasks.aggregate(pipeline))
+
+
+def custom_report(collection, group_by, metrics, filters):
+    """Dynamic custom report builder (8.1)."""
+    db = get_db()
+    allowed_collections = ["leads", "customers", "deals", "tasks", "followups", "tickets"]
+    if collection not in allowed_collections:
+        raise KeyError(f"Collection '{collection}' not supported.")
+
+    match_query = {}
+    if filters:
+        for key, value in filters.items():
+            if value:
+                match_query[key] = value
+
+    group_stage = {"_id": f"${group_by}"}
+    for metric in metrics:
+        field = metric.get("field", "count")
+        op = metric.get("op", "count").lower()
+        alias = metric.get("alias", field)
+        if op == "count":
+            group_stage[alias] = {"$sum": 1}
+        elif op == "sum":
+            group_stage[alias] = {"$sum": f"${field}"}
+        elif op == "avg":
+            group_stage[alias] = {"$avg": f"${field}"}
+        elif op == "min":
+            group_stage[alias] = {"$min": f"${field}"}
+        elif op == "max":
+            group_stage[alias] = {"$max": f"${field}"}
+        else:
+            group_stage[alias] = {"$sum": 1}
+
+    pipeline = []
+    if match_query:
+        pipeline.append({"$match": match_query})
+    pipeline.append({"$group": group_stage})
+    pipeline.append({"$sort": {"_id": 1}})
+
+    return list(db[collection].aggregate(pipeline))
+
+
+def forecast_accuracy_report():
+    """Compare won deals against forecasted stages (8.4)."""
+    db = get_db()
+    all_deals = list(db.deals.find({}))
+    total = len(all_deals)
+    if total == 0:
+        return {"total_deals": 0, "won": 0, "lost": 0, "accuracy_pct": 0, "by_user": []}
+
+    stage_ids = [str(s["_id"]) for s in db.pipeline_stages.find()]
+    won = [d for d in all_deals if d.get("status") == "won"]
+    lost = [d for d in all_deals if d.get("status") == "lost"]
+
+    by_user_pipeline = [
+        {
+            "$group": {
+                "_id": "$assigned_to",
+                "total": {"$sum": 1},
+                "won": {"$sum": {"$cond": [{"$eq": ["$status", "won"]}, 1, 0]}},
+                "lost": {"$sum": {"$cond": [{"$eq": ["$status", "lost"]}, 1, 0]}},
+                "total_value": {"$sum": {"$cond": [{"$eq": ["$status", "won"]}, "$value", 0]}},
+            }
+        },
+        {"$sort": {"won": -1}},
+    ]
+    by_user = list(db.deals.aggregate(by_user_pipeline))
+
+    return {
+        "total_deals": total,
+        "won": len(won),
+        "lost": len(lost),
+        "accuracy_pct": round((len(won) / total) * 100, 1) if total else 0,
+        "by_user": by_user,
+    }

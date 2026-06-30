@@ -1,0 +1,333 @@
+/* =========================================================
+   Reports Page — Production CSS
+   ========================================================= */
+
+.rpt-page {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+}
+
+/* ── KPI strip ───────────────────────────────────────────── */
+.rpt-kpi-strip {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 14px;
+    margin-bottom: 24px;
+}
+
+.rpt-stat-card {
+    background: var(--surface);
+    border: 1px solid var(--border-hairline);
+    border-radius: var(--radius-md);
+    padding: 18px 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    box-shadow: var(--shadow-sm);
+    transition: box-shadow var(--transition-fast), transform var(--transition-fast);
+    position: relative;
+    overflow: hidden;
+}
+
+.rpt-stat-card:hover {
+    box-shadow: var(--shadow-md);
+    transform: translateY(-1px);
+}
+
+.rpt-stat-icon {
+    width: 36px;
+    height: 36px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 10px;
+    flex-shrink: 0;
+}
+
+.rpt-stat-value {
+    font-family: var(--font-display);
+    font-size: 28px;
+    font-weight: 700;
+    color: var(--ink-900);
+    line-height: 1;
+    letter-spacing: -0.02em;
+}
+
+.rpt-stat-label {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--ink-400);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-top: 2px;
+}
+
+.rpt-stat-sub {
+    font-size: 12px;
+    color: var(--ink-600);
+    margin-top: 2px;
+}
+
+/* ── Charts grid ─────────────────────────────────────────── */
+.rpt-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+}
+
+/* ── Chart card ──────────────────────────────────────────── */
+.rpt-card {
+    background: var(--surface);
+    border: 1px solid var(--border-hairline);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    box-shadow: var(--shadow-sm);
+    transition: box-shadow var(--transition-fast);
+    display: flex;
+    flex-direction: column;
+}
+
+.rpt-card:hover {
+    box-shadow: var(--shadow-md);
+}
+
+.rpt-card-header {
+    padding: 18px 22px 0;
+    border-left: 4px solid transparent;
+    margin-left: -1px; /* overlap card border */
+    padding-left: 18px;
+}
+
+.rpt-card-title {
+    font-family: var(--font-display);
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--ink-900);
+    margin: 0 0 3px;
+    letter-spacing: -0.01em;
+}
+
+.rpt-card-subtitle {
+    font-size: 12px;
+    color: var(--ink-400);
+    margin: 0 0 16px;
+}
+
+.rpt-card-body {
+    padding: 4px 22px 22px;
+    flex: 1;
+}
+
+.rpt-chart-label {
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--ink-400);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin: 0 0 10px;
+}
+
+/* ── Horizontal bar chart ────────────────────────────────── */
+.rpt-hbar-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.rpt-hbar-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.rpt-hbar-label {
+    min-width: 110px;
+    max-width: 110px;
+    font-size: 12.5px;
+    color: var(--ink-600);
+    text-align: right;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    flex-shrink: 0;
+}
+
+.rpt-hbar-track {
+    flex: 1;
+    height: 22px;
+    background: var(--surface-sunken);
+    border-radius: 6px;
+    overflow: hidden;
+    position: relative;
+}
+
+.rpt-hbar-fill {
+    height: 100%;
+    border-radius: 6px;
+    transition: width 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+    min-width: 4px;
+}
+
+.rpt-hbar-val {
+    min-width: 64px;
+    font-size: 12.5px;
+    font-weight: 700;
+    color: var(--ink-800);
+    text-align: right;
+    font-variant-numeric: tabular-nums;
+    flex-shrink: 0;
+}
+
+/* ── Vertical bar chart ──────────────────────────────────── */
+.rpt-vbar-wrap {
+    overflow-x: auto;
+    padding-bottom: 4px;
+}
+
+/* ── Donut chart ─────────────────────────────────────────── */
+.rpt-donut-wrap {
+    position: relative;
+    flex-shrink: 0;
+}
+
+.rpt-donut-center {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    pointer-events: none;
+}
+
+.rpt-donut-total {
+    font-family: var(--font-display);
+    font-size: 26px;
+    font-weight: 700;
+    color: var(--ink-900);
+    line-height: 1;
+}
+
+.rpt-donut-sub {
+    font-size: 11px;
+    color: var(--ink-400);
+    margin-top: 2px;
+}
+
+/* ── Pie + Legend row ────────────────────────────────────── */
+.rpt-pie-row {
+    display: flex;
+    align-items: center;
+    gap: 28px;
+    flex-wrap: wrap;
+}
+
+/* ── Legend ──────────────────────────────────────────────── */
+.rpt-legend {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 9px;
+    flex: 1;
+    min-width: 140px;
+}
+
+.rpt-legend-inline {
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 10px 20px;
+}
+
+.rpt-legend-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 13px;
+}
+
+.rpt-legend-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    flex-shrink: 0;
+}
+
+.rpt-legend-label {
+    flex: 1;
+    color: var(--ink-600);
+    font-size: 12.5px;
+}
+
+.rpt-legend-val {
+    font-weight: 700;
+    color: var(--ink-900);
+    font-variant-numeric: tabular-nums;
+    font-size: 13px;
+}
+
+.rpt-legend-pct {
+    font-size: 11.5px;
+    color: var(--ink-400);
+    min-width: 34px;
+    text-align: right;
+}
+
+/* ── Stacked bar ─────────────────────────────────────────── */
+.rpt-stacked-wrap {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+}
+
+.rpt-stacked-bar {
+    display: flex;
+    height: 28px;
+    border-radius: 8px;
+    overflow: hidden;
+    gap: 2px;
+}
+
+.rpt-stacked-seg {
+    transition: width 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+    min-width: 2px;
+}
+
+.rpt-task-total {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 16px 0 4px;
+}
+
+/* ── Empty state ─────────────────────────────────────────── */
+.rpt-empty {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 40px 20px;
+    font-size: 13px;
+    color: var(--ink-400);
+    border: 1px dashed var(--border-hairline);
+    border-radius: var(--radius-md);
+    text-align: center;
+}
+
+/* ── Responsive ──────────────────────────────────────────── */
+@media (max-width: 1024px) {
+    .rpt-kpi-strip { grid-template-columns: repeat(2, 1fr); }
+}
+
+@media (max-width: 768px) {
+    .rpt-grid { grid-template-columns: 1fr; }
+    .rpt-kpi-strip { grid-template-columns: repeat(2, 1fr); }
+    .rpt-card[style*="span 2"] { grid-column: span 1 !important; }
+}
+
+@media (max-width: 480px) {
+    .rpt-kpi-strip { grid-template-columns: 1fr; }
+    .rpt-hbar-label { min-width: 80px; max-width: 80px; }
+}

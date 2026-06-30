@@ -1,0 +1,589 @@
+PSM CRM — MASTER BLUEPRINT (EXPANDED EDITION)
+Original Development Blueprint + Competitive Pain-Point Feature Expansion
+===========================================================================
+This document merges your original PSM CRM Expanded Development Blueprint
+with a much larger set of features specifically designed to pull customers
+away from Zoho CRM, Salesforce, and HubSpot. Part A is your original
+content, reproduced in full so this is now a single reference document.
+Part B is the new, expanded competitive feature set, organized by the
+exact pain point each feature solves, with the competitor evidence behind
+each one.
+
+
+===========================================================================
+PART A — YOUR ORIGINAL BLUEPRINT (UNCHANGED)
+===========================================================================
+
+A1. VISION
+---------------------------------------------------------------------------
+PSM CRM should be a production-grade SaaS CRM focused on reducing
+operational friction for small and medium businesses. The objective is
+not to copy competitors feature-for-feature but to provide a faster,
+simpler, and more connected workflow.
+
+A2. PRODUCT PRINCIPLES
+---------------------------------------------------------------------------
+1. Fast user interface.
+2. Minimal clicks for common tasks.
+3. Unified customer workspace.
+4. Communication-first design.
+5. Modular architecture.
+6. Multi-tenant SaaS.
+7. API-first development.
+8. Enterprise security.
+9. AI only where it creates measurable value.
+
+Core Modules (from original blueprint):
+  Authentication & Organizations
+  Leads
+  Contacts
+  Companies
+  Deals/Pipeline
+  Tasks & Activities
+  Calendar & Meetings
+  Customer Timeline
+  Email Integration
+  WhatsApp Business
+  Quotes & Proposals
+  Invoices
+  Support Desk
+  Knowledge Base
+  Reports & Dashboards
+  Workflow Automation
+  Documents & Files
+  Settings & Administration
+
+A3. RECOMMENDED ARCHITECTURE
+---------------------------------------------------------------------------
+  Frontend: React + Vite.
+  Backend: Node.js + Express.
+  Database: PostgreSQL or MySQL.
+  Redis for caching and queues.
+  Object Storage for files.
+  Background workers for synchronization.
+  REST APIs with versioning.
+  JWT/OAuth authentication.
+  Docker-based deployment with CI/CD.
+
+A4. CUSTOMER TIMELINE
+---------------------------------------------------------------------------
+Every interaction should generate an activity record. Emails, WhatsApp
+messages, meetings, calls, proposals, invoices, tickets and notes should
+appear in one chronological feed. Each timeline item references the
+originating module rather than duplicating data. This provides complete
+customer context from a single page.
+
+A5. ACTIVITY SERVICE
+---------------------------------------------------------------------------
+Implement a shared Activity Service used by every module. Whenever an
+important business event occurs, publish an activity containing:
+customer ID, activity type, title, description, actor, timestamp,
+reference table and reference ID. The timeline reads only from this
+service.
+
+A6. PAIN POINTS WORTH SOLVING (original list)
+---------------------------------------------------------------------------
+  - Too many clicks.
+  - Scattered customer information.
+  - Duplicate data entry.
+  - Slow UI on large datasets.
+  - Difficult onboarding.
+  - Weak search.
+  - Complicated reporting.
+  - Notification overload.
+  - Mobile limitations.
+  - Excessive configuration.
+  - Context switching between applications.
+  - Limited visibility into next actions.
+  - Manual follow-ups.
+  - Long implementation cycles.
+
+A7. WORKFLOW IMPROVEMENTS
+---------------------------------------------------------------------------
+Use inline editing, command palette, keyboard shortcuts, bulk actions,
+drag-and-drop pipeline management, reusable templates, customer-centric
+navigation, one-click communication, and contextual side panels to reduce
+repetitive work.
+
+A8. INTEGRATIONS
+---------------------------------------------------------------------------
+Support OAuth connections for Gmail, Outlook/Microsoft 365, Google
+Calendar, Google Drive, WhatsApp Business, Zoom, Google Meet, Microsoft
+Teams, Stripe, Razorpay, QuickBooks, webhooks and public REST APIs.
+Integrations should appear naturally inside customer workflows rather
+than existing as isolated modules.
+
+A9. AI STRATEGY
+---------------------------------------------------------------------------
+AI should not power CRUD operations or routine database queries.
+Introduce an AI Gateway that routes requests to appropriate models,
+caches responses, enforces quotas and logs usage. AI should focus on
+customer summaries, email drafting, meeting summaries, document
+extraction, natural-language search and sales recommendations.
+
+A10. SECURITY
+---------------------------------------------------------------------------
+Multi-tenant isolation, role-based access control, field permissions,
+audit logs, encrypted secrets, HTTPS, MFA, secure password hashing, API
+rate limiting, backups, monitoring and disaster recovery planning.
+
+A11. SCALABILITY
+---------------------------------------------------------------------------
+Design stateless APIs, asynchronous background jobs, caching, pagination,
+lazy loading, optimized database indexes, CDN for assets and horizontal
+scaling for application servers.
+
+A12. SUGGESTED DATABASE DOMAINS
+---------------------------------------------------------------------------
+Organizations, Users, Roles, Permissions, Leads, Contacts, Companies,
+Deals, Activities, Tasks, Meetings, Emails, Messages, Files, Quotes,
+Invoices, Payments, Tickets, Notes, Automations, Notifications,
+Integrations, OAuth Tokens, Audit Logs.
+
+A13. POTENTIAL DIFFERENTIATORS (original list)
+---------------------------------------------------------------------------
+Rather than claiming unique features, differentiate through execution:
+  - Faster onboarding.
+  - Cleaner interface.
+  - Unified customer timeline.
+  - Excellent search.
+  - High performance.
+  - Communication-first workflows.
+  - Mobile productivity.
+  - Cost-conscious AI.
+  - Consistent APIs.
+  - Strong developer experience.
+
+A14. DEVELOPMENT ROADMAP
+---------------------------------------------------------------------------
+  Phase 1: Authentication, CRM basics, timeline, email, dashboards.
+  Phase 2: WhatsApp, automation, reports, calendar, files.
+  Phase 3: AI assistant, marketplace, advanced integrations.
+  Phase 4: Enterprise features, white-labeling, analytics, public
+           developer ecosystem.
+
+A15. FINAL RECOMMENDATIONS
+---------------------------------------------------------------------------
+Measure success using user outcomes instead of feature counts. Track
+onboarding time, number of clicks for common tasks, search success, page
+load speed, workflow completion time, and customer satisfaction. Build a
+product that is reliable, easy to learn, and pleasant to use. Established
+competitors already provide many similar capabilities, so PSM CRM's
+advantage should come from better workflow design, performance,
+usability, and thoughtful integration.
+
+
+===========================================================================
+PART B — EXPANDED COMPETITIVE FEATURE SET
+===========================================================================
+
+WHY THIS EXPANSION EXISTS
+---------------------------------------------------------------------------
+Your original blueprint (Part A) already names 14 pain points (A6) and
+9 differentiators (A13) at a high level — "slow UI," "weak search,"
+"cost-conscious AI." Part B takes each of those general statements and
+turns them into specific, buildable features, backed by what real
+companies currently say about Zoho, Salesforce, and HubSpot. Every
+section below references which part of your original blueprint it
+extends, so nothing here replaces Part A — it makes it concrete.
+
+Researched competitor evidence behind this expansion:
+  - Zoho: cluttered interface (80+ sidebar sections), inconsistent
+    support response times for non-premium users, and reports of abrupt
+    service suspension over billing disputes with no reasonable payment
+    window.
+  - Salesforce: implementation costs of $5,000-$25,000 before the
+    platform is usable for a small business, annual contracts with
+    9-24% renewal price increases, and a learning curve that typically
+    requires a dedicated administrator costing $70,000+/year in staffing.
+  - HubSpot: free-tier automation capped at one automated action, deep
+    automation gated behind Professional tiers (jumps from $20/month to
+    $800+/month), mandatory non-optional onboarding fees of $3,000-$6,000
+    on Professional/Enterprise plans, and unexpected billing if marketing
+    contact limits are exceeded — with no way to undo the charge until
+    the next renewal.
+  - All three: messy data on import/export, duplicate records, weak
+    native telephony, and growing pains the moment a team scales past
+    its starting tier.
+
+
+SECTION 1 — SWITCHING-FRICTION FEATURES
+(Extends A6: "long implementation cycles," A13: "faster onboarding")
+---------------------------------------------------------------------------
+
+1.1 One-Click Migration Importer
+Connects directly to Zoho, Salesforce, or HubSpot via their APIs, maps
+fields automatically, and migrates contacts, deals, notes, and
+attachments in one pass. This is the direct fix for the implementation
+cost and timeline problem — Salesforce SMB implementations commonly cost
+$5,000-$25,000 and take weeks before the system is even usable.
+
+1.2 Parallel-Run Mode
+Run PSM CRM alongside an existing CRM for a trial period, syncing data
+one-way so reps can test the new system without risking the live
+pipeline. Removes the "what if it breaks our sales process" objection.
+
+1.3 Field & Module Equivalency Map
+An onboarding screen showing exactly where old custom fields and modules
+from Zoho/Salesforce/HubSpot now live in PSM CRM, so admins don't
+manually rebuild months of configuration work from scratch.
+
+1.4 Reversible Trial — Full Data Export Anytime, No Lock-In
+Guaranteed, in-product ability to export 100% of data (contacts, deals,
+files, emails, notes) in open formats at any time. Answers the lock-in
+fear created by annual contracts that are hard to downgrade or cancel
+before renewal.
+
+1.5 "Switch From" Cost Comparison Tool
+An interactive calculator where a prospect enters their current
+Zoho/Salesforce/HubSpot plan and team size, and sees a realistic 12-month
+cost comparison including onboarding fees, per-seat costs, and contact
+tier overages — categories competitors routinely leave out of headline
+pricing.
+
+1.6 Admin-Free First 90 Days
+A guarantee that no dedicated CRM administrator is required to run core
+workflows for the first 90 days — directly targeting the documented need
+for a dedicated Salesforce admin or paid consultant to get real value
+out of the platform.
+
+
+SECTION 2 — INTERFACE SIMPLICITY FEATURES
+(Extends A6: "too many clicks," "excessive configuration," A2: "minimal
+clicks for common tasks")
+---------------------------------------------------------------------------
+
+2.1 Role-Based Adaptive Interface
+The UI shows only what's relevant to the logged-in role. A direct fix
+for interfaces with dozens of sidebar sections that overwhelm new users
+regardless of their actual job.
+
+2.2 Setup Wizard With Industry Templates
+A short guided setup that pre-configures pipelines, fields, and email
+templates by business type, instead of a blank, fully-customizable
+system that takes weeks to configure properly.
+
+2.3 "Explain This Screen" Contextual Helper
+Plain-language explanations of any field, button, or report, in place,
+reducing dependence on documentation, support tickets, or paid
+onboarding consultants.
+
+2.4 Progressive Disclosure for Admin Settings
+Advanced configuration hidden behind an "Advanced" toggle by default —
+new admins aren't shown everything on day one, but power users retain
+full access.
+
+2.5 Maximum Sidebar Depth Rule
+A hard design constraint: no more than two levels of navigation depth
+and no more than 12 top-level sidebar items, enforced as a product rule
+during development — directly countering the kind of sprawling
+navigation that becomes a top complaint once a platform's module count
+grows over time.
+
+2.6 Undo Everything
+A universal, time-limited "undo" for bulk edits, deletes, imports, and
+automation runs — most CRMs treat destructive actions as final, which
+makes admins overly cautious and slow when configuring the system.
+
+
+SECTION 3 — PRICING TRANSPARENCY FEATURES
+(Extends A13: "cost-conscious AI," general "pricing surprises" theme)
+---------------------------------------------------------------------------
+
+3.1 Transparent, Locked-In Pricing Calculator
+A public, no-login pricing page with exact monthly cost for a given team
+size and module selection — no "contact sales" gating, unlike pricing
+models where the real cost only becomes clear after multiple sales
+calls.
+
+3.2 No Per-Seat Penalty for Light Users
+A low-cost "light user" seat tier for occasional users (view-only,
+comment, basic tasks), so companies aren't forced to buy full seats for
+people who barely touch the CRM.
+
+3.3 Usage Dashboard With Pre-Overage Alerts
+Real-time visibility into current usage against plan limits (contacts,
+emails, automations), with alerts before any limit is hit — directly
+preventing the kind of surprise tier-jump billing that occurs when
+contact limits are exceeded unexpectedly through a sync, with no way to
+reverse the charge until renewal.
+
+3.4 No Forced Annual Contracts for Core Plan
+Month-to-month billing on all tiers, not just entry-level, removing the
+renewal lock-in that creates 9-24% price increases at renewal time on
+some competitor contracts.
+
+3.5 No Mandatory Onboarding Fees
+Onboarding and setup assistance included or optional at every tier —
+addressing mandatory, non-optional onboarding charges of $3,000-$6,000
+that some competitors require before a new customer can fully use
+Professional or Enterprise tiers.
+
+3.6 Flat Automation Pricing, Not Tier-Gated
+Core workflow automation (multi-step sequences, triggers, lead routing)
+available from the lowest paid tier, rather than reserved for a far more
+expensive Professional tier — countering the common pattern where basic
+multi-step automation is the single biggest forced upgrade trigger.
+
+3.7 Downgrade Anytime, Not Just at Renewal
+Customers can move to a lower tier immediately rather than being locked
+into their contracted tier until the renewal date, even if usage drops.
+
+
+SECTION 4 — SUPPORT & TRUST FEATURES
+(Extends A6 generally, new theme not explicit in original blueprint)
+---------------------------------------------------------------------------
+
+4.1 Guaranteed Response-Time SLA on Every Plan
+Published, contractual support response times even on the cheapest paid
+tier — countering inconsistent support response times reported for
+non-premium users on larger platforms.
+
+4.2 In-App Live Chat With a Human, Not Just a Bot
+Embedded chat routes to a real support agent within minutes during
+business hours; AI only handles simple FAQ deflection first.
+
+4.3 Public Status Page + Proactive Incident Notifications
+Real-time uptime/incident page with automatic alerts to admins when
+something affecting their account changes.
+
+4.4 Community + Direct Product Team Feedback Loop
+A visible roadmap and feature-request board with real responses from the
+product team, not a generic support queue.
+
+4.5 No-Surprise Billing Dispute Process
+A documented, guaranteed minimum response and payment-resolution window
+(e.g. a defined number of business days) before any account is
+suspended for a billing issue — a direct answer to reports of accounts
+being suspended within 48 hours of a payment dispute with no prior
+warning of an immediate-payment requirement.
+
+4.6 Dedicated Migration Concierge for First 30 Days
+A named (not ticket-queue) contact for any company migrating from a
+competitor during their first month, so the switch doesn't stall the
+way long CRM rollouts often do.
+
+
+SECTION 5 — DATA QUALITY & AUTOMATION FEATURES
+(Extends A6: "duplicate data entry," A5: Activity Service, A9: AI
+Strategy)
+---------------------------------------------------------------------------
+
+5.1 Auto-Clean Data on Import/Sync
+Automatically detects and merges duplicate contacts/companies, fixes
+inconsistent formatting, and flags missing required fields — solving the
+well-documented problem of imports from Excel or other tools creating
+messy duplicate property/field data.
+
+5.2 Smart Field Auto-Population
+Auto-fills company name, industry, and size from public data and prior
+interaction history when a record is created from an email, meeting, or
+form — directly reducing the manual data entry your own blueprint
+already flags as a core pain point (A6).
+
+5.3 "Next Best Action" Suggestions on Every Record
+Each contact/deal page surfaces 1-3 specific suggested actions based on
+real signals (no activity in X days, email opened but not replied to,
+etc.) — targeted AI rather than a generic chatbot layered on top, in
+line with your AI Strategy in A9 ("AI only where it creates measurable
+value").
+
+5.4 Auto-Logged Calls, Texts, and WhatsApp
+Native click-to-call, SMS, and WhatsApp logging directly into the
+Activity Service (A5) without manual entry — addressing recurring
+complaints about weak or unreliable native telephony integration on
+competing platforms.
+
+5.5 Reply-Triggered Workflow Automation
+Automation that reacts instantly to real customer behavior (opened
+email, clicked link, replied, visited pricing page), not just
+time-based schedules — closing the visibility gap your blueprint
+identifies in A6 ("limited visibility into next actions").
+
+5.6 Workflow Builder Available From the Lowest Paid Tier
+Multi-step automation (not just single-action triggers) included from
+the entry paid plan, directly undercutting platforms where multi-step
+sequences, lead routing, and branching logic require a much higher tier.
+
+5.7 Native Data Sync Safety Net
+Before any sync or bulk import runs, the system shows a preview of what
+will change and lets the admin approve or reject it — preventing the
+kind of unexpected billing or data shifts that can occur when automated
+syncs silently exceed plan limits or alter large numbers of records.
+
+5.8 Two-Way Email Logging by Default
+All email sent and received through connected inboxes (Gmail, Outlook)
+logs to the Activity Service automatically in both directions, with no
+manual "log this email" step — addressing the common complaint that
+emails sent outside the CRM require manual logging and create gaps in
+the customer record.
+
+
+SECTION 6 — DAY-TO-DAY SPEED FEATURES
+(Extends A7: Workflow Improvements, A6: "slow UI on large datasets,"
+"context switching between applications," "mobile limitations")
+---------------------------------------------------------------------------
+
+6.1 Command Palette (Cmd+K) That Performs Actions, Not Just Navigates
+Extends the command palette already named in A7 so it can execute
+actions directly ("create deal for Acme Corp $5000") without leaving the
+current screen.
+
+6.2 Split-Screen Record + Inbox View
+Contact profile and live email/WhatsApp thread side by side, so reps
+never tab out to Gmail or WhatsApp Web — a direct answer to the "context
+switching between applications" pain point in A6.
+
+6.3 True Offline Mode for Mobile
+Full read/write access to contacts, deals, and notes without a
+connection, syncing automatically when reconnected — solving the
+"mobile limitations" pain point in A6 more completely than apps that are
+read-only or degraded offline.
+
+6.4 Voice-to-CRM Note Capture
+Quick voice notes after a call/meeting, transcribed and auto-attached to
+the right record, removing the friction of typing notes manually.
+
+6.5 Built-In Meeting Scheduler With Round-Robin Routing
+Native scheduling links assign meetings automatically by territory,
+availability, or deal ownership, removing the need for a separate
+scheduling subscription.
+
+6.6 Sub-200ms List and Search Performance Budget
+A hard internal performance target (page interactions under 200ms,
+search results under 300ms) enforced through indexing, pagination, and
+caching as described in A11 — turning "slow UI on large datasets" (A6)
+into a measurable engineering requirement rather than an aspiration.
+
+6.7 Bulk Action Bar on Every List View
+Select any number of records in any list (leads, deals, contacts,
+tickets) and apply an action — update field, assign owner, enroll in
+automation, merge, export — without opening each record individually.
+
+
+SECTION 7 — SMALL/MID BUSINESS FOCUSED FEATURES
+(Extends A1: Vision — "focused on reducing operational friction for
+small and medium businesses")
+---------------------------------------------------------------------------
+
+7.1 "Single Owner Mode" for Solo Founders/Small Teams
+A simplified mode for 1-5 person businesses that strips out
+team-management overhead and focuses purely on tracking customers and
+deals.
+
+7.2 Built-In Invoicing & Payment Links
+Generate and send invoices with embedded Stripe/Razorpay payment links
+directly from a deal, removing the need for a separate accounting tool
+for straightforward SMB use cases — extends the Invoices module already
+in your Core Modules list.
+
+7.3 WhatsApp-First Lead Capture
+A new number messaging the business automatically becomes a lead — goes
+beyond the WhatsApp Business integration already planned for Phase 2,
+which matters heavily in markets where WhatsApp is the primary sales
+channel.
+
+7.4 Industry-Specific Starter Packs
+Pre-built pipelines, fields, and templates for common SMB verticals
+(real estate, agencies, clinics, consultants, retailers) so a new
+customer is productive within an hour.
+
+7.5 No Per-Contact Pricing Penalty
+Pricing based on seats and usage tiers, not raw contact count — directly
+avoiding the scaling cost structure where simply having more contacts in
+the database (not more usage) increases the bill.
+
+7.6 Two Full Users Free, Forever
+A genuinely usable free tier for the smallest teams that doesn't cap out
+at a single user or two seats the moment a third team member needs
+access — a common early growth wall on competing free tiers.
+
+
+SECTION 8 — REPORTING & VISIBILITY FEATURES
+(Extends A6: "complicated reporting," A13: "high performance")
+---------------------------------------------------------------------------
+
+8.1 Custom Reports Without a Tier Upgrade
+Custom report building available from the entry paid tier, not gated
+behind Professional/Enterprise — addressing the pattern where the free
+or starter plan only offers a fixed set of dashboards with no way to
+build a report tailored to a specific metric.
+
+8.2 Plain-Language Report Builder
+Build a report by describing what you want ("show me deals by rep that
+closed last quarter") instead of configuring filters, groupings, and
+chart types manually — reduces the complexity your blueprint already
+flags in A6.
+
+8.3 One-Click Drill-Down From Every Chart
+Every dashboard chart is clickable through to the underlying record
+list, so "complicated reporting" (A6) doesn't also mean reports that
+dead-end instead of leading somewhere actionable.
+
+8.4 Forecast Accuracy Tracking
+The system tracks how close past forecasts were to actual outcomes over
+time and surfaces this transparently to managers, building trust in the
+numbers rather than just displaying them.
+
+
+SECTION 9 — TRUST AND DIFFERENTIATION FEATURES
+(Extends A10: Security, A13: Differentiators)
+---------------------------------------------------------------------------
+
+9.1 Plain-Language Security & Data Page
+A public page explaining where data is stored, who can access it, and
+what happens on cancellation — written for a business owner, not a
+security engineer.
+
+9.2 No Dark-Pattern Cancellation
+Cancel directly from account settings in under 2 minutes, no mandatory
+support call required.
+
+9.3 Built-In ROI Dashboard for Decision-Makers
+A simple, owner-facing dashboard showing time saved, faster deal closure,
+and response-time improvements since adoption — useful for retention and
+for internal budget justification.
+
+9.4 Independent Uptime & Security Audit Publication
+Publish third-party audit/uptime results on a public page rather than
+only providing them on request — building credibility with buyers who
+are wary of unverifiable claims from any vendor, including PSM CRM
+itself.
+
+
+SECTION 10 — SUGGESTED PRIORITY FOR EARLY DEVELOPMENT
+---------------------------------------------------------------------------
+Mapped against your original Phase 1-4 roadmap (A14), the following
+should be pulled into Phase 1 specifically because they have outsized
+impact on winning customers away from established competitors, with
+minimal added scope:
+
+  Phase 1 additions:
+    1. One-Click Migration Importer (1.1)
+    2. Transparent Pricing Calculator (3.1)
+    3. Role-Based Adaptive Interface (2.1)
+    4. Auto-Clean Data on Import/Sync (5.1)
+    5. Two-Way Email Logging by Default (5.8)
+    6. Two Full Users Free, Forever (7.6)
+
+  Phase 2 additions (alongside your planned WhatsApp/automation/reports):
+    7. WhatsApp-First Lead Capture (7.3)
+    8. Workflow Builder From Lowest Paid Tier (5.6)
+    9. Built-In Invoicing & Payment Links (7.2)
+    10. Custom Reports Without a Tier Upgrade (8.1)
+
+  Phase 3/4 additions (alongside your planned AI assistant/enterprise):
+    11. "Next Best Action" Suggestions (5.3)
+    12. Plain-Language Report Builder (8.2)
+    13. Independent Uptime & Security Audit Publication (9.4)
+
+These map directly onto the most-cited, evidence-backed weaknesses of
+Zoho, Salesforce, and HubSpot: switching cost and implementation time,
+pricing unpredictability and surprise charges, interface complexity,
+messy/duplicated data, support inconsistency on lower tiers, and
+features that are gated behind expensive upgrades rather than included
+from the start.
+
+
+===========================================================================
+End of document.
