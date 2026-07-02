@@ -1,3 +1,64 @@
+.rpt-page {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+}
+
+/* ── KPI Strip ── */
+.rpt-kpi-strip {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 16px;
+    margin-bottom: 24px;
+}
+
+.rpt-stat-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    transition: all var(--transition-fast);
+}
+
+.rpt-stat-card:hover {
+    box-shadow: var(--shadow-md);
+    border-color: var(--accent);
+    transform: translateY(-1px);
+}
+
+.rpt-stat-icon {
+    width: 36px;
+    height: 36px;
+    border-radius: var(--radius-sm);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 4px;
+}
+
+.rpt-stat-value {
+    font-size: 24px;
+    font-weight: 700;
+    color: var(--ink-900);
+    line-height: 1.2;
+    font-variant-numeric: tabular-nums;
+}
+
+.rpt-stat-label {
+    font-size: 12px;
+    color: var(--ink-500);
+    font-weight: 500;
+}
+
+.rpt-stat-sub {
+    font-size: 12px;
+    color: var(--ink-400);
+}
+
+/* ── Chart Grid ── */
 .rpt-grid {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
@@ -10,7 +71,6 @@
     border: 1px solid var(--border);
     border-radius: var(--radius-md);
     padding: 18px;
-    cursor: pointer;
     transition: all var(--transition-fast);
 }
 
@@ -18,6 +78,33 @@
     box-shadow: var(--shadow-md);
     border-color: var(--accent);
     transform: translateY(-1px);
+}
+
+.rpt-card-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    margin-bottom: 16px;
+    gap: 12px;
+    padding-left: 4px;
+}
+
+.rpt-card-title {
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--ink-900);
+    margin: 0;
+}
+
+.rpt-card-subtitle {
+    font-size: 12px;
+    color: var(--ink-500);
+    margin-top: 2px;
+    line-height: 1.4;
+}
+
+.rpt-card-body {
+    position: relative;
 }
 
 .rpt-card-icon {
@@ -38,13 +125,6 @@
 .rpt-card-icon-amber { background: var(--gradient-warning); }
 .rpt-card-icon-red { background: var(--gradient-danger); }
 
-.rpt-card-title {
-    font-size: 14px;
-    font-weight: 700;
-    color: var(--ink-900);
-    margin-bottom: 4px;
-}
-
 .rpt-card-desc {
     font-size: 12px;
     color: var(--ink-500);
@@ -58,6 +138,200 @@
     margin-top: 10px;
     font-size: 11px;
     color: var(--ink-500);
+}
+
+/* ── Horizontal Bar Chart ── */
+.rpt-hbar-list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.rpt-hbar-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.rpt-hbar-label {
+    width: 90px;
+    font-size: 12px;
+    color: var(--ink-600);
+    flex-shrink: 0;
+    text-align: right;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.rpt-hbar-track {
+    flex: 1;
+    height: 20px;
+    background: var(--ink-200);
+    border-radius: var(--radius-xs);
+    overflow: hidden;
+}
+
+.rpt-hbar-fill {
+    height: 100%;
+    border-radius: var(--radius-xs);
+    transition: width 0.4s ease;
+    min-width: 4px;
+}
+
+.rpt-hbar-val {
+    width: 70px;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--ink-800);
+    flex-shrink: 0;
+    text-align: right;
+    font-variant-numeric: tabular-nums;
+}
+
+/* ── Donut / Pie ── */
+.rpt-pie-row {
+    display: flex;
+    align-items: center;
+    gap: 24px;
+}
+
+.rpt-donut-wrap {
+    position: relative;
+    flex-shrink: 0;
+}
+
+.rpt-donut-center {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.rpt-donut-total {
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--ink-900);
+    line-height: 1.2;
+}
+
+.rpt-donut-sub {
+    font-size: 10px;
+    color: var(--ink-500);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+}
+
+/* ── Legend ── */
+.rpt-legend {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    flex: 1;
+    min-width: 0;
+}
+
+.rpt-legend-inline {
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-top: 12px;
+}
+
+.rpt-legend-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 12px;
+    color: var(--ink-700);
+}
+
+.rpt-legend-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    flex-shrink: 0;
+}
+
+.rpt-legend-label {
+    flex: 1;
+    min-width: 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.rpt-legend-val {
+    font-weight: 600;
+    color: var(--ink-800);
+    font-variant-numeric: tabular-nums;
+    min-width: 24px;
+    text-align: right;
+}
+
+.rpt-legend-pct {
+    color: var(--ink-500);
+    font-variant-numeric: tabular-nums;
+    min-width: 36px;
+    text-align: right;
+}
+
+/* ── Vertical Bar ── */
+.rpt-vbar-wrap {
+    overflow-x: auto;
+    padding: 8px 0;
+}
+
+/* ── Stacked Bar ── */
+.rpt-stacked-wrap {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.rpt-stacked-bar {
+    display: flex;
+    height: 28px;
+    border-radius: var(--radius-sm);
+    overflow: hidden;
+}
+
+.rpt-stacked-seg {
+    height: 100%;
+    transition: width 0.4s ease;
+    min-width: 4px;
+}
+
+/* ── Labels / Empty ── */
+.rpt-chart-label {
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--ink-500);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 8px;
+}
+
+.rpt-task-total {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 16px;
+    padding-top: 12px;
+    border-top: 1px solid var(--border-light);
+}
+
+.rpt-empty {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 32px 16px;
+    color: var(--ink-400);
+    font-size: 13px;
 }
 
 .rpt-full-chart {

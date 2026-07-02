@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import { DragDropContext, Droppable } from "@hello-pangea/dnd";
 import { settingsApi } from "../../api/miscApi";
 import DashboardWidget from "./DashboardWidget";
@@ -17,10 +17,6 @@ function saveLocal(val) {
     try { localStorage.setItem(LS_KEY, JSON.stringify(val)); } catch {}
 }
 
-function getDefault(ids) {
-    return { order: [...ids], hidden: [] };
-}
-
 export default function DashboardLayout({ widgets, defaultOrder, children }) {
     const [order, setOrder] = useState(() => {
         return loadLocal()?.order || [...defaultOrder];
@@ -29,13 +25,24 @@ export default function DashboardLayout({ widgets, defaultOrder, children }) {
         return loadLocal()?.hidden || [];
     });
     const [customizing, setCustomizing] = useState(false);
+    const serverSynced = useRef(false);
+    const mounted = useRef(false);
 
-    useEffect(() => { saveLocal({ order, hidden }); }, [order, hidden]);
-
-    // Sync from server once on mount
     useEffect(() => {
+        mounted.current = true;
+        return () => { mounted.current = false; };
+    }, []);
+
+    useEffect(() => {
+        if (mounted.current) saveLocal({ order, hidden });
+    }, [order, hidden]);
+
+    useEffect(() => {
+        if (serverSynced.current) return;
+        serverSynced.current = true;
         settingsApi.list({ scope: "user" })
             .then(res => {
+                if (!mounted.current) return;
                 const items = res.data.data || [];
                 const saved = items.find(s => s.key === API_KEY);
                 if (saved?.value) {
@@ -44,7 +51,7 @@ export default function DashboardLayout({ widgets, defaultOrder, children }) {
                 }
             })
             .catch(() => {});
-    }, []);
+    }, [defaultOrder]);
 
     const persist = useCallback(async (newOrder, newHidden) => {
         try {
@@ -58,20 +65,25 @@ export default function DashboardLayout({ widgets, defaultOrder, children }) {
 
     function handleDragEnd(result) {
         if (!result.destination) return;
-        const items = Array.from(order);
-        const [moved] = items.splice(result.source.index, 1);
-        items.splice(result.destination.index, 0, moved);
-        setOrder(items);
+        setOrder(prev => {
+            const items = Array.from(prev);
+            const [moved] = items.splice(result.source.index, 1);
+            items.splice(result.destination.index, 0, moved);
+            return items;
+        });
     }
 
     function toggleWidget(id) {
-        if (order.includes(id)) {
-            setOrder(order.filter(w => w !== id));
-            setHidden(h => [...h, id]);
-        } else {
-            setHidden(h => h.filter(x => x !== id));
-            setOrder(o => [...o, id]);
-        }
+        setOrder(prev => {
+            if (prev.includes(id)) {
+                return prev.filter(w => w !== id);
+            }
+            return [...prev, id];
+        });
+        setHidden(prev => {
+            if (prev.includes(id)) return prev.filter(x => x !== id);
+            return [...prev, id];
+        });
     }
 
     function handleDone() {
@@ -138,26 +150,25 @@ export default function DashboardLayout({ widgets, defaultOrder, children }) {
 
             <DragDropContext onDragEnd={handleDragEnd}>
                 <Droppable droppableId="dashboard" direction="vertical">
-                    {(provided) => (
+                    {(provided, _snapshot) => (
                         <div
                             ref={provided.innerRef}
                             {...provided.droppableProps}
-                            style={{
-                                display: "grid",
-                                gridTemplateColumns: "1fr 1fr",
-                                gap: 20,
-                                marginBottom: 24,
-                                minHeight: customizing ? 120 : 0,
-                            }}
+                            className="dash-widget-grid"
+                            data-customizing={customizing}
                         >
                             {visibleWidgets.map(w => (
-                                <div key={w.id} style={w.span === 2 ? { gridColumn: "1 / -1" } : { gridColumn: "span 1" }}>
+                                <div key={w.id}
+                                    className={`dash-widget-cell ${w.span === 2 ? "dash-widget-cell-full" : "dash-widget-cell-half"}`}
+                                >
                                     <DashboardWidget id={w.id} title={w.title} index={w.index} customizing={customizing}>
                                         {w.render()}
                                     </DashboardWidget>
                                 </div>
                             ))}
-                            {provided.placeholder}
+                            {provided.placeholder && (
+                                <div className="dash-widget-placeholder" />
+                            )}
                         </div>
                     )}
                 </Droppable>
@@ -189,7 +200,7 @@ export default function DashboardLayout({ widgets, defaultOrder, children }) {
                                         display: "flex", alignItems: "center", gap: 10,
                                         padding: "10px 12px", borderRadius: "var(--radius-sm)",
                                         background: visible ? "var(--accent-tint)" : "var(--surface-sunken)",
-                                        border: "1px solid var(--border-hairline)",
+                                        border: "1px solid var(--border)",
                                         cursor: "pointer", fontSize: 13,
                                     }}>
                                     <input type="checkbox" checked={visible} readOnly />
@@ -199,7 +210,7 @@ export default function DashboardLayout({ widgets, defaultOrder, children }) {
                                     <span style={{
                                         fontSize: 10, color: "var(--ink-400)",
                                         background: "var(--surface)", padding: "1px 6px",
-                                        borderRadius: 4, border: "1px solid var(--border-hairline)",
+                                        borderRadius: 4, border: "1px solid var(--border)",
                                     }}>
                                         {w.span === 2 ? "Full" : "Half"}
                                     </span>

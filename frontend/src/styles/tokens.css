@@ -138,3 +138,30 @@
     --shadow-lg: 0 10px 24px rgba(0, 0, 0, 0.3);
     --shadow-xl: 0 20px 40px rgba(0, 0, 0, 0.35);
 }
+
+/* ── Extended tokens (workflow + misc) ─────────────────────── */
+:root {
+    /* Missing border tokens */
+    --border:            #E4E1D8;
+    --border-light:      #EDEAE3;
+    --border-strong:     #C8C5BC;
+
+    /* Missing surface tokens */
+    --surface-raised:    #F7F6F2;
+    --canvas-alt:        #F7F6F1;
+
+    /* Missing shadow */
+    --shadow-xl:         0 20px 60px rgba(21, 25, 43, 0.22);
+
+    /* Missing radius */
+    --radius-full:       9999px;
+
+    /* Ink-300 / Ink-500 shims */
+    --ink-300:           #D0CFC8;
+    --ink-500:           #565B6A;
+
+    /* Accent HSL for glow effects */
+    --accent-h:          33;
+    --accent-s:          65%;
+    --accent-l:          48%;
+}

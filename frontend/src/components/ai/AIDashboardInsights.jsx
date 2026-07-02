@@ -1,21 +1,11 @@
-/**
- * AI Dashboard Insights — Displays AI-generated insights on the dashboard
- * 
- * Integrates with the AI service to generate contextual business insights
- * based on current CRM data. Falls back to rule-based insights when
- * no AI provider is configured.
- * 
- * TODO: Connect to real AI provider for dynamic insight generation
- * TODO: Add insight dismissal/feedback mechanism
- * TODO: Add insight refresh on data change
- */
-
-import { useState } from 'react';
+import { useState, useEffect, useMemo } from 'react';
+import { useAI } from '../../context/AIContext';
+import { IconDollar, IconAlertTriangle, IconTrendUp, IconLightbulb } from '../ui/Icons';
 
 const fallbackInsights = [
     {
         type: 'opportunity',
-        icon: '💰',
+        icon: IconDollar,
         title: 'High-value deals approaching close',
         description: '3 deals worth $45,000+ are in the final negotiation stage. Consider personalized outreach.',
         action: 'View Deals',
@@ -23,7 +13,7 @@ const fallbackInsights = [
     },
     {
         type: 'alert',
-        icon: '⚠️',
+        icon: IconAlertTriangle,
         title: 'Follow-up backlog detected',
         description: '5 follow-ups are overdue. Automate reminders to improve response rates.',
         action: 'View Follow-ups',
@@ -31,7 +21,7 @@ const fallbackInsights = [
     },
     {
         type: 'trend',
-        icon: '📈',
+        icon: IconTrendUp,
         title: 'Lead source performance',
         description: 'Website referrals convert 40% better than other channels. Consider increasing ad spend.',
         action: 'View Reports',
@@ -39,7 +29,7 @@ const fallbackInsights = [
     },
     {
         type: 'tip',
-        icon: '💡',
+        icon: IconLightbulb,
         title: 'Pipeline bottleneck',
         description: 'Leads are spending 2x longer in the "Qualified" stage. Review your qualification criteria.',
         action: 'View Pipeline',
@@ -47,69 +37,103 @@ const fallbackInsights = [
     },
 ];
 
-export default function AIDashboardInsights({ summary, compact }) {
-    const [activeIndex, setActiveIndex] = useState(0);
-    const [dismissed, setDismissed] = useState(new Set());
+const AI_INSIGHT_COLORS = {
+    opportunity: { bg: 'var(--accent-green-tint)', border: 'var(--accent-green)', icon: 'var(--accent-green)' },
+    alert: { bg: 'var(--accent-red-tint)', border: 'var(--accent-red)', icon: 'var(--accent-red)' },
+    trend: { bg: 'var(--accent-blue-tint)', border: 'var(--accent-blue)', icon: 'var(--accent-blue)' },
+    tip: { bg: 'var(--accent-amber-tint)', border: 'var(--accent-amber)', icon: 'var(--accent-amber)' },
+    ai: { bg: 'var(--accent-purple-tint)', border: 'var(--accent-purple)', icon: 'var(--accent-purple)' },
+};
 
-    const visible = fallbackInsights.filter((_, i) => !dismissed.has(i));
+export default function AIDashboardInsights({ summary, compact }) {
+    const { ready: aiReady, analyzeAI } = useAI();
+    const [activeIndex, setActiveIndex] = useState(0);
+    const [dismissed] = useState(new Set());
+    const [aiInsights, setAiInsights] = useState(null);
+
+    useEffect(() => {
+        if (aiReady && summary) {
+            analyzeAI('dashboard', {
+                total_leads: summary.total_leads,
+                total_customers: summary.total_customers,
+                open_deals: summary.open_deals_count,
+                open_deals_value: summary.open_deals_value,
+                won_deals: summary.won_deals_count,
+                pending_tasks: summary.pending_tasks,
+                overdue_tasks: summary.overdue_tasks,
+                pending_followups: summary.pending_followups,
+                new_leads: summary.new_leads,
+            }).then(result => {
+                if (result.success) {
+                    setAiInsights([{
+                        type: 'ai',
+                        icon: IconLightbulb,
+                        title: 'AI Analysis',
+                        description: result.message?.slice(0, 150) || 'Analysis complete.',
+                        action: 'View Details',
+                        link: '/ai-assistant',
+                    }]);
+                }
+            }).catch(() => {});
+        }
+    }, [aiReady, summary, analyzeAI]);
+
+    const allInsights = useMemo(() => {
+        return [...(aiInsights || []), ...fallbackInsights];
+    }, [aiInsights]);
+
+    const visible = allInsights.filter((_, i) => !dismissed.has(i));
 
     if (visible.length === 0) return null;
 
     const insight = compact ? visible[activeIndex % visible.length] : null;
 
     if (compact) {
+        const colors = AI_INSIGHT_COLORS[insight.type] || AI_INSIGHT_COLORS.tip;
+        const Icon = insight.icon;
         return (
-            <div style={{
-                background: 'var(--gradient-primary)',
-                borderRadius: 'var(--radius-md)', padding: '16px 20px',
-                color: '#fff', cursor: 'pointer', position: 'relative', overflow: 'hidden',
-            }} onClick={() => setActiveIndex(i => (i + 1) % visible.length)}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 4 }}>
-                    <span style={{ fontSize: 20 }}>{insight.icon}</span>
-                    <span style={{ fontWeight: 700, fontSize: 14 }}>{insight.title}</span>
+            <div
+                className="ai-insight-compact"
+                style={{ background: colors.bg, borderColor: colors.border }}
+                onClick={() => setActiveIndex(i => (i + 1) % visible.length)}
+            >
+                <div className="ai-insight-compact-top">
+                    <span className="ai-insight-compact-icon" style={{ color: colors.icon }}>
+                        <Icon width={18} height={18} />
+                    </span>
+                    <span className="ai-insight-compact-title">{insight.title}</span>
                 </div>
-                <p style={{ fontSize: 13, opacity: 0.9, lineHeight: 1.5, marginBottom: 8 }}>{insight.description}</p>
-                <a href={insight.link} style={{ fontSize: 12, fontWeight: 700, color: '#fff', opacity: 0.85, textDecoration: 'underline' }}
-                    onClick={e => e.stopPropagation()}>
-                    {insight.action} →
+                <p className="ai-insight-compact-desc">{insight.description}</p>
+                <a href={insight.link} className="ai-insight-link" onClick={e => e.stopPropagation()}>
+                    {insight.action} &rarr;
                 </a>
-                <span style={{ position: 'absolute', bottom: 8, right: 12, fontSize: 11, opacity: 0.5 }}>
-                    {activeIndex + 1}/{visible.length}
-                </span>
+                <span className="ai-insight-counter">{activeIndex + 1}/{visible.length}</span>
             </div>
         );
     }
 
     return (
-        <div style={{
-            background: 'var(--surface)', border: '1px solid var(--border)',
-            borderRadius: 'var(--radius-md)', overflow: 'hidden',
-        }}>
-            <div style={{ padding: '16px 20px', borderBottom: '1px solid var(--border)' }}>
-                <span style={{ fontSize: 15, fontWeight: 700, color: 'var(--ink-900)' }}>
-                    AI Insights
-                </span>
+        <div className="ai-card">
+            <div className="ai-card-header">
+                <span className="ai-card-title">AI Insights</span>
             </div>
-            <div style={{ padding: '8px 20px' }}>
-                {visible.map((insight, i) => (
-                    <div key={i} style={{
-                        display: 'flex', gap: 12, padding: '12px 0',
-                        borderBottom: i < visible.length - 1 ? '1px solid var(--border-light)' : 'none',
-                    }}>
-                        <span style={{ fontSize: 20, lineHeight: 1.4 }}>{insight.icon}</span>
-                        <div style={{ flex: 1 }}>
-                            <div style={{ fontWeight: 600, fontSize: 13, color: 'var(--ink-800)', marginBottom: 2 }}>
-                                {insight.title}
+            <div className="ai-card-body ai-insights-list">
+                {visible.map((insight, i) => {
+                    const Icon = insight.icon;
+                    const colors = AI_INSIGHT_COLORS[insight.type] || AI_INSIGHT_COLORS.tip;
+                    return (
+                        <div key={i} className="ai-insight-row">
+                            <span className="ai-insight-icon" style={{ color: colors.icon }}>
+                                <Icon width={18} height={18} />
+                            </span>
+                            <div className="ai-insight-content">
+                                <div className="ai-insight-title">{insight.title}</div>
+                                <p className="ai-insight-desc">{insight.description}</p>
+                                <a href={insight.link} className="ai-insight-link">{insight.action} &rarr;</a>
                             </div>
-                            <p style={{ fontSize: 12, color: 'var(--ink-500)', lineHeight: 1.5, marginBottom: 6 }}>
-                                {insight.description}
-                            </p>
-                            <a href={insight.link} style={{ fontSize: 12, fontWeight: 600, color: 'var(--accent)', textDecoration: 'none' }}>
-                                {insight.action} →
-                            </a>
                         </div>
-                    </div>
-                ))}
+                    );
+                })}
             </div>
         </div>
     );

@@ -1,0 +1,46 @@
+# ── Frontend (React + Vite) ──
+frontend/node_modules/
+frontend/dist/
+frontend/.vite/
+frontend/*.tsbuildinfo
+frontend/.env.local
+frontend/.env.*.local
+
+# ── Backend (Python Flask) ──
+backend/__pycache__/
+backend/app/__pycache__/
+backend/app/**/__pycache__/
+backend/*.pyc
+backend/*.pyo
+backend/.env
+backend/.venv/
+backend/venv/
+backend/env/
+backend/*.egg-info/
+backend/.Python
+backend/pip-wheel-metadata/
+backend/.pytest_cache/
+backend/.coverage
+backend/htmlcov/
+backend/instance/
+backend/.webassets-cache
+backend/.tox/
+
+# ── IDE / Editor ──
+.vscode/
+.kiro/
+.idea/
+*.swp
+*.swo
+*~
+
+# ── OS ──
+.DS_Store
+Thumbs.db
+Desktop.ini
+
+# ── Logs ──
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*

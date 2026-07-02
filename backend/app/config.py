@@ -35,6 +35,12 @@ class Config:
     # File uploads
     UPLOAD_FOLDER = os.getenv("UPLOAD_FOLDER", os.path.join(os.path.dirname(__file__), "..", "uploads"))
 
+    # AI Provider (Groq)
+    AI_PROVIDER = os.getenv("AI_PROVIDER", "groq")
+    GROQ_API_KEY = os.getenv("GROQ_API_KEY", "")
+    GROQ_MODEL = os.getenv("GROQ_MODEL", "llama-3.3-70b-versatile")
+    GROQ_BASE_URL = "https://api.groq.com/openai/v1"
+
     # Pagination
     DEFAULT_PAGE_SIZE = int(os.getenv("DEFAULT_PAGE_SIZE", 20))
     MAX_PAGE_SIZE = int(os.getenv("MAX_PAGE_SIZE", 100))

@@ -3,8 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { DragDropContext, Droppable, Draggable } from "@hello-pangea/dnd";
 import { pipelineApi, dealsApi } from "../api/pipelineApi";
 import { formatCurrency } from "../utils/formatters";
-import { IconPlus, IconDollar, IconTarget } from "../components/ui/Icons";
-import { useAuth } from "../context/AuthContext";
+import { IconPlus, IconTarget } from "../components/ui/Icons";
 import { useToast } from "../context/ToastContext";
 
 const STAGE_ACCENTS = {
@@ -18,14 +17,13 @@ const STAGE_ACCENTS = {
 
 export default function PipelinePage() {
     const navigate = useNavigate();
-    const { user } = useAuth();
     const toast = useToast();
     const [stages, setStages] = useState([]);
     const [board, setBoard] = useState({});
     const [loading, setLoading] = useState(true);
     const [moving, setMoving] = useState(false);
 
-    function loadBoard() {
+    const loadBoard = useCallback(() => {
         setLoading(true);
         Promise.all([pipelineApi.listStages(), pipelineApi.board()])
             .then(([stagesRes, boardRes]) => {
@@ -34,9 +32,9 @@ export default function PipelinePage() {
             })
             .catch(() => toast.error("Failed to load pipeline"))
             .finally(() => setLoading(false));
-    }
+    }, [toast]);
 
-    useEffect(loadBoard, []);
+    useEffect(() => { loadBoard(); }, [loadBoard]);
 
     const handleDragEnd = useCallback(async (result) => {
         if (!result.destination) return;
@@ -70,7 +68,7 @@ export default function PipelinePage() {
         } finally {
             setMoving(false);
         }
-    }, [board, toast]);
+    }, [board, toast, loadBoard]);
 
     const totalPipelineValue = stages.reduce((sum, stage) => {
         const deals = board[stage.id] || board[stage.name] || [];

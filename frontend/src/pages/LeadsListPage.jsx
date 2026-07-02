@@ -6,10 +6,11 @@ import { StatusBadge } from "../components/ui/Badge";
 import { Button } from "../components/ui/Button";
 import { Modal } from "../components/ui/Modal";
 import { LeadFormModal } from "../components/features/LeadFormModal";
+import { ImportLeadsModal } from "../components/features/ImportLeadsModal";
 import { Pagination } from "../components/ui/Misc";
 import { useToast } from "../context/ToastContext";
 import { formatDate, formatCurrency } from "../utils/formatters";
-import { IconPlus, IconSearch } from "../components/ui/Icons";
+import { IconPlus, IconSearch, IconUpload } from "../components/ui/Icons";
 
 const TEMP_COLOR = { hot:"var(--danger)", warm:"var(--warning)", cold:"var(--info)" };
 const TEMP_EMOJI = { hot:"🔥", warm:"🌤", cold:"❄️" };
@@ -18,6 +19,7 @@ export default function LeadsListPage() {
     const navigate   = useNavigate();
     const toast      = useToast();
     const [showCreate, setShowCreate] = useState(false);
+    const [showImport, setShowImport] = useState(false);
     const [search, setSearch]         = useState("");
     const [status, setStatus]         = useState("");
     const [source, setSource]         = useState("");
@@ -39,6 +41,9 @@ export default function LeadsListPage() {
                     <span className="page-header-subtitle">{meta.total_count} total leads</span>
                 </div>
                 <div className="page-actions">
+                    <Button variant="secondary" onClick={() => setShowImport(true)}>
+                        <IconUpload width={14} height={14} /> Import
+                    </Button>
                     <Button onClick={() => setShowCreate(true)}>
                         <IconPlus width={14} height={14} /> New Lead
                     </Button>
@@ -135,6 +140,13 @@ export default function LeadsListPage() {
                 <LeadFormModal
                     onCreated={() => { setShowCreate(false); reload(); toast.success("Lead created."); }}
                     onCancel={() => setShowCreate(false)}
+                />
+            </Modal>
+
+            <Modal open={showImport} onClose={() => setShowImport(false)} title="Import Leads" maxWidth={560}>
+                <ImportLeadsModal
+                    onClose={() => setShowImport(false)}
+                    onImported={() => reload()}
                 />
             </Modal>
         </div>

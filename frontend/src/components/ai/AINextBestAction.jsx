@@ -1,22 +1,37 @@
-/**
- * AI Next Best Action — Suggests the most impactful action a user should take
- * 
- * Uses CRM data to rank pending actions by:
- *   - Urgency (deadlines, overdue items)
- *   - Impact (deal value, lead potential)
- *   - Priority (user-set priorities, smart scoring)
- * 
- * TODO: Connect to AI provider for personalized suggestions
- * TODO: Add reinforcement learning — track which suggestions users accept
- * TODO: Add time-aware suggestions (morning vs afternoon)
- */
-
-import { useMemo } from 'react';
+import { useMemo, useEffect, useState } from 'react';
+import { useAI } from '../../context/AIContext';
 
 const priorityOrder = { urgent: 0, high: 1, medium: 2, low: 3 };
 
+const PriorityIcon = ({ level }) => {
+    const colors = { urgent: '#EF4444', high: '#F59E0B', medium: '#10B981', low: '#3B82F6' };
+    return (
+        <svg viewBox="0 0 24 24" width={20} height={20} fill={colors[level] || '#94A3B8'}>
+            <circle cx="12" cy="12" r="10" />
+        </svg>
+    );
+};
+
 export default function AINextBestAction({ summary }) {
-    const s = summary || {};
+    const { ready: aiReady, analyzeAI } = useAI();
+    const [aiPriority, setAiPriority] = useState(null);
+    const s = useMemo(() => summary || {}, [summary]);
+
+    useEffect(() => {
+        if (aiReady && s.open_deals_count > 0) {
+            analyzeAI('next_best_action', {
+                overdue_tasks: s.overdue_tasks,
+                pending_followups: s.pending_followups,
+                new_leads: s.new_leads,
+                open_deals: s.open_deals_count,
+                open_deals_value: s.open_deals_value,
+            }).then(result => {
+                if (result.success && result.message) {
+                    setAiPriority(result.message.slice(0, 200));
+                }
+            }).catch(() => {});
+        }
+    }, [aiReady, s, analyzeAI]);
 
     const actions = useMemo(() => {
         const list = [];
@@ -25,9 +40,8 @@ export default function AINextBestAction({ summary }) {
             list.push({
                 id: 'overdue-tasks',
                 priority: 'urgent',
-                icon: '🔴',
                 title: `Clear ${s.overdue_tasks} overdue task${s.overdue_tasks > 1 ? 's' : ''}`,
-                description: 'Overdue tasks may be blocking your team. Prioritize these first.',
+                description: aiPriority || 'Overdue tasks may be blocking your team. Prioritize these first.',
                 action: 'View Tasks',
                 link: '/tasks',
                 impact: 90,
@@ -38,7 +52,6 @@ export default function AINextBestAction({ summary }) {
             list.push({
                 id: 'pending-followups',
                 priority: 'high',
-                icon: '🟡',
                 title: `Complete ${s.pending_followups} pending follow-up${s.pending_followups > 1 ? 's' : ''}`,
                 description: 'Timely follow-ups increase conversion rates by up to 50%.',
                 action: 'View Follow-ups',
@@ -51,7 +64,6 @@ export default function AINextBestAction({ summary }) {
             list.push({
                 id: 'new-leads',
                 priority: 'high',
-                icon: '🟢',
                 title: `Qualify ${s.new_leads} new lead${s.new_leads > 1 ? 's' : ''}`,
                 description: 'New leads lose interest quickly. Respond within the first hour.',
                 action: 'View Leads',
@@ -64,7 +76,6 @@ export default function AINextBestAction({ summary }) {
             list.push({
                 id: 'pipeline-review',
                 priority: 'medium',
-                icon: '🔵',
                 title: `Review ${s.open_deals_count} open deal${s.open_deals_count > 1 ? 's' : ''} in pipeline`,
                 description: 'Regular pipeline reviews help identify stalled opportunities.',
                 action: 'View Pipeline',
@@ -76,39 +87,24 @@ export default function AINextBestAction({ summary }) {
         list.sort((a, b) => (priorityOrder[a.priority] || 99) - (priorityOrder[b.priority] || 99));
 
         return list;
-    }, [s]);
+    }, [s, aiPriority]);
 
     if (actions.length === 0) return null;
 
     return (
-        <div style={{
-            background: 'var(--surface)', border: '1px solid var(--border)',
-            borderRadius: 'var(--radius-md)', overflow: 'hidden',
-        }}>
-            <div style={{ padding: '16px 20px', borderBottom: '1px solid var(--border)' }}>
-                <span style={{ fontSize: 15, fontWeight: 700, color: 'var(--ink-900)' }}>
-                    Next Best Actions
-                </span>
+        <div className="ai-card">
+            <div className="ai-card-header">
+                <span className="ai-card-title">Next Best Actions</span>
             </div>
-            <div style={{ padding: '4px 20px' }}>
+            <div className="ai-card-body">
                 {actions.map((a) => (
-                    <div key={a.id} style={{
-                        display: 'flex', gap: 12, padding: '12px 0',
-                        borderBottom: '1px solid var(--border-light)',
-                        alignItems: 'center',
-                    }}>
-                        <span style={{ fontSize: 20, lineHeight: 1.4 }}>{a.icon}</span>
-                        <div style={{ flex: 1 }}>
-                            <div style={{ fontWeight: 600, fontSize: 13, color: 'var(--ink-800)', marginBottom: 2 }}>
-                                {a.title}
-                            </div>
-                            <p style={{ fontSize: 12, color: 'var(--ink-500)', lineHeight: 1.5 }}>
-                                {a.description}
-                            </p>
+                    <div key={a.id} className="ai-action-row">
+                        <PriorityIcon level={a.priority} />
+                        <div className="ai-action-content">
+                            <div className="ai-action-title">{a.title}</div>
+                            <p className="ai-action-desc">{a.description}</p>
                         </div>
-                        <a href={a.link} className="btn btn-sm btn-primary" style={{ textDecoration: 'none' }}>
-                            {a.action}
-                        </a>
+                        <a href={a.link} className="btn btn-sm btn-primary">{a.action}</a>
                     </div>
                 ))}
             </div>

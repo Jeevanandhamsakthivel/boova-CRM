@@ -42,6 +42,13 @@ from app.routes.enrichment_routes import enrich_bp
 from app.routes.migration_enhanced_routes import migration_enhanced_bp
 from app.routes.pricing_routes import pricing_bp
 from app.routes.onboarding_routes import onboarding_bp
+from app.routes.workflow_routes import workflows_bp
+from app.routes.workflow_template_routes import workflow_templates_bp
+from app.routes.workflow_execution_routes import workflow_executions_bp
+from app.routes.workflow_analytics_routes import workflow_analytics_bp
+from app.routes.setup_wizard_routes import setup_wizard_bp
+from app.routes.employee_setup_routes import employee_setup_bp
+from app.routes.ai_routes import ai_bp
 def create_app(config_object=None):
     app = Flask(__name__)
     app.config.from_object(config_object or get_config())
@@ -93,6 +100,13 @@ def create_app(config_object=None):
     app.register_blueprint(enrich_bp)
     app.register_blueprint(pricing_bp)
     app.register_blueprint(onboarding_bp)
+    app.register_blueprint(workflows_bp)
+    app.register_blueprint(workflow_templates_bp)
+    app.register_blueprint(workflow_executions_bp)
+    app.register_blueprint(workflow_analytics_bp)
+    app.register_blueprint(setup_wizard_bp)
+    app.register_blueprint(employee_setup_bp)
+    app.register_blueprint(ai_bp)
 
     # Serve uploaded files (avatars, etc.)
     upload_dir = app.config.get("UPLOAD_FOLDER", os.path.join(os.getcwd(), "uploads"))

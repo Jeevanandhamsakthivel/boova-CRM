@@ -124,3 +124,87 @@ export const IconRefresh = (p) => (
 export const IconFilter = (p) => (
     <svg viewBox="0 0 24 24" {...base} {...p}><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3" /></svg>
 );
+export const IconWorkflow = (p) => (
+    <svg viewBox="0 0 24 24" {...base} {...p}><rect x="3" y="3" width="7" height="7" rx="1.5" /><rect x="14" y="3" width="7" height="7" rx="1.5" /><rect x="3" y="14" width="7" height="7" rx="1.5" /><rect x="14" y="14" width="7" height="7" rx="1.5" /><path d="M6.5 10v4M17.5 10v4M10 6.5h4M10 17.5h4" /></svg>
+);
+export const IconWorkflowBuilder = (p) => (
+    <svg viewBox="0 0 24 24" {...base} {...p}><path d="M12 3v18M3 12h18" /><circle cx="12" cy="5" r="2" /><circle cx="12" cy="19" r="2" /><circle cx="5" cy="12" r="2" /><circle cx="19" cy="12" r="2" /></svg>
+);
+export const IconTemplate = (p) => (
+    <svg viewBox="0 0 24 24" {...base} {...p}><rect x="3" y="3" width="18" height="18" rx="2" /><path d="M3 9h18M9 3v18" /></svg>
+);
+export const IconPlay = (p) => (
+    <svg viewBox="0 0 24 24" {...base} {...p}><polygon points="5 3 19 12 5 21 5 3" /></svg>
+);
+export const IconBarChart = (p) => (
+    <svg viewBox="0 0 24 24" {...base} {...p}><path d="M3 3v18h18" /><rect x="7" y="13" width="3" height="5" /><rect x="12" y="9" width="3" height="9" /><rect x="17" y="6" width="3" height="12" /></svg>
+);
+export const IconShuffle = (p) => (
+    <svg viewBox="0 0 24 24" {...base} {...p}><polyline points="16 3 21 3 21 8" /><line x1="4" y1="20" x2="21" y2="3" /><polyline points="21 16 21 21 16 21" /><line x1="15" y1="15" x2="21" y2="21" /><line x1="4" y1="4" x2="9" y2="9" /></svg>
+);
+export const IconGitMerge = (p) => (
+    <svg viewBox="0 0 24 24" {...base} {...p}><circle cx="18" cy="18" r="3" /><circle cx="6" cy="6" r="3" /><path d="M6 21V9a9 9 0 0 0 9 9" /></svg>
+);
+export const IconSave = (p) => (
+    <svg viewBox="0 0 24 24" {...base} {...p}><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z" /><polyline points="17 21 17 13 7 13 7 21" /><polyline points="7 3 7 8 15 8" /></svg>
+);
+export const IconCopy = (p) => (
+    <svg viewBox="0 0 24 24" {...base} {...p}><rect x="9" y="9" width="13" height="13" rx="2" /><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" /></svg>
+);
+export const IconNodeStart = (p) => (
+    <svg viewBox="0 0 24 24" {...base} {...p}><polygon points="5 3 19 12 5 21 5 3" /></svg>
+);
+export const IconNodeEnd = (p) => (
+    <svg viewBox="0 0 24 24" {...base} {...p}><rect x="4" y="4" width="16" height="16" rx="3" /></svg>
+);
+export const IconNodeCondition = (p) => (
+    <svg viewBox="0 0 24 24" {...base} {...p}><polygon points="12 2 22 12 12 22 2 12" /></svg>
+);
+export const IconNodeWait = (p) => (
+    <svg viewBox="0 0 24 24" {...base} {...p}><circle cx="12" cy="12" r="9" /><polyline points="12 7 12 12 15 15" /></svg>
+);
+export const IconNodeAssignOwner = (p) => (
+    <svg viewBox="0 0 24 24" {...base} {...p}><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" /><circle cx="9" cy="7" r="4" /><line x1="19" y1="8" x2="19" y2="14" /><line x1="16" y1="11" x2="22" y2="11" /></svg>
+);
+export const IconNodeTransferOwner = (p) => (
+    <svg viewBox="0 0 24 24" {...base} {...p}><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" /><circle cx="9" cy="7" r="4" /><polyline points="17 8 21 12 17 16" /><line x1="21" y1="12" x2="9" y2="12" /></svg>
+);
+export const IconNodeSms = (p) => (
+    <svg viewBox="0 0 24 24" {...base} {...p}><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" /></svg>
+);
+export const IconNodeGenerateDocument = (p) => (
+    <svg viewBox="0 0 24 24" {...base} {...p}><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" /><polyline points="14 2 14 8 20 8" /><line x1="9" y1="13" x2="15" y2="13" /><line x1="9" y1="17" x2="13" y2="17" /></svg>
+);
+export const IconNodeWebhook = (p) => (
+    <svg viewBox="0 0 24 24" {...base} {...p}><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71" /><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71" /></svg>
+);
+export const IconNodeRestApi = (p) => (
+    <svg viewBox="0 0 24 24" {...base} {...p}><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2" /></svg>
+);
+export const IconNodeAiDecision = (p) => (
+    <svg viewBox="0 0 24 24" {...base} {...p}><rect x="4" y="4" width="16" height="16" rx="3" /><circle cx="9" cy="10" r="1.5" /><circle cx="15" cy="10" r="1.5" /><path d="M8 16c0 1.1 1.79 2 4 2s4-.9 4-2" /></svg>
+);
+export const IconNodeParallel = (p) => (
+    <svg viewBox="0 0 24 24" {...base} {...p}><rect x="3" y="3" width="7" height="18" rx="1" /><rect x="14" y="3" width="7" height="18" rx="1" /></svg>
+);
+export const IconUpload = (p) => (
+    <svg viewBox="0 0 24 24" {...base} {...p}><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" /><polyline points="17 8 12 3 7 8" /><line x1="12" y1="3" x2="12" y2="15" /></svg>
+);
+export const IconFile = (p) => (
+    <svg viewBox="0 0 24 24" {...base} {...p}><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" /><polyline points="14 2 14 8 20 8" /></svg>
+);
+export const IconTable = (p) => (
+    <svg viewBox="0 0 24 24" {...base} {...p}><rect x="3" y="3" width="18" height="18" rx="2" /><line x1="3" y1="9" x2="21" y2="9" /><line x1="3" y1="15" x2="21" y2="15" /><line x1="9" y1="3" x2="9" y2="21" /></svg>
+);
+export const IconMessageCircle = (p) => (
+    <svg viewBox="0 0 24 24" {...base} {...p}><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" /></svg>
+);
+export const IconLightbulb = (p) => (
+    <svg viewBox="0 0 24 24" {...base} {...p}><path d="M9 18h6" /><path d="M10 22h4" /><path d="M15.09 14c.18-.98.65-1.74 1.41-2.5A4.65 4.65 0 0 0 18 8 6 6 0 0 0 6 8c0 1 .23 2.23 1.5 3.5A4.61 4.61 0 0 1 8.91 14" /></svg>
+);
+export const IconZap = (p) => (
+    <svg viewBox="0 0 24 24" {...base} {...p}><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2" /></svg>
+);
+export const IconBot = (p) => (
+    <svg viewBox="0 0 24 24" {...base} {...p}><rect x="3" y="11" width="18" height="10" rx="2" /><circle cx="12" cy="16" r="2" /><path d="M12 9V6M8 6a4 4 0 0 1 8 0" /><line x1="8" y1="13" x2="10" y2="13" /><line x1="14" y1="13" x2="16" y2="13" /></svg>
+);

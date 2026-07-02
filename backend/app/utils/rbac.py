@@ -93,6 +93,14 @@ PERMISSIONS = {
 
     "bulk.actions": [ROLE_ADMIN, ROLE_MANAGER],
     "migration.read": [ROLE_ADMIN, ROLE_MANAGER],
+
+    "workflows.read": [ROLE_ADMIN, ROLE_MANAGER, ROLE_AGENT],
+    "workflows.create": [ROLE_ADMIN, ROLE_MANAGER],
+    "workflows.update": [ROLE_ADMIN, ROLE_MANAGER],
+    "workflows.delete": [ROLE_ADMIN],
+    "workflows.execute": [ROLE_ADMIN, ROLE_MANAGER, ROLE_AGENT],
+    "workflows.approve": [ROLE_ADMIN, ROLE_MANAGER],
+    "workflows.analytics": [ROLE_ADMIN, ROLE_MANAGER],
 }
 
 

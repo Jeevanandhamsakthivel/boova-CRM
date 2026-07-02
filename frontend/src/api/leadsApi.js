@@ -8,4 +8,11 @@ export const leadsApi = {
     remove: (id) => apiClient.delete(`/leads/${id}`),
     convert: (id, payload) => apiClient.post(`/leads/${id}/convert`, payload),
     activities: (id, params) => apiClient.get(`/leads/${id}/activities`, { params }),
+    importLeads: (file) => {
+        const formData = new FormData();
+        formData.append("file", file);
+        return apiClient.post("/leads/import", formData, {
+            headers: { "Content-Type": "multipart/form-data" },
+        });
+    },
 };

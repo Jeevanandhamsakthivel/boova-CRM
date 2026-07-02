@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { dashboardApi, activitiesApi } from "../api/miscApi";
 import { useAuth } from "../context/AuthContext";
@@ -50,7 +50,7 @@ export default function DashboardPage() {
 
     useEffect(loadData, []);
 
-    const s = summary || {};
+    const s = useMemo(() => summary || {}, [summary]);
     const greeting = useMemo(() => {
         const h = new Date().getHours();
         if (h < 12) return "Good morning";
@@ -61,16 +61,9 @@ export default function DashboardPage() {
     const wonDeals = s.won_deals_count || 0;
     const totalDeals = (s.open_deals_count || 0) + wonDeals;
     const winRate = totalDeals > 0 ? Math.round((wonDeals / totalDeals) * 100) : 0;
-
-    if (loading) return (
-        <div className="page-loading">
-            <div className="spinner spinner-lg" />
-        </div>
-    );
-
     const hasStageData = s.stage_distribution && s.stage_distribution.length > 0;
 
-    function PipelineWidget() {
+    const PipelineWidget = useCallback(function PipelineWidget() {
         if (!hasStageData) return null;
         return (
             <div className="dash-panel">
@@ -93,9 +86,9 @@ export default function DashboardPage() {
                 </div>
             </div>
         );
-    }
+    }, [s, hasStageData]);
 
-    function WinRateWidget() {
+    const WinRateWidget = useCallback(function WinRateWidget() {
         return (
             <div className="dash-panel">
                 <div className="dash-panel-header">
@@ -130,9 +123,9 @@ export default function DashboardPage() {
                 </div>
             </div>
         );
-    }
+    }, [s, winRate, wonDeals]);
 
-    function ActivityWidget() {
+    const ActivityWidget = useCallback(function ActivityWidget() {
         return (
             <div className="dash-panel">
                 <div className="dash-panel-header">
@@ -164,9 +157,9 @@ export default function DashboardPage() {
                 </div>
             </div>
         );
-    }
+    }, [recentActivities]);
 
-    const widgets = [
+    const widgets = useMemo(() => [
         {
             id: "health", title: "Business Health", span: 1,
             render: () => <BusinessHealthScore metrics={s} />,
@@ -199,9 +192,15 @@ export default function DashboardPage() {
             id: "activity", title: "Recent Activity", span: 2,
             render: () => <ActivityWidget />,
         },
-    ];
+    ], [s, PipelineWidget, WinRateWidget, ActivityWidget]);
 
-    const defaultOrder = ["health", "actions", "forecast", "advisor", "pipeline", "winrate", "notifications", "activity"];
+    const defaultOrder = useMemo(() => ["health", "actions", "forecast", "advisor", "pipeline", "winrate", "notifications", "activity"], []);
+
+    if (loading) return (
+        <div className="page-loading">
+            <div className="spinner spinner-lg" />
+        </div>
+    );
 
     return (
         <>

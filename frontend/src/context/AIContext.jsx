@@ -1,19 +1,24 @@
 /**
  * AI Context — Centralized state for all AI features
- * 
+ *
  * Provides:
- *   - AI provider configuration
+ *   - AI provider auto-initialization
  *   - Global AI request state (loading, errors)
  *   - AI insight cache
+ *   - Provider-agnostic ask/analyze/generate methods
  *   - Provider selection/switching
- * 
+ *
+ * Auto-loads the AI provider on mount based on VITE_AI_PROVIDER env var.
+ * Supported: openai, gemini, ollama, groq
+ *
  * TODO: Add rate limiting for AI requests
  * TODO: Add request queuing for offline support
  * TODO: Add AI feature flag management
  * TODO: Add telemetry for AI usage tracking
  */
 
-import { createContext, useCallback, useContext, useReducer, useState } from 'react';
+import { createContext, useCallback, useContext, useEffect, useReducer } from 'react';
+import aiService from '../services/ai';
 
 const AIContext = createContext(null);
 
@@ -49,6 +54,14 @@ function aiReducer(state, action) {
 export function AIProvider({ children }) {
     const [state, dispatch] = useReducer(aiReducer, initialState);
 
+    useEffect(() => {
+        aiService.getProvider().then(provider => {
+            dispatch({ type: 'SET_PROVIDER', payload: provider });
+        }).catch(err => {
+            console.error('Failed to initialize AI provider:', err);
+        });
+    }, []);
+
     const setProvider = useCallback((provider) => {
         dispatch({ type: 'SET_PROVIDER', payload: provider });
     }, []);
@@ -73,6 +86,45 @@ export function AIProvider({ children }) {
         dispatch({ type: 'CLEAR_ADVISOR' });
     }, []);
 
+    const askAI = useCallback(async (context, prompt) => {
+        dispatch({ type: 'SET_LOADING', payload: true });
+        try {
+            const result = await aiService.ask(context, prompt);
+            return result;
+        } catch (err) {
+            dispatch({ type: 'SET_ERROR', payload: err.message });
+            return { success: false, message: err.message };
+        } finally {
+            dispatch({ type: 'SET_LOADING', payload: false });
+        }
+    }, []);
+
+    const analyzeAI = useCallback(async (dataType, data) => {
+        dispatch({ type: 'SET_LOADING', payload: true });
+        try {
+            const result = await aiService.analyze(dataType, data);
+            return result;
+        } catch (err) {
+            dispatch({ type: 'SET_ERROR', payload: err.message });
+            return { success: false, message: err.message };
+        } finally {
+            dispatch({ type: 'SET_LOADING', payload: false });
+        }
+    }, []);
+
+    const generateAI = useCallback(async (template, params) => {
+        dispatch({ type: 'SET_LOADING', payload: true });
+        try {
+            const result = await aiService.generate(template, params);
+            return result;
+        } catch (err) {
+            dispatch({ type: 'SET_ERROR', payload: err.message });
+            return { success: false, message: err.message };
+        } finally {
+            dispatch({ type: 'SET_LOADING', payload: false });
+        }
+    }, []);
+
     const value = {
         ...state,
         setProvider,
@@ -81,6 +133,9 @@ export function AIProvider({ children }) {
         addInsight,
         addAdvisorMessage,
         clearAdvisor,
+        askAI,
+        analyzeAI,
+        generateAI,
     };
 
     return (

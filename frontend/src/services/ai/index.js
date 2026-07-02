@@ -7,6 +7,9 @@
  *   2. Configure provider-specific settings
  *   3. The orchestrator will route requests automatically
  * 
+ * Supported providers: openai, gemini, ollama, groq
+ * Set VITE_AI_PROVIDER=groq in .env to use Groq
+ * Set VITE_GROQ_API_KEY in .env with your Groq API key
  * TODO: Integrate with LangChain for RAG and tool calling
  * TODO: Add streaming support via Server-Sent Events
  * TODO: Add context window management for long conversations
@@ -16,6 +19,7 @@ const PROVIDERS = {
     openai: () => import('./providers/openai'),
     gemini: () => import('./providers/gemini'),
     ollama: () => import('./providers/ollama'),
+    groq: () => import('./providers/groq'),
 };
 
 let activeProvider = null;

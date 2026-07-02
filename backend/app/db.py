@@ -205,4 +205,39 @@ def create_indexes(db):
     db.automations.create_index([("object_type", ASCENDING)], name="idx_automation_object_type")
     db.automations.create_index([("trigger.type", ASCENDING)], name="idx_automation_trigger_type")
 
+    # --- Workflows ---
+    db.workflows.create_index([("status", ASCENDING)], name="idx_workflow_status")
+    db.workflows.create_index([("category", ASCENDING)], name="idx_workflow_category")
+    db.workflows.create_index([("entity_type", ASCENDING)], name="idx_workflow_entity_type")
+    db.workflows.create_index([("created_by", ASCENDING)], name="idx_workflow_created_by")
+    db.workflows.create_index([("updated_at", DESCENDING)], name="idx_workflow_updated_at")
+    db.workflows.create_index([("name", TEXT), ("description", TEXT)], name="text_workflow_search")
+
+    # --- Workflow Templates ---
+    db.workflow_templates.create_index([("category", ASCENDING)], name="idx_wf_template_category")
+    db.workflow_templates.create_index([("entity_type", ASCENDING)], name="idx_wf_template_entity_type")
+    db.workflow_templates.create_index([("industry", ASCENDING)], name="idx_wf_template_industry")
+    db.workflow_templates.create_index([("is_built_in", ASCENDING)], name="idx_wf_template_builtin")
+
+    # --- Workflow Executions ---
+    db.workflow_executions.create_index([("workflow_id", ASCENDING)], name="idx_wf_exec_workflow")
+    db.workflow_executions.create_index([("status", ASCENDING)], name="idx_wf_exec_status")
+    db.workflow_executions.create_index([("entity_type", ASCENDING), ("entity_id", ASCENDING)], name="idx_wf_exec_entity")
+    db.workflow_executions.create_index([("trigger_type", ASCENDING)], name="idx_wf_exec_trigger")
+    db.workflow_executions.create_index([("created_at", DESCENDING)], name="idx_wf_exec_created_at")
+
+    # --- AI Setup Wizard (Organizations, Branches, Departments) ---
+    db.organizations.create_index([("user_id", ASCENDING)], name="idx_org_user")
+    db.organizations.create_index([("business_type", ASCENDING)], name="idx_org_business_type")
+    db.organizations.create_index([("setup_completed", ASCENDING)], name="idx_org_setup_completed")
+    db.branches.create_index([("organization_id", ASCENDING)], name="idx_branch_org")
+    db.departments.create_index([("organization_id", ASCENDING)], name="idx_dept_org")
+    db.departments.create_index([("name", ASCENDING)], name="idx_dept_name")
+    db.roles.create_index([("organization_id", ASCENDING)], name="idx_role_org")
+    db.roles.create_index([("level", ASCENDING)], name="idx_role_level")
+    db.dashboards.create_index([("organization_id", ASCENDING)], name="idx_dashboard_org")
+    db.forms.create_index([("organization_id", ASCENDING)], name="idx_form_org")
+    db.permissions.create_index([("organization_id", ASCENDING)], name="idx_perm_org")
+    db.permissions.create_index([("role", ASCENDING)], name="idx_perm_role")
+
     logger.info("All MongoDB indexes ensured.")

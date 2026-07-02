@@ -24,6 +24,11 @@ import {
     IconGlobe,
     IconStar,
     IconTrendUp,
+    IconWorkflow,
+    IconWorkflowBuilder,
+    IconTemplate,
+    IconPlay,
+    IconBarChart,
 } from "../ui/Icons";
 
 const NAV_SECTIONS = [
@@ -79,8 +84,19 @@ const NAV_SECTIONS = [
         items: [
             { to: "/reports", label: "Reports", icon: IconReports },
             { to: "/ai-assistant", label: "AI Assistant", icon: IconTrendUp },
-            { to: "/automation", label: "Automation", icon: IconActivity },
             { to: "/documents", label: "Documents", icon: IconDollar },
+        ],
+    },
+    {
+        label: "Workflow",
+        items: [
+            { to: "/workflows", label: "Dashboard", icon: IconWorkflow },
+            { to: "/workflows/builder", label: "Builder", icon: IconWorkflowBuilder },
+            { to: "/workflows/templates", label: "Templates", icon: IconTemplate },
+            { to: "/automation", label: "Automation", icon: IconActivity },
+            { to: "/workflows/executions", label: "Executions", icon: IconPlay },
+            { to: "/workflows/analytics", label: "Analytics", icon: IconBarChart },
+            { to: "/workflows/settings", label: "Settings", icon: IconSettings, roles: ["admin"] },
         ],
     },
     {

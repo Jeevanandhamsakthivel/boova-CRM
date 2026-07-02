@@ -252,8 +252,8 @@
 .sidebar-collapsed .main-content { margin-left: var(--rail-width-collapsed); }
 
 .page-container {
-    padding: 24px;
-    max-width: 1440px;
+    padding: 28px 32px;
+    max-width: 1600px;
 }
 
 .page-header {
@@ -265,6 +265,17 @@
     flex-wrap: wrap;
 }
 
+.page-header-title {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.page-header-subtitle {
+    font-size: 13px;
+    color: var(--ink-500);
+}
+
 .page-title {
     font-size: 22px;
     font-weight: 800;
@@ -272,10 +283,83 @@
     letter-spacing: -0.02em;
 }
 
+.page-actions {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-shrink: 0;
+}
+
 .page-subtitle {
     font-size: 13px;
     color: var(--ink-500);
     margin-top: 2px;
+}
+
+/* ── Page Stats Row ── */
+.page-stats {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 16px;
+    margin-bottom: 24px;
+}
+
+.page-stat-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    padding: 18px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    transition: all var(--transition-fast);
+}
+
+.page-stat-card:hover {
+    box-shadow: var(--shadow-md);
+    border-color: var(--accent);
+    transform: translateY(-1px);
+}
+
+.page-stat-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: var(--radius-sm);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.page-stat-body {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    min-width: 0;
+}
+
+.page-stat-value {
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--ink-900);
+    line-height: 1.2;
+    font-variant-numeric: tabular-nums;
+}
+
+.page-stat-label {
+    font-size: 12px;
+    color: var(--ink-500);
+    font-weight: 500;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.filter-bar {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    align-items: center;
 }
 
 .page-grid {

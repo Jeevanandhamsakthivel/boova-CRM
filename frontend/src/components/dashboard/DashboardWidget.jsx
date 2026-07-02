@@ -1,3 +1,4 @@
+import { memo } from "react";
 import { Draggable } from "@hello-pangea/dnd";
 
 const dragHandle = {
@@ -12,6 +13,8 @@ const cardStyle = {
     borderRadius: "var(--radius-md)", overflow: "hidden",
     transition: "box-shadow 0.2s, border-color 0.2s",
     height: "100%",
+    display: "flex",
+    flexDirection: "column",
 };
 
 const headerStyle = {
@@ -25,7 +28,7 @@ const titleStyle = {
     fontFamily: "var(--font-display)",
 };
 
-export default function DashboardWidget({ id, title, children, index, customizing }) {
+function DashboardWidget({ id, title, children, index, customizing }) {
     return (
         <Draggable draggableId={id} index={index} isDragDisabled={!customizing}>
             {(provided, snapshot) => (
@@ -36,6 +39,7 @@ export default function DashboardWidget({ id, title, children, index, customizin
                         ...provided.draggableProps.style,
                         opacity: snapshot.isDragging ? 0.85 : 1,
                         ...(snapshot.isDragging ? { zIndex: 999 } : {}),
+                        height: "100%",
                     }}
                 >
                     <div style={{
@@ -65,7 +69,7 @@ export default function DashboardWidget({ id, title, children, index, customizin
                                 </span>
                             )}
                         </div>
-                        <div>
+                        <div style={{ flex: 1, minHeight: 0, overflow: "auto" }}>
                             {children}
                         </div>
                     </div>
@@ -74,3 +78,5 @@ export default function DashboardWidget({ id, title, children, index, customizin
         </Draggable>
     );
 }
+
+export default memo(DashboardWidget);
