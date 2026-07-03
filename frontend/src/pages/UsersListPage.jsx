@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { usersApi } from "../api/miscApi";
+import { ConfirmDialog } from "../components/ui/ConfirmDialog";
 
 const ROLE_CLASS = { admin: "badge-danger", manager: "badge-warning", agent: "badge-neutral" };
 
@@ -7,6 +8,7 @@ export default function UsersListPage() {
     const [users, setUsers] = useState([]);
     const [loading, setLoading] = useState(true);
     const [search, setSearch] = useState("");
+    const [confirmDeleteId, setConfirmDeleteId] = useState(null);
 
     function load() {
         setLoading(true);
@@ -23,8 +25,9 @@ export default function UsersListPage() {
         load();
     }
 
-    async function handleDelete(id) {
-        if (!window.confirm("Delete this user?")) return;
+    async function handleDelete() {
+        const id = confirmDeleteId;
+        setConfirmDeleteId(null);
         await usersApi.remove(id);
         load();
     }
@@ -79,7 +82,7 @@ export default function UsersListPage() {
                                     </td>
                                     <td className="cell-muted">{u.created_at ? new Date(u.created_at).toLocaleDateString() : "—"}</td>
                                     <td>
-                                        <button className="btn btn-danger btn-sm" onClick={() => handleDelete(u.id)}>Delete</button>
+                                        <button className="btn btn-danger btn-sm" onClick={() => setConfirmDeleteId(u.id)}>Delete</button>
                                     </td>
                                 </tr>
                             ))}
@@ -87,6 +90,15 @@ export default function UsersListPage() {
                     </table>
                 </div>
             )}
+            <ConfirmDialog
+                open={!!confirmDeleteId}
+                title="Delete User?"
+                message="This action cannot be undone. The user will lose access to the system."
+                confirmLabel="Delete"
+                danger
+                onConfirm={handleDelete}
+                onCancel={() => setConfirmDeleteId(null)}
+            />
         </div>
     );
 }

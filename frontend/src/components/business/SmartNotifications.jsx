@@ -75,19 +75,7 @@ export default function SmartNotifications({ compact }) {
     }
 
     return (
-        <div style={{
-            background: 'var(--surface)', border: '1px solid var(--border)',
-            borderRadius: 'var(--radius-md)', overflow: 'hidden',
-        }}>
-            <div style={{ padding: '16px 20px', borderBottom: '1px solid var(--border)', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-                <span style={{ fontSize: 15, fontWeight: 700, color: 'var(--ink-900)' }}>Notifications</span>
-                {summary && (
-                    <span className="badge badge-accent" style={{ fontSize: 10 }}>
-                        {summary.unread} unread
-                    </span>
-                )}
-            </div>
-
+        <div style={{ height: '100%' }}>
             {summary && (
                 <div style={{
                     padding: '10px 20px', background: 'var(--accent-tint)',

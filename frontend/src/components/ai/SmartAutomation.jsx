@@ -74,7 +74,7 @@ export default function SmartAutomation({ onClose }) {
                     })));
                 }
             })
-            .catch(() => {});
+            .catch((err) => console.error("Failed to load workflow templates:", err));
     }, []);
 
     useEffect(() => {
@@ -84,7 +84,7 @@ export default function SmartAutomation({ onClose }) {
                     if (result.success && result.recommendations) {
                         setAiSuggestions(result.recommendations.slice(0, 3));
                     }
-                }).catch(() => {});
+                }).catch((err) => console.error("AI automation suggestions failed:", err));
         }
     }, [aiReady, templates, analyzeAI]);
 

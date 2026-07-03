@@ -4,9 +4,10 @@ import { usePaginatedList } from "../hooks/usePaginatedList";
 import { StatusBadge } from "../components/ui/Badge";
 import { Button } from "../components/ui/Button";
 import { Modal } from "../components/ui/Modal";
-import { Pagination } from "../components/ui/Misc";
+import { Pagination, InlineError } from "../components/ui/Misc";
 import { useToast } from "../context/ToastContext";
 import { formatDate } from "../utils/formatters";
+import { getErrorMessage } from "../utils/errorUtils";
 import { IconPlus, IconChevronRight, IconActivity, IconCheck } from "../components/ui/Icons";
 
 function ZapIcon(p) {
@@ -17,19 +18,24 @@ function ZapIcon(p) {
     );
 }
 
-function AutomationToggle({ active, onChange }) {
+function AutomationToggle({ active, onChange, disabled }) {
     return (
-        <div className={`automation-toggle ${active ? "active" : ""}`} onClick={onChange}>
+        <div className={`automation-toggle ${active ? "active" : ""} ${disabled ? "automation-toggle-disabled" : ""}`} onClick={disabled ? undefined : onChange}>
             <div className="automation-toggle-knob" />
         </div>
     );
 }
 
+const INIT_FORM = { name: "", object_type: "lead", trigger_type: "lead_created", action_type: "assign_owner" };
+
 export default function AutomationPage() {
     const toast = useToast();
     const [showCreate, setShowCreate] = useState(false);
+    const [form, setForm] = useState(INIT_FORM);
+    const [creating, setCreating] = useState(false);
+    const [toggling, setToggling] = useState(null);
 
-    const { items: automations, meta, loading, reload, updateParams } = usePaginatedList(
+    const { items: automations, meta, loading, error, reload, updateParams } = usePaginatedList(
         automationApi.list,
         { page: 1, per_page: 20 }
     );
@@ -44,6 +50,7 @@ export default function AutomationPage() {
 
     const triggerLabels = {
         lead_created: "Lead Created",
+        lead_status_changed: "Lead Status Changed",
         deal_stage_changed: "Deal Stage Changed",
         task_completed: "Task Completed",
         invoice_paid: "Invoice Paid",
@@ -55,14 +62,53 @@ export default function AutomationPage() {
         send_email: "Send Email",
         send_whatsapp: "Send WhatsApp",
         create_task: "Create Task",
+        create_followup: "Create Follow-up",
         add_tag: "Add Tag",
+        remove_tag: "Remove Tag",
         webhook: "Webhook",
+        update_field: "Update Field",
+        change_stage: "Change Stage",
+        send_notification: "Send Notification",
+        score_lead: "Score Lead",
+        trigger_workflow: "Trigger Workflow",
     };
 
-    function handleToggle(a) {
-        const updated = { ...a, status: a.status === "active" ? "inactive" : "active" };
-        toast.success(`Automation ${updated.status === "active" ? "activated" : "deactivated"} (demo).`);
-        reload();
+    async function handleCreate() {
+        if (!form.name.trim()) {
+            toast.error("Name is required.");
+            return;
+        }
+        setCreating(true);
+        try {
+            await automationApi.create({
+                name: form.name.trim(),
+                object_type: form.object_type,
+                trigger: { type: form.trigger_type, conditions: {}, delay_minutes: 0 },
+                actions: [{ type: form.action_type, config: {} }],
+            });
+            toast.success("Automation created.");
+            setShowCreate(false);
+            setForm(INIT_FORM);
+            reload();
+        } catch (err) {
+            toast.error(getErrorMessage(err) || "Failed to create automation.");
+        } finally {
+            setCreating(false);
+        }
+    }
+
+    async function handleToggle(a) {
+        setToggling(a.id);
+        const newStatus = a.status === "active" ? "inactive" : "active";
+        try {
+            await automationApi.update(a.id, { status: newStatus });
+            toast.success(`Automation ${newStatus === "active" ? "activated" : "deactivated"}.`);
+            reload();
+        } catch (err) {
+            toast.error(getErrorMessage(err) || "Failed to update automation.");
+        } finally {
+            setToggling(null);
+        }
     }
 
     return (
@@ -116,9 +162,11 @@ export default function AutomationPage() {
                 </div>
             </div>
 
+            {error && <InlineError message={error} onRetry={reload} />}
+
             {loading ? (
                 <div className="page-loading"><div className="spinner" style={{ width: 28, height: 28 }} /></div>
-            ) : automations.length === 0 ? (
+            ) : error ? null : automations.length === 0 ? (
                 <div className="empty-state">
                     <ZapIcon width={40} height={40} />
                     <h3>No automations configured</h3>
@@ -131,7 +179,7 @@ export default function AutomationPage() {
                         <div key={a.id} className="automation-card">
                             <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 8 }}>
                                 <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
-                                    <AutomationToggle active={a.status === "active"} onChange={() => handleToggle(a)} />
+                                    <AutomationToggle active={a.status === "active"} onChange={() => handleToggle(a)} disabled={toggling === a.id} />
                                     <div>
                                         <h3 style={{ fontFamily: "var(--font-display)", fontSize: 15, fontWeight: 700, color: "var(--ink-900)", margin: 0 }}>{a.name}</h3>
                                         <span style={{ fontSize: 12, color: "var(--ink-400)" }}>{a.object_type || "—"}</span>
@@ -163,17 +211,18 @@ export default function AutomationPage() {
                 </div>
             )}
 
-            <Modal open={showCreate} onClose={() => setShowCreate(false)} title="New Automation" maxWidth={700}>
+            <Modal open={showCreate} onClose={() => { setShowCreate(false); setForm(INIT_FORM); }} title="New Automation" maxWidth={700}>
                 <div className="form-layout">
                     <div className="field-group">
                         <label className="field-label">Name <span className="required">*</span></label>
-                        <input className="field-input" placeholder="e.g. New Lead Assignment" />
+                        <input className="field-input" placeholder="e.g. New Lead Assignment" value={form.name} onChange={e => setForm(f => ({ ...f, name: e.target.value }))} />
                     </div>
                     <div className="field-group">
                         <label className="field-label">Object Type</label>
-                        <select className="field-select">
+                        <select className="field-select" value={form.object_type} onChange={e => setForm(f => ({ ...f, object_type: e.target.value }))}>
                             <option value="lead">Lead</option>
                             <option value="deal">Deal</option>
+                            <option value="customer">Customer</option>
                             <option value="task">Task</option>
                             <option value="ticket">Ticket</option>
                             <option value="invoice">Invoice</option>
@@ -181,8 +230,9 @@ export default function AutomationPage() {
                     </div>
                     <div className="field-group">
                         <label className="field-label">Trigger Type <span className="required">*</span></label>
-                        <select className="field-select">
+                        <select className="field-select" value={form.trigger_type} onChange={e => setForm(f => ({ ...f, trigger_type: e.target.value }))}>
                             <option value="lead_created">Lead Created</option>
+                            <option value="lead_status_changed">Lead Status Changed</option>
                             <option value="deal_stage_changed">Deal Stage Changed</option>
                             <option value="task_completed">Task Completed</option>
                             <option value="invoice_paid">Invoice Paid</option>
@@ -191,18 +241,25 @@ export default function AutomationPage() {
                     </div>
                     <div className="field-group">
                         <label className="field-label">Action <span className="required">*</span></label>
-                        <select className="field-select">
+                        <select className="field-select" value={form.action_type} onChange={e => setForm(f => ({ ...f, action_type: e.target.value }))}>
                             <option value="assign_owner">Assign Owner</option>
                             <option value="send_email">Send Email</option>
                             <option value="send_whatsapp">Send WhatsApp</option>
                             <option value="create_task">Create Task</option>
+                            <option value="create_followup">Create Follow-up</option>
                             <option value="add_tag">Add Tag</option>
+                            <option value="remove_tag">Remove Tag</option>
+                            <option value="update_field">Update Field</option>
+                            <option value="change_stage">Change Stage</option>
+                            <option value="send_notification">Send Notification</option>
                             <option value="webhook">Webhook</option>
+                            <option value="score_lead">Score Lead</option>
+                            <option value="trigger_workflow">Trigger Workflow</option>
                         </select>
                     </div>
                     <div className="form-actions">
-                        <Button variant="secondary" onClick={() => setShowCreate(false)}>Cancel</Button>
-                        <Button onClick={() => { toast.success("Automation created (demo)."); setShowCreate(false); reload(); }}>Create</Button>
+                        <Button variant="secondary" onClick={() => { setShowCreate(false); setForm(INIT_FORM); }}>Cancel</Button>
+                        <Button onClick={handleCreate} disabled={creating}>{creating ? "Creating..." : "Create"}</Button>
                     </div>
                 </div>
             </Modal>

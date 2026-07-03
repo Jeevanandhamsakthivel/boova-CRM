@@ -23,7 +23,7 @@ export function NotificationsDropdown() {
                 setNotifications(items);
                 setUnreadCount(items.filter((n) => !n.is_read).length);
             })
-            .catch(() => {})
+            .catch((err) => console.error("Failed to load notifications:", err))
             .finally(() => setLoading(false));
     }
 

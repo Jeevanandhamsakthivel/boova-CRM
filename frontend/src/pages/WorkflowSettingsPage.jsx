@@ -31,7 +31,7 @@ export default function WorkflowSettingsPage() {
                 const stored = localStorage.getItem("wf_settings");
                 if (stored) setSettings({ ...DEFAULT_SETTINGS, ...JSON.parse(stored) });
             })
-            .catch(() => {})
+            .catch((err) => console.error("Failed to load workflow settings:", err))
             .finally(() => setLoading(false));
     }, []);
 

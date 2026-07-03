@@ -40,12 +40,12 @@ export default function DashboardPage() {
         setRefreshing(true);
         dashboardApi.summary()
             .then(r => setSummary(r.data.data))
-            .catch(() => setSummary(null))
+            .catch((err) => { console.error("Failed to load summary:", err); setSummary(null); })
             .finally(() => { setLoading(false); setRefreshing(false); });
 
         activitiesApi.listRecent({ per_page: 8 })
             .then(r => setRecentActivities(r.data.data || []))
-            .catch(() => {});
+            .catch(() => setRecentActivities([]));
     }
 
     useEffect(loadData, []);
@@ -170,7 +170,7 @@ export default function DashboardPage() {
         },
         {
             id: "advisor", title: "AI Advisor", span: 1,
-            render: () => <AIBusinessAdvisor summary={s} />,
+            render: () => <AIBusinessAdvisor summary={s} widget />,
         },
         {
             id: "forecast", title: "Revenue Forecast", span: 2,

@@ -58,12 +58,8 @@ export default function BusinessHealthScore({ metrics }) {
     const circumference = 2 * Math.PI * radius;
 
     return (
-        <div style={{
-            background: 'var(--surface)', border: '1px solid var(--border)',
-            borderRadius: 'var(--radius-md)', padding: 20, display: 'flex',
-            flexDirection: 'column', gap: 16,
-        }}>
-            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 16, height: '100%' }}>
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '16px 20px 0' }}>
                 <span style={{ fontSize: 15, fontWeight: 700, color: 'var(--ink-900)' }}>
                     Business Health Score
                 </span>
@@ -72,7 +68,7 @@ export default function BusinessHealthScore({ metrics }) {
                 </span>
             </div>
 
-            <div style={{ display: 'flex', alignItems: 'center', gap: 24 }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 24, padding: '0 20px 20px' }}>
                 <svg width={size} height={size} style={{ flex: 'none' }}>
                     {rings.map((ring, i) => {
                         const pct = contributions[ring.key] || 0;

@@ -1,12 +1,13 @@
 import { useState, useEffect, useCallback, useRef } from "react";
 import { useSearchParams, useNavigate } from "react-router-dom";
-import { workflowsApi } from "../api/workflowsApi";
+import { workflowsApi, workflowExecutionsApi } from "../api/workflowsApi";
 import { WorkflowCanvas } from "../components/workflow/WorkflowCanvas";
 import { WorkflowNodePalette } from "../components/workflow/WorkflowNodePalette";
 import { WorkflowNodeConfig } from "../components/workflow/WorkflowNodeConfig";
 import { WorkflowToolbar } from "../components/workflow/WorkflowToolbar";
 import WorkflowSetupWizard from "../components/workflow/WorkflowSetupWizard";
 import { Modal } from "../components/ui/Modal";
+import { ConfirmDialog } from "../components/ui/ConfirmDialog";
 import { Button } from "../components/ui/Button";
 import { Spinner } from "../components/ui/Misc";
 import { useToast } from "../context/ToastContext";
@@ -45,7 +46,6 @@ export default function WorkflowBuilderPage() {
     const [searchParams] = useSearchParams();
     const navigate = useNavigate();
     const toast = useToast();
-    const saveShortcutRef = useRef(false);
 
     const workflowId = searchParams.get("id");
     const [workflow, setWorkflow] = useState(EMPTY_WORKFLOW);
@@ -54,7 +54,9 @@ export default function WorkflowBuilderPage() {
     const [selectedNodeId, setSelectedNodeId] = useState(null);
     const [saving, setSaving] = useState(false);
     const [loading, setLoading] = useState(!!workflowId);
+    const [running, setRunning] = useState(false);
     const [showNewModal, setShowNewModal] = useState(false);
+    const [confirmDelete, setConfirmDelete] = useState(false);
     const [showSetupWizard, setShowSetupWizard] = useState(false);
     const [showPalette, setShowPalette] = useState(true);
     const [showConfig, setShowConfig] = useState(false);
@@ -98,11 +100,6 @@ export default function WorkflowBuilderPage() {
     const selectedNode = nodes.find(n => n.id === selectedNodeId) || null;
 
     const handleSave = useCallback(async () => {
-        const validationErrors = validateWorkflow(nodes, edges);
-        if (validationErrors.length > 0) {
-            toast.error(validationErrors[0]);
-            return;
-        }
         setSaving(true);
         const payload = {
             ...workflow,
@@ -134,14 +131,18 @@ export default function WorkflowBuilderPage() {
             toast.error(validationErrors[0]);
             return;
         }
+        setSaving(true);
         try {
+            await workflowsApi.update(workflowId, { ...workflow, nodes, edges });
             const res = await workflowsApi.activate(workflowId);
             setWorkflow(res.data.data);
-            toast.success("Workflow activated.");
+            toast.success("Workflow saved and activated.");
         } catch {
             toast.error("Failed to activate workflow.");
+        } finally {
+            setSaving(false);
         }
-    }, [workflowId, nodes, edges, toast]);
+    }, [workflowId, workflow, nodes, edges, toast]);
 
     const handleDeactivate = useCallback(async () => {
         if (!workflowId) return;
@@ -149,6 +150,27 @@ export default function WorkflowBuilderPage() {
         setWorkflow(res.data.data);
         toast.success("Workflow deactivated.");
     }, [workflowId, toast]);
+
+    const handleRun = useCallback(async () => {
+        if (!workflowId) return;
+        setRunning(true);
+        try {
+            await workflowsApi.update(workflowId, { ...workflow, nodes, edges });
+            const res = await workflowExecutionsApi.create({
+                workflow_id: workflowId,
+                entity_type: workflow.entity_type || "lead",
+                entity_id: "manual",
+                trigger_type: "manual",
+            });
+            const executionId = res.data.data.id;
+            await workflowExecutionsApi.start(executionId);
+            toast.success("Workflow execution started.");
+        } catch {
+            toast.error("Failed to run workflow.");
+        } finally {
+            setRunning(false);
+        }
+    }, [workflowId, workflow, nodes, edges, toast]);
 
     const handleDuplicate = useCallback(async () => {
         if (!workflowId) return;
@@ -159,6 +181,7 @@ export default function WorkflowBuilderPage() {
 
     const handleDelete = useCallback(async () => {
         if (!workflowId) return;
+        setConfirmDelete(false);
         await workflowsApi.remove(workflowId);
         toast.success("Workflow deleted.");
         navigate("/workflows");
@@ -170,33 +193,48 @@ export default function WorkflowBuilderPage() {
             return;
         }
         setShowNewModal(false);
-        setWorkflow({
-            ...EMPTY_WORKFLOW,
-            name: newWorkflow.name,
-            description: newWorkflow.description,
-            category: newWorkflow.category,
-            entity_type: newWorkflow.entity_type,
-        });
-        setNodes([]);
-        setEdges([]);
-        setSelectedNodeId(null);
-    }, [newWorkflow, toast]);
+        setSaving(true);
+        try {
+            const payload = {
+                ...EMPTY_WORKFLOW,
+                name: newWorkflow.name,
+                description: newWorkflow.description,
+                category: newWorkflow.category,
+                entity_type: newWorkflow.entity_type,
+            };
+            const res = await workflowsApi.create(payload);
+            navigate(`/workflows/builder?id=${res.data.data.id}`, { replace: true });
+            toast.success("Workflow created.");
+        } catch {
+            toast.error("Failed to create workflow.");
+        } finally {
+            setSaving(false);
+        }
+    }, [newWorkflow, navigate, toast]);
 
-    const handleWizardGenerate = useCallback((result) => {
-        setWorkflow({
-            ...EMPTY_WORKFLOW,
-            name: result.name,
-            description: result.description || `Auto-generated ${result.category} workflow`,
-            category: result.category,
-            entity_type: result.entity_type,
-            stages: [],
-        });
-        setNodes(result.nodes);
-        setEdges(result.edges);
-        setSelectedNodeId(null);
+    const handleWizardGenerate = useCallback(async (result) => {
         setShowSetupWizard(false);
-        toast.success(`Workflow "${result.name}" generated with ${result.nodes.length} nodes.`);
-    }, [toast]);
+        setSaving(true);
+        try {
+            const payload = {
+                ...EMPTY_WORKFLOW,
+                name: result.name,
+                description: result.description || `Auto-generated ${result.category} workflow`,
+                category: result.category,
+                entity_type: result.entity_type,
+                stages: [],
+                nodes: result.nodes,
+                edges: result.edges,
+            };
+            const res = await workflowsApi.create(payload);
+            navigate(`/workflows/builder?id=${res.data.data.id}`, { replace: true });
+            toast.success(`Workflow "${result.name}" created with ${result.nodes.length} nodes.`);
+        } catch {
+            toast.error("Failed to create workflow from wizard.");
+        } finally {
+            setSaving(false);
+        }
+    }, [navigate, toast]);
 
     const handleNodeConfigChange = useCallback((nodeId, config, label) => {
         setNodes(prev => prev.map(n =>
@@ -223,16 +261,17 @@ export default function WorkflowBuilderPage() {
                             onActivate={handleActivate}
                             onDeactivate={handleDeactivate}
                             onDuplicate={handleDuplicate}
-                            onDelete={handleDelete}
-                            onRun={() => {}}
+                            onDelete={() => setConfirmDelete(true)}
+                            onRun={handleRun}
+                            running={running}
                             saving={saving}
                         />
                     )}
                 </div>
                 <div className="wf-builder-header-right">
                     {!workflowId && (
-                        <Button onClick={handleSave} disabled={saving || !workflow.name}>
-                            {saving ? "Saving..." : "Create Workflow"}
+                        <Button onClick={handleCreateNew} disabled={saving || !newWorkflow.name?.trim()}>
+                            {saving ? "Creating..." : "Create Workflow"}
                         </Button>
                     )}
                     <Button variant="secondary" onClick={() => setShowPalette(!showPalette)}>
@@ -264,9 +303,10 @@ export default function WorkflowBuilderPage() {
                                         placeholder="Workflow name..."
                                         value={newWorkflow.name}
                                         onChange={e => setNewWorkflow(prev => ({ ...prev, name: e.target.value }))}
-                                        onKeyDown={e => e.key === "Enter" && handleCreateNew()}
+                                        onKeyDown={e => { if (e.key === "Enter" && !saving) handleCreateNew(); }}
+                                        disabled={saving}
                                     />
-                                    <Button onClick={handleCreateNew}>Create</Button>
+                                    <Button onClick={handleCreateNew} disabled={saving}>Create</Button>
                                     <Button variant="secondary" onClick={() => setShowSetupWizard(true)}>
                                         Setup Wizard
                                     </Button>
@@ -324,15 +364,15 @@ export default function WorkflowBuilderPage() {
                 <div className="form-layout">
                     <div className="field-group">
                         <label className="field-label">Name <span className="required">*</span></label>
-                        <input className="field-input" placeholder="e.g. Lead Conversion Pipeline" value={newWorkflow.name} onChange={e => setNewWorkflow(prev => ({ ...prev, name: e.target.value }))} />
+                        <input className="field-input" placeholder="e.g. Lead Conversion Pipeline" value={newWorkflow.name} onChange={e => setNewWorkflow(prev => ({ ...prev, name: e.target.value }))} disabled={saving} />
                     </div>
                     <div className="field-group">
                         <label className="field-label">Description</label>
-                        <textarea className="field-input field-textarea" rows={3} value={newWorkflow.description} onChange={e => setNewWorkflow(prev => ({ ...prev, description: e.target.value }))} />
+                        <textarea className="field-input field-textarea" rows={3} value={newWorkflow.description} onChange={e => setNewWorkflow(prev => ({ ...prev, description: e.target.value }))} disabled={saving} />
                     </div>
                     <div className="field-group">
                         <label className="field-label">Category</label>
-                        <select className="field-select" value={newWorkflow.category} onChange={e => setNewWorkflow(prev => ({ ...prev, category: e.target.value }))}>
+                        <select className="field-select" value={newWorkflow.category} onChange={e => setNewWorkflow(prev => ({ ...prev, category: e.target.value }))} disabled={saving}>
                             <option value="automation">Automation</option>
                             <option value="customer">Customer</option>
                             <option value="employee">Employee</option>
@@ -344,7 +384,7 @@ export default function WorkflowBuilderPage() {
                     </div>
                     <div className="field-group">
                         <label className="field-label">Entity Type</label>
-                        <select className="field-select" value={newWorkflow.entity_type} onChange={e => setNewWorkflow(prev => ({ ...prev, entity_type: e.target.value }))}>
+                        <select className="field-select" value={newWorkflow.entity_type} onChange={e => setNewWorkflow(prev => ({ ...prev, entity_type: e.target.value }))} disabled={saving}>
                             <option value="lead">Lead</option>
                             <option value="customer">Customer</option>
                             <option value="deal">Deal</option>
@@ -354,8 +394,8 @@ export default function WorkflowBuilderPage() {
                         </select>
                     </div>
                     <div className="form-actions">
-                        <Button variant="secondary" onClick={() => setShowNewModal(false)}>Cancel</Button>
-                        <Button onClick={handleCreateNew}>Create</Button>
+                        <Button variant="secondary" onClick={() => setShowNewModal(false)} disabled={saving}>Cancel</Button>
+                        <Button onClick={handleCreateNew} disabled={saving}>{saving ? "Creating..." : "Create"}</Button>
                     </div>
                 </div>
             </Modal>
@@ -366,6 +406,16 @@ export default function WorkflowBuilderPage() {
                     onClose={() => setShowSetupWizard(false)}
                 />
             )}
+
+            <ConfirmDialog
+                open={confirmDelete}
+                title="Delete Workflow?"
+                message="This action cannot be undone. The workflow and all its configurations will be permanently removed."
+                confirmLabel="Delete"
+                danger
+                onConfirm={handleDelete}
+                onCancel={() => setConfirmDelete(false)}
+            />
         </div>
     );
 }

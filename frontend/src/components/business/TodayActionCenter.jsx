@@ -35,20 +35,7 @@ export default function TodayActionCenter({ summary }) {
     const hasItems = (s.overdue_tasks || 0) + (s.pending_followups || 0) + (s.new_leads || 0) + (s.open_deals_count || 0) > 0;
 
     return (
-        <div style={{
-            background: 'var(--surface)', border: '1px solid var(--border)',
-            borderRadius: 'var(--radius-md)', overflow: 'hidden',
-        }}>
-            <div style={{ padding: '16px 20px', borderBottom: '1px solid var(--border)', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-                    <span style={{ fontSize: 15, fontWeight: 700, color: 'var(--ink-900)' }}>Today's Action Center</span>
-                    {!hasItems && <span className="badge badge-success" style={{ fontSize: 10 }}>All clear</span>}
-                </div>
-                <span style={{ fontSize: 11, color: 'var(--ink-500)', fontWeight: 600 }}>
-                    {new Date().toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' })}
-                </span>
-            </div>
-
+        <div style={{ height: '100%' }}>
             <div style={{ padding: '4px 20px' }}>
                 {!hasItems ? (
                     <div className="empty-state" style={{ padding: '30px 20px' }}>

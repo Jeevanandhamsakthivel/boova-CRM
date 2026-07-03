@@ -59,3 +59,23 @@ export function EmptyState({ icon, title, message, action }) {
         </div>
     );
 }
+
+export function InlineError({ message, onRetry }) {
+    return (
+        <div className="error-banner">
+            <span style={{ flex: 1 }}>{message || "Something went wrong."}</span>
+            {onRetry && (
+                <Button variant="secondary" size="sm" onClick={onRetry}>Retry</Button>
+            )}
+        </div>
+    );
+}
+
+export function InlineLoading({ message }) {
+    return (
+        <div className="page-loading" style={{ padding: 40 }}>
+            <Spinner size={22} />
+            {message && <p style={{ margin: "8px 0 0", fontSize: 13, color: "var(--ink-500)" }}>{message}</p>}
+        </div>
+    );
+}

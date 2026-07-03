@@ -50,7 +50,7 @@ export default function DashboardLayout({ widgets, defaultOrder, children }) {
                     setHidden(saved.value.hidden || []);
                 }
             })
-            .catch(() => {});
+            .catch((err) => console.error("Failed to load dashboard layout:", err));
     }, [defaultOrder]);
 
     const persist = useCallback(async (newOrder, newHidden) => {
@@ -166,9 +166,6 @@ export default function DashboardLayout({ widgets, defaultOrder, children }) {
                                     </DashboardWidget>
                                 </div>
                             ))}
-                            {provided.placeholder && (
-                                <div className="dash-widget-placeholder" />
-                            )}
                         </div>
                     )}
                 </Droppable>

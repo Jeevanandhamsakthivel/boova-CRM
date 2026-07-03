@@ -191,9 +191,11 @@
 .dash-widget-grid {
     display: grid;
     grid-template-columns: 1fr 1fr;
+    grid-auto-rows: auto;
     gap: 24px;
     margin-bottom: 32px;
     min-height: 0;
+    align-items: start;
 }
 
 .dash-widget-grid[data-customizing="true"] {

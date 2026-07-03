@@ -208,3 +208,27 @@ export const IconZap = (p) => (
 export const IconBot = (p) => (
     <svg viewBox="0 0 24 24" {...base} {...p}><rect x="3" y="11" width="18" height="10" rx="2" /><circle cx="12" cy="16" r="2" /><path d="M12 9V6M8 6a4 4 0 0 1 8 0" /><line x1="8" y1="13" x2="10" y2="13" /><line x1="14" y1="13" x2="16" y2="13" /></svg>
 );
+export const IconSend = (p) => (
+    <svg viewBox="0 0 24 24" {...base} {...p}><line x1="22" y1="2" x2="11" y2="13" /><polygon points="22 2 15 22 11 13 2 9 22 2" /></svg>
+);
+export const IconReply = (p) => (
+    <svg viewBox="0 0 24 24" {...base} {...p}><polyline points="9 17 4 12 9 7" /><path d="M20 18v-2a4 4 0 0 0-4-4H4" /></svg>
+);
+export const IconForward = (p) => (
+    <svg viewBox="0 0 24 24" {...base} {...p}><polyline points="15 17 20 12 15 7" /><path d="M4 18v-2a4 4 0 0 1 4-4h12" /></svg>
+);
+export const IconTrash2 = (p) => (
+    <svg viewBox="0 0 24 24" {...base} {...p}><polyline points="3 6 5 6 21 6" /><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" /><line x1="10" y1="11" x2="10" y2="17" /><line x1="14" y1="11" x2="14" y2="17" /></svg>
+);
+export const IconEye = (p) => (
+    <svg viewBox="0 0 24 24" {...base} {...p}><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" /><circle cx="12" cy="12" r="3" /></svg>
+);
+export const IconHot = (p) => (
+    <svg viewBox="0 0 24 24" {...base} {...p}><path d="M12 2c-3.5 6-5 9-5 11.5a5 5 0 0 0 10 0c0-2.5-1.5-5.5-5-11.5z"/></svg>
+);
+export const IconWarm = (p) => (
+    <svg viewBox="0 0 24 24" {...base} {...p}><circle cx="12" cy="12" r="5"/><path d="M12 2v2M12 20v2M2 12h2M20 12h2"/></svg>
+);
+export const IconCold = (p) => (
+    <svg viewBox="0 0 24 24" {...base} {...p}><path d="M12 2v20M2 12h20M6 6l12 12M18 6l-12 12"/></svg>
+);

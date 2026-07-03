@@ -29,7 +29,7 @@ export default function AINextBestAction({ summary }) {
                 if (result.success && result.message) {
                     setAiPriority(result.message.slice(0, 200));
                 }
-            }).catch(() => {});
+            }).catch((err) => console.error("Failed to load next best actions:", err));
         }
     }, [aiReady, s, analyzeAI]);
 

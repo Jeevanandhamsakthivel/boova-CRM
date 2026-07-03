@@ -298,6 +298,7 @@ export function WorkflowCanvas({ nodes, edges, selectedNodeId, onNodesChange, on
                         <WorkflowNode
                             node={node}
                             selected={selectedNodeId === node.id}
+                            dragging={dragging === node.id}
                             onSelect={onSelectNode}
                             onDelete={handleNodeDelete}
                             onDragStart={handleNodeDragStart}

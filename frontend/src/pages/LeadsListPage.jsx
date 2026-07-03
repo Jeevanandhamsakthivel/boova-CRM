@@ -10,10 +10,10 @@ import { ImportLeadsModal } from "../components/features/ImportLeadsModal";
 import { Pagination } from "../components/ui/Misc";
 import { useToast } from "../context/ToastContext";
 import { formatDate, formatCurrency } from "../utils/formatters";
-import { IconPlus, IconSearch, IconUpload } from "../components/ui/Icons";
+import { IconPlus, IconSearch, IconUpload, IconHot, IconWarm, IconCold } from "../components/ui/Icons";
 
 const TEMP_COLOR = { hot:"var(--danger)", warm:"var(--warning)", cold:"var(--info)" };
-const TEMP_EMOJI = { hot:"🔥", warm:"🌤", cold:"❄️" };
+const TEMP_ICON  = { hot:IconHot, warm:IconWarm, cold:IconCold };
 
 export default function LeadsListPage() {
     const navigate   = useNavigate();
@@ -117,8 +117,8 @@ export default function LeadsListPage() {
                                     <td><StatusBadge status={lead.status} /></td>
                                     <td>
                                         {lead.qualification && (
-                                            <span style={{ fontSize:13, fontWeight:600, color:TEMP_COLOR[lead.qualification] }}>
-                                                {TEMP_EMOJI[lead.qualification]} {lead.qualification.charAt(0).toUpperCase()+lead.qualification.slice(1)}
+                                            <span style={{ display:"inline-flex", alignItems:"center", gap:4, fontSize:13, fontWeight:600, color:TEMP_COLOR[lead.qualification] }}>
+                                                {(() => { const I = TEMP_ICON[lead.qualification]; return I ? <I width={14} height={14} /> : null; })()} {lead.qualification.charAt(0).toUpperCase()+lead.qualification.slice(1)}
                                             </span>
                                         )}
                                     </td>

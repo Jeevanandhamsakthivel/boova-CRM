@@ -40,10 +40,7 @@ export default function RevenueForecast({ summary }) {
     const chartHeight = 120;
 
     return (
-        <div style={{
-            background: 'var(--surface)', border: '1px solid var(--border)',
-            borderRadius: 'var(--radius-md)', padding: 20,
-        }}>
+        <div style={{ padding: 20, height: '100%' }}>
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 16 }}>
                 <div>
                     <span style={{ fontSize: 15, fontWeight: 700, color: 'var(--ink-900)' }}>Revenue Forecast</span>

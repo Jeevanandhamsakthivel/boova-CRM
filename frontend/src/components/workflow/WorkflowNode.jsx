@@ -55,7 +55,7 @@ const NODE_COLORS = {
     parallel: "#6366F1",
 };
 
-function WorkflowNodeInner({ node, selected, onSelect, onDelete, onDragStart, onOutputClick }) {
+function WorkflowNodeInner({ node, selected, dragging, onSelect, onDelete, onDragStart, onOutputClick }) {
     const color = NODE_COLORS[node.type] || "#6366F1";
     const Icon = NODE_ICONS[node.type] || IconNodeStart;
 
@@ -63,9 +63,7 @@ function WorkflowNodeInner({ node, selected, onSelect, onDelete, onDragStart, on
         if (e.button !== 0) return;
         if (e.target.closest(".wf-node-delete")) return;
         if (e.target.closest(".wf-node-handle")) return;
-        if (e.target.closest(".wf-node-header")) {
-            onDragStart(e, node.id);
-        }
+        onDragStart(e, node.id);
     }, [node.id, onDragStart]);
 
     const handleOutputClick = useCallback((e) => {
@@ -83,9 +81,15 @@ function WorkflowNodeInner({ node, selected, onSelect, onDelete, onDragStart, on
         onSelect(node);
     }, [node, onSelect]);
 
+    const classNames = [
+        "wf-node",
+        selected && "wf-node-selected",
+        dragging && "wf-node-dragging",
+    ].filter(Boolean).join(" ");
+
     return (
         <div
-            className={`wf-node ${selected ? "wf-node-selected" : ""}`}
+            className={classNames}
             style={{ position: "absolute", left: node.position.x, top: node.position.y }}
             onClick={handleSelect}
             onMouseDown={handleMouseDown}

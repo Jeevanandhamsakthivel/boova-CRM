@@ -6,6 +6,7 @@ import { ProtectedRoute, RoleRoute } from "./components/common/RouteGuards";
 import { AppLayout } from "./components/layout/AppLayout";
 import { ThemeProvider } from "./context/ThemeContext";
 import { AIProvider } from "./context/AIContext";
+import { ErrorBoundary } from "./components/ui/ErrorBoundary";
 
 // Lazy-loaded pages for code splitting
 const LoginPage = lazy(() => import("./pages/LoginPage"));
@@ -57,8 +58,12 @@ function PageLoading() {
     );
 }
 
-function SuspenseWrapper({ children }) {
-    return <Suspense fallback={<PageLoading />}>{children}</Suspense>;
+function SafePage({ children }) {
+    return (
+        <ErrorBoundary>
+            <Suspense fallback={<PageLoading />}>{children}</Suspense>
+        </ErrorBoundary>
+    );
 }
 
 import "./styles/tokens.css";
@@ -80,65 +85,65 @@ export default function App() {
                     <AIProvider>
                         <ToastProvider>
                             <Routes>
-                                <Route path="/login" element={<SuspenseWrapper><LoginPage /></SuspenseWrapper>} />
-                                <Route path="/register" element={<SuspenseWrapper><RegisterPage /></SuspenseWrapper>} />
+                                <Route path="/login" element={<SafePage><LoginPage /></SafePage>} />
+                                <Route path="/register" element={<SafePage><RegisterPage /></SafePage>} />
 
                                 <Route element={<ProtectedRoute />}>
                                     <Route element={<AppLayout />}>
-                                        <Route path="/" element={<SuspenseWrapper><DashboardPage /></SuspenseWrapper>} />
-                                        <Route path="/profile" element={<SuspenseWrapper><ProfilePage /></SuspenseWrapper>} />
+                                        <Route path="/" element={<SafePage><DashboardPage /></SafePage>} />
+                                        <Route path="/profile" element={<SafePage><ProfilePage /></SafePage>} />
 
-                                        <Route path="/leads" element={<SuspenseWrapper><LeadsListPage /></SuspenseWrapper>} />
-                                        <Route path="/leads/:id" element={<SuspenseWrapper><LeadDetailPage /></SuspenseWrapper>} />
+                                        <Route path="/leads" element={<SafePage><LeadsListPage /></SafePage>} />
+                                        <Route path="/leads/:id" element={<SafePage><LeadDetailPage /></SafePage>} />
 
-                                        <Route path="/customers" element={<SuspenseWrapper><CustomersListPage /></SuspenseWrapper>} />
-                                        <Route path="/customers/:id" element={<SuspenseWrapper><CustomerWorkspacePage /></SuspenseWrapper>} />
+                                        <Route path="/customers" element={<SafePage><CustomersListPage /></SafePage>} />
+                                        <Route path="/customers/:id" element={<SafePage><CustomerWorkspacePage /></SafePage>} />
 
-                                        <Route path="/companies" element={<SuspenseWrapper><CompaniesPage /></SuspenseWrapper>} />
-                                        <Route path="/quotes" element={<SuspenseWrapper><QuotesPage /></SuspenseWrapper>} />
-                                        <Route path="/invoices" element={<SuspenseWrapper><InvoicesPage /></SuspenseWrapper>} />
+                                        <Route path="/companies" element={<SafePage><CompaniesPage /></SafePage>} />
+                                        <Route path="/quotes" element={<SafePage><QuotesPage /></SafePage>} />
+                                        <Route path="/invoices" element={<SafePage><InvoicesPage /></SafePage>} />
 
-                                        <Route path="/tasks" element={<SuspenseWrapper><TasksListPage /></SuspenseWrapper>} />
-                                        <Route path="/followups" element={<SuspenseWrapper><FollowUpsListPage /></SuspenseWrapper>} />
-                                        <Route path="/pipeline" element={<SuspenseWrapper><PipelinePage /></SuspenseWrapper>} />
+                                        <Route path="/tasks" element={<SafePage><TasksListPage /></SafePage>} />
+                                        <Route path="/followups" element={<SafePage><FollowUpsListPage /></SafePage>} />
+                                        <Route path="/pipeline" element={<SafePage><PipelinePage /></SafePage>} />
 
-                                        <Route path="/tickets" element={<SuspenseWrapper><TicketsPage /></SuspenseWrapper>} />
-                                        <Route path="/knowledge-base" element={<SuspenseWrapper><KnowledgeBasePage /></SuspenseWrapper>} />
-                                        <Route path="/calendar" element={<SuspenseWrapper><CalendarPage /></SuspenseWrapper>} />
-                                        <Route path="/email" element={<SuspenseWrapper><EmailInboxPage /></SuspenseWrapper>} />
-                                        <Route path="/whatsapp" element={<SuspenseWrapper><WhatsAppPage /></SuspenseWrapper>} />
-                                        <Route path="/automation" element={<SuspenseWrapper><AutomationPage /></SuspenseWrapper>} />
+                                        <Route path="/tickets" element={<SafePage><TicketsPage /></SafePage>} />
+                                        <Route path="/knowledge-base" element={<SafePage><KnowledgeBasePage /></SafePage>} />
+                                        <Route path="/calendar" element={<SafePage><CalendarPage /></SafePage>} />
+                                        <Route path="/email" element={<SafePage><EmailInboxPage /></SafePage>} />
+                                        <Route path="/whatsapp" element={<SafePage><WhatsAppPage /></SafePage>} />
+                                        <Route path="/automation" element={<SafePage><AutomationPage /></SafePage>} />
 
-                                        <Route path="/reports" element={<SuspenseWrapper><ReportsPage /></SuspenseWrapper>} />
-                                        <Route path="/products" element={<SuspenseWrapper><ProductsPage /></SuspenseWrapper>} />
-                                        <Route path="/services" element={<SuspenseWrapper><ServicesPage /></SuspenseWrapper>} />
-                                        <Route path="/projects" element={<SuspenseWrapper><ProjectsPage /></SuspenseWrapper>} />
-                                        <Route path="/ai-assistant" element={<SuspenseWrapper><AIAssistantPage /></SuspenseWrapper>} />
-                                        <Route path="/documents" element={<SuspenseWrapper><DocumentsPage /></SuspenseWrapper>} />
+                                        <Route path="/reports" element={<SafePage><ReportsPage /></SafePage>} />
+                                        <Route path="/products" element={<SafePage><ProductsPage /></SafePage>} />
+                                        <Route path="/services" element={<SafePage><ServicesPage /></SafePage>} />
+                                        <Route path="/projects" element={<SafePage><ProjectsPage /></SafePage>} />
+                                        <Route path="/ai-assistant" element={<SafePage><AIAssistantPage /></SafePage>} />
+                                        <Route path="/documents" element={<SafePage><DocumentsPage /></SafePage>} />
 
-                                        <Route path="/workflows" element={<SuspenseWrapper><WorkflowDashboardPage /></SuspenseWrapper>} />
-                                        <Route path="/workflows/builder" element={<SuspenseWrapper><WorkflowBuilderPage /></SuspenseWrapper>} />
-                                        <Route path="/workflows/templates" element={<SuspenseWrapper><WorkflowTemplatesPage /></SuspenseWrapper>} />
-                                        <Route path="/workflows/executions" element={<SuspenseWrapper><WorkflowExecutionsPage /></SuspenseWrapper>} />
-                                        <Route path="/workflows/analytics" element={<SuspenseWrapper><WorkflowAnalyticsPage /></SuspenseWrapper>} />
+                                        <Route path="/workflows" element={<SafePage><WorkflowDashboardPage /></SafePage>} />
+                                        <Route path="/workflows/builder" element={<SafePage><WorkflowBuilderPage /></SafePage>} />
+                                        <Route path="/workflows/templates" element={<SafePage><WorkflowTemplatesPage /></SafePage>} />
+                                        <Route path="/workflows/executions" element={<SafePage><WorkflowExecutionsPage /></SafePage>} />
+                                        <Route path="/workflows/analytics" element={<SafePage><WorkflowAnalyticsPage /></SafePage>} />
                                         <Route element={<RoleRoute roles={["admin"]} />}>
-                                            <Route path="/workflows/settings" element={<SuspenseWrapper><WorkflowSettingsPage /></SuspenseWrapper>} />
+                                            <Route path="/workflows/settings" element={<SafePage><WorkflowSettingsPage /></SafePage>} />
                                         </Route>
 
-                                        <Route path="/pricing" element={<SuspenseWrapper><PricingPage /></SuspenseWrapper>} />
-                                        <Route path="/onboarding" element={<SuspenseWrapper><OnboardingWizardPage /></SuspenseWrapper>} />
-                                        <Route path="/setup-wizard" element={<SuspenseWrapper><BusinessSetupWizardPage /></SuspenseWrapper>} />
-                                        <Route path="/data-export" element={<SuspenseWrapper><DataExportPage /></SuspenseWrapper>} />
+                                        <Route path="/pricing" element={<SafePage><PricingPage /></SafePage>} />
+                                        <Route path="/onboarding" element={<SafePage><OnboardingWizardPage /></SafePage>} />
+                                        <Route path="/setup-wizard" element={<SafePage><BusinessSetupWizardPage /></SafePage>} />
+                                        <Route path="/data-export" element={<SafePage><DataExportPage /></SafePage>} />
 
                                         <Route element={<RoleRoute roles={["admin"]} />}>
-                                            <Route path="/users" element={<SuspenseWrapper><UsersListPage /></SuspenseWrapper>} />
-                                            <Route path="/audit-logs" element={<SuspenseWrapper><AuditLogsPage /></SuspenseWrapper>} />
-                                            <Route path="/settings" element={<SuspenseWrapper><SettingsPage /></SuspenseWrapper>} />
+                                            <Route path="/users" element={<SafePage><UsersListPage /></SafePage>} />
+                                            <Route path="/audit-logs" element={<SafePage><AuditLogsPage /></SafePage>} />
+                                            <Route path="/settings" element={<SafePage><SettingsPage /></SafePage>} />
                                         </Route>
                                     </Route>
                                 </Route>
 
-                                <Route path="/404" element={<SuspenseWrapper><NotFoundPage /></SuspenseWrapper>} />
+                                <Route path="/404" element={<SafePage><NotFoundPage /></SafePage>} />
                                 <Route path="*" element={<Navigate to="/404" replace />} />
                             </Routes>
                         </ToastProvider>

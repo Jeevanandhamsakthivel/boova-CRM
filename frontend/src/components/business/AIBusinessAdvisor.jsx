@@ -19,9 +19,9 @@ const SeverityIcon = ({ level }) => {
     );
 };
 
-export default function AIBusinessAdvisor({ summary }) {
+export default function AIBusinessAdvisor({ summary, widget }) {
     const { ready: aiReady, askAI: contextAskAI } = useAI();
-    const [expanded, setExpanded] = useState(false);
+    const [expanded, setExpanded] = useState(!widget);
     const [query, setQuery] = useState('');
     const [thinking, setThinking] = useState(false);
     const [response, setResponse] = useState(null);
@@ -94,6 +94,72 @@ export default function AIBusinessAdvisor({ summary }) {
 
     const TipIcon = dailyTip.icon;
 
+    const body = (
+        <div className="ai-advisor-body">
+            <div className="ai-tip-banner">
+                <span className="ai-tip-icon"><TipIcon width={18} height={18} /></span>
+                <span>{dailyTip.text}</span>
+            </div>
+
+            {insights.length > 0 && (
+                <div className="ai-insights-section">
+                    <span className="ai-section-label">Insights</span>
+                    {insights.map((insight, i) => (
+                        <div key={i} className="ai-insight-item">
+                            <SeverityIcon level={insight.severity} />
+                            <span>{insight.text}</span>
+                        </div>
+                    ))}
+                </div>
+            )}
+
+            <div className="ai-ask-section">
+                <span className="ai-section-label">Ask AI Anything</span>
+                <div className="ai-ask-row">
+                    <input
+                        value={query}
+                        onChange={e => setQuery(e.target.value)}
+                        onKeyDown={e => e.key === 'Enter' && handleAsk()}
+                        placeholder="e.g., What should I focus on today?"
+                        className="field-input"
+                    />
+                    <button className="btn btn-primary" onClick={handleAsk} disabled={thinking || !query.trim()}>
+                        {thinking ? (
+                            <div className="spinner spinner-sm" style={{ borderTopColor: '#fff', borderColor: 'rgba(255,255,255,0.3)' }} />
+                        ) : 'Ask'}
+                    </button>
+                </div>
+
+                {response && (
+                    <div className="ai-response-box">
+                        <p className="ai-response-text">{response.message}</p>
+                        <div className="ai-suggestion-list">
+                            {response.suggestions.map((s, i) => (
+                                <div key={i} className="ai-suggestion-item">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" width={12} height={12}>
+                                        <path d="M5 12h14M12 5l7 7-7 7" />
+                                    </svg>
+                                    {s}
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+                )}
+            </div>
+
+            <div className="ai-advisor-footer">
+                AI advisor uses your CRM data to generate insights.
+                {!import.meta.env.VITE_AI_PROVIDER && (
+                    <span> Configure an AI provider in Settings for enhanced responses.</span>
+                )}
+            </div>
+        </div>
+    );
+
+    if (widget) {
+        return body;
+    }
+
     return (
         <div className="ai-card">
             <div className="ai-card-header ai-card-header-clickable" onClick={() => setExpanded(!expanded)}>
@@ -111,67 +177,7 @@ export default function AIBusinessAdvisor({ summary }) {
                 </svg>
             </div>
 
-            {expanded && (
-                <div className="ai-advisor-body">
-                    <div className="ai-tip-banner">
-                        <span className="ai-tip-icon"><TipIcon width={18} height={18} /></span>
-                        <span>{dailyTip.text}</span>
-                    </div>
-
-                    {insights.length > 0 && (
-                        <div className="ai-insights-section">
-                            <span className="ai-section-label">Insights</span>
-                            {insights.map((insight, i) => (
-                                <div key={i} className="ai-insight-item">
-                                    <SeverityIcon level={insight.severity} />
-                                    <span>{insight.text}</span>
-                                </div>
-                            ))}
-                        </div>
-                    )}
-
-                    <div className="ai-ask-section">
-                        <span className="ai-section-label">Ask AI Anything</span>
-                        <div className="ai-ask-row">
-                            <input
-                                value={query}
-                                onChange={e => setQuery(e.target.value)}
-                                onKeyDown={e => e.key === 'Enter' && handleAsk()}
-                                placeholder="e.g., What should I focus on today?"
-                                className="field-input"
-                            />
-                            <button className="btn btn-primary" onClick={handleAsk} disabled={thinking || !query.trim()}>
-                                {thinking ? (
-                                    <div className="spinner spinner-sm" style={{ borderTopColor: '#fff', borderColor: 'rgba(255,255,255,0.3)' }} />
-                                ) : 'Ask'}
-                            </button>
-                        </div>
-
-                        {response && (
-                            <div className="ai-response-box">
-                                <p className="ai-response-text">{response.message}</p>
-                                <div className="ai-suggestion-list">
-                                    {response.suggestions.map((s, i) => (
-                                        <div key={i} className="ai-suggestion-item">
-                                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" width={12} height={12}>
-                                                <path d="M5 12h14M12 5l7 7-7 7" />
-                                            </svg>
-                                            {s}
-                                        </div>
-                                    ))}
-                                </div>
-                            </div>
-                        )}
-                    </div>
-
-                    <div className="ai-advisor-footer">
-                        AI advisor uses your CRM data to generate insights.
-                        {!import.meta.env.VITE_AI_PROVIDER && (
-                            <span> Configure an AI provider in Settings for enhanced responses.</span>
-                        )}
-                    </div>
-                </div>
-            )}
+            {expanded && body}
         </div>
     );
 }

@@ -74,7 +74,7 @@ export default function AIDashboardInsights({ summary, compact }) {
                         link: '/ai-assistant',
                     }]);
                 }
-            }).catch(() => {});
+            }).catch((err) => console.error("Failed to load dashboard insights:", err));
         }
     }, [aiReady, summary, analyzeAI]);
 

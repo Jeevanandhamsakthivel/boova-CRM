@@ -41,9 +41,25 @@ class Config:
     GROQ_MODEL = os.getenv("GROQ_MODEL", "llama-3.3-70b-versatile")
     GROQ_BASE_URL = "https://api.groq.com/openai/v1"
 
+    # SMTP / Email
+    SMTP_HOST = os.getenv("SMTP_HOST", "")
+    SMTP_PORT = int(os.getenv("SMTP_PORT", "587"))
+    SMTP_USER = os.getenv("SMTP_USER", "")
+    SMTP_PASSWORD = os.getenv("SMTP_PASSWORD", "")
+    SMTP_USE_TLS = os.getenv("SMTP_USE_TLS", "true").lower() == "true"
+    SMTP_FROM_NAME = os.getenv("SMTP_FROM_NAME", "PSM CRM")
+    SMTP_FROM_EMAIL = os.getenv("SMTP_FROM_EMAIL", "noreply@psmcrm.com")
+    SMTP_MAX_RETRIES = int(os.getenv("SMTP_MAX_RETRIES", "3"))
+    SMTP_RETRY_DELAY = int(os.getenv("SMTP_RETRY_DELAY", "5"))
+    SMTP_TIMEOUT = int(os.getenv("SMTP_TIMEOUT", "30"))
+
     # Pagination
     DEFAULT_PAGE_SIZE = int(os.getenv("DEFAULT_PAGE_SIZE", 20))
     MAX_PAGE_SIZE = int(os.getenv("MAX_PAGE_SIZE", 100))
+
+    # Email Webhook
+    EMAIL_WEBHOOK_SECRET = os.getenv("EMAIL_WEBHOOK_SECRET", "")
+    EXTERNAL_URL = os.getenv("EXTERNAL_URL", "http://localhost:5000")
 
     # Misc
     JSON_SORT_KEYS = False

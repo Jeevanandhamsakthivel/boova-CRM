@@ -2,6 +2,7 @@ import { useRef, useState } from "react";
 import { workspaceApi } from "../../../api/workspaceApi";
 import { useTabLoad } from "../../../hooks/useTabLoad";
 import { Spinner } from "../../ui/Misc";
+import { ConfirmDialog } from "../../ui/ConfirmDialog";
 import { formatDate } from "../../../utils/formatters";
 import { getErrorMessage } from "../../../utils/errorUtils";
 import { useToast } from "../../../context/ToastContext";
@@ -82,8 +83,11 @@ export function FilesTab({ customerId, activeTab, canWrite }) {
         }
     }
 
-    async function handleDelete(file) {
-        if (!window.confirm(`Delete "${file.filename}"?`)) return;
+    const [confirmDeleteFile, setConfirmDeleteFile] = useState(null);
+
+    async function handleDelete() {
+        const file = confirmDeleteFile;
+        setConfirmDeleteFile(null);
         setItems((prev) => prev.filter((f) => f.id !== file.id));
         try {
             await workspaceApi.deleteFile(customerId, file.id);
@@ -161,7 +165,7 @@ export function FilesTab({ customerId, activeTab, canWrite }) {
                             {canWrite && !file.__pending && (
                                 <button
                                     className="btn btn-ghost btn-icon btn-sm"
-                                    onClick={() => handleDelete(file)}
+                                    onClick={() => setConfirmDeleteFile(file)}
                                     title="Delete file"
                                     style={{ color: "var(--danger)", flexShrink: 0 }}
                                 >
@@ -172,6 +176,16 @@ export function FilesTab({ customerId, activeTab, canWrite }) {
                     ))}
                 </div>
             )}
+
+            <ConfirmDialog
+                open={!!confirmDeleteFile}
+                title="Delete File?"
+                message={confirmDeleteFile ? `Permanently delete "${confirmDeleteFile.filename}"?` : ""}
+                confirmLabel="Delete"
+                danger
+                onConfirm={handleDelete}
+                onCancel={() => setConfirmDeleteFile(null)}
+            />
         </div>
     );
 }

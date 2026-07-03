@@ -7,4 +7,6 @@ export const emailApi = {
     createTemplate: (payload) => apiClient.post("/email/templates", payload),
     updateTemplate: (id, payload) => apiClient.put(`/email/templates/${id}`, payload),
     deleteTemplate: (id) => apiClient.delete(`/email/templates/${id}`),
+    sendTest: (payload) => apiClient.post("/email/send-test", payload),
+    getConfig: () => apiClient.get("/email/config"),
 };

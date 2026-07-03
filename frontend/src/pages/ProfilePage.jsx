@@ -106,7 +106,7 @@ export default function ProfilePage() {
     useEffect(() => {
         authApi.getMyAuditLogs({ per_page: 20 })
             .then(res => setAuditLogs(res.data.data || []))
-            .catch(() => {})
+            .catch((err) => console.error("Failed to load audit logs:", err))
             .finally(() => setAuditLoading(false));
     }, []);
 

@@ -3,11 +3,14 @@ import { leadsApi } from "../../api/leadsApi";
 import { getErrorMessage, getFieldErrors } from "../../utils/errorUtils";
 import { FieldGroup, TextInput, TextArea, Select, FieldRow } from "../ui/FormFields";
 import { Button } from "../ui/Button";
+import { IconHot, IconWarm, IconCold } from "../ui/Icons";
 import { useAuth } from "../../context/AuthContext";
 
 const STATUS_OPTS = ["new","contacted","qualified","unqualified","lost"].map(s => ({ value: s, label: s.charAt(0).toUpperCase()+s.slice(1) }));
 const SOURCE_OPTS = ["website","referral","social_media","email_campaign","cold_call","event","whatsapp","paid_ad","partner","other"].map(s => ({ value: s, label: s.split("_").map(w=>w.charAt(0).toUpperCase()+w.slice(1)).join(" ") }));
-const QUAL_OPTS   = [{ value:"hot",label:"🔥 Hot" },{ value:"warm",label:"🌤 Warm" },{ value:"cold",label:"❄️ Cold" }];
+const QUAL_OPTS   = [{ value:"hot",label:"Hot" },{ value:"warm",label:"Warm" },{ value:"cold",label:"Cold" }];
+const QUAL_COLOR  = { hot:"var(--danger)", warm:"var(--warning)", cold:"var(--info)" };
+const QUAL_ICON   = { hot:IconHot, warm:IconWarm, cold:IconCold };
 const IND_OPTS    = ["technology","finance","healthcare","retail","manufacturing","real_estate","education","consulting","media","logistics","other"].map(s => ({ value:s, label:s.split("_").map(w=>w.charAt(0).toUpperCase()+w.slice(1)).join(" ") }));
 
 export function LeadFormModal({ onCreated, onCancel, initial = {} }) {
@@ -83,7 +86,14 @@ export function LeadFormModal({ onCreated, onCancel, initial = {} }) {
                     <Select options={STATUS_OPTS} value={form.status} onChange={e=>set("status",e.target.value)} />
                 </FieldGroup>
                 <FieldGroup label="Temperature" error={fieldErrors.qualification}>
-                    <Select options={QUAL_OPTS} value={form.qualification} onChange={e=>set("qualification",e.target.value)} placeholder="— select —" />
+                    <div style={{ display:"flex", alignItems:"center", gap:6 }}>
+                        {form.qualification && QUAL_ICON[form.qualification] && (
+                            <span style={{ color:QUAL_COLOR[form.qualification], display:"flex", flexShrink:0 }}>
+                                {(() => { const I = QUAL_ICON[form.qualification]; return <I width={16} height={16} />; })()}
+                            </span>
+                        )}
+                        <Select options={QUAL_OPTS} value={form.qualification} onChange={e=>set("qualification",e.target.value)} placeholder="— select —" style={{ flex:1 }} />
+                    </div>
                 </FieldGroup>
             </FieldRow>
             <FieldRow>

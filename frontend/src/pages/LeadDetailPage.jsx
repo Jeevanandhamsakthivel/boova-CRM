@@ -4,13 +4,14 @@ import { leadsApi } from "../api/leadsApi";
 import { StatusBadge } from "../components/ui/Badge";
 import { Button } from "../components/ui/Button";
 import { Modal } from "../components/ui/Modal";
+import { ConfirmDialog } from "../components/ui/ConfirmDialog";
 import { LeadConvertModal } from "../components/features/LeadConvertModal";
 import { useToast } from "../context/ToastContext";
 import { formatDate, formatCurrency } from "../utils/formatters";
 import { getErrorMessage } from "../utils/errorUtils";
 import {
     IconMail, IconPhone, IconBuilding, IconEdit, IconTrash,
-    IconArrowRight, IconCheck,
+    IconArrowRight, IconCheck, IconHot, IconWarm, IconCold,
 } from "../components/ui/Icons";
 
 const STATUS_OPTS = ["new","contacted","qualified","unqualified","lost"];
@@ -48,7 +49,7 @@ function EditField({ label, fieldKey, form, setForm, type="text", options }) {
 }
 
 const TEMP_COLOR = { hot:"var(--danger)", warm:"var(--warning)", cold:"var(--info)" };
-const TEMP_EMOJI = { hot:"🔥", warm:"🌤", cold:"❄️" };
+const TEMP_ICON  = { hot:IconHot, warm:IconWarm, cold:IconCold };
 
 export default function LeadDetailPage() {
     const { id } = useParams();
@@ -61,6 +62,7 @@ export default function LeadDetailPage() {
     const [form,    setForm]    = useState({});
     const [saving,  setSaving]  = useState(false);
     const [showConvert, setShowConvert] = useState(false);
+    const [confirmDelete, setConfirmDelete] = useState(false);
 
     useEffect(() => {
         leadsApi.get(id)
@@ -80,7 +82,7 @@ export default function LeadDetailPage() {
     }
 
     async function handleDelete() {
-        if (!window.confirm("Permanently delete this lead?")) return;
+        setConfirmDelete(false);
         await leadsApi.remove(id);
         toast.success("Lead deleted.");
         navigate("/leads");
@@ -106,8 +108,8 @@ export default function LeadDetailPage() {
                             <h1 style={{ fontFamily:"var(--font-display)", fontSize:22, fontWeight:700, margin:0, letterSpacing:"-0.02em" }}>{lead.name}</h1>
                             <StatusBadge status={lead.status} />
                             {lead.qualification && (
-                                <span style={{ fontSize:13, fontWeight:600, color:TEMP_COLOR[lead.qualification] }}>
-                                    {TEMP_EMOJI[lead.qualification]} {titleCase(lead.qualification)}
+                                <span style={{ display:"inline-flex", alignItems:"center", gap:4, fontSize:13, fontWeight:600, color:TEMP_COLOR[lead.qualification] }}>
+                                    {(() => { const I = TEMP_ICON[lead.qualification]; return I ? <I width={14} height={14} /> : null; })()} {titleCase(lead.qualification)}
                                 </span>
                             )}
                         </div>
@@ -157,7 +159,7 @@ export default function LeadDetailPage() {
                                 <span className="badge badge-success">✓ Converted to Customer</span>
                             )}
                             <div style={{ marginLeft:"auto" }}>
-                                <Button variant="secondary" size="sm" onClick={handleDelete} style={{ color:"var(--danger)", borderColor:"var(--danger-tint)" }}>
+                                <Button variant="secondary" size="sm" onClick={() => setConfirmDelete(true)} style={{ color:"var(--danger)", borderColor:"var(--danger-tint)" }}>
                                     <IconTrash width={13} height={13}/> Delete
                                 </Button>
                             </div>
@@ -244,6 +246,16 @@ export default function LeadDetailPage() {
                     onCancel={()=>setShowConvert(false)}
                 />
             </Modal>
+
+            <ConfirmDialog
+                open={confirmDelete}
+                title="Delete Lead?"
+                message="This action cannot be undone. The lead and all associated data will be permanently removed."
+                confirmLabel="Delete"
+                danger
+                onConfirm={handleDelete}
+                onCancel={() => setConfirmDelete(false)}
+            />
         </div>
     );
 }

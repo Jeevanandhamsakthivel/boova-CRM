@@ -9,6 +9,7 @@ export function WorkflowToolbar({
     onDuplicate,
     onDelete,
     onRun,
+    running,
     saving,
 }) {
     if (!workflow) return null;
@@ -27,9 +28,14 @@ export function WorkflowToolbar({
                     <IconSave width={14} height={14} /> {saving ? "Saving..." : "Save"}
                 </Button>
                 {workflow.status === "active" ? (
-                    <Button variant="secondary" onClick={onDeactivate}>
-                        Deactivate
-                    </Button>
+                    <>
+                        <Button variant="success" onClick={onRun} disabled={running}>
+                            <IconPlay width={14} height={14} /> {running ? "Running..." : "Run"}
+                        </Button>
+                        <Button variant="secondary" onClick={onDeactivate}>
+                            Deactivate
+                        </Button>
+                    </>
                 ) : workflow.status === "draft" || workflow.status === "inactive" ? (
                     <Button variant="success" onClick={onActivate}>
                         <IconPlay width={14} height={14} /> Activate
